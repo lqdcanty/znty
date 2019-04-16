@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>详情</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				width:150px!important;
+			}
+			.layui-form-pane .layui-input-block{
+				margin-left:150px;
+			}
+			.matchCode{
+				position:relative;
+				height:38px;
+			}
+			.matchCode input{
+				width:100%;
+				display:block;
+				height:38px;
+				border:1px solid #ccc;
+				border-radius:4px;
+				background:#fff;
+				padding:0 10px;
+				box-sizing:border-box;
+				-webkit-box-sizing:-webkit-border-box;
+				-moz-box-sizing:-moz-border-box;
+				-ms-box-sizing:-ms-border-box;
+			}
+			.selectBox{
+				width:100%;
+				height:250px;
+				overflow-y:scroll;
+				position:absolute;
+				left:0;
+				top:40px;
+				background:#fff;
+				z-index:100;
+				box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+				padding:5px 0;
+				border-radius: 4px;
+			}
+			.selectBox span{
+				line-height:36px;
+				display:block;
+				padding:0 8px;
+				cursor: pointer;
+			}
+			.tableBox{
+				min-height:350px;
+			}
+			[v-cloak] {
+				display: none;
+			}
+			.textareaBox{
+			    min-height: 130px;
+			    padding: 5px;
+			    width: 98%;
+			    border-color: #e6e6e6;
+			}
+			
+		</style>
+	</head>
+
+	<body class="childrenBody">
+		<div id="app" v-cloak>
+			<input type="hidden" id="dataObj">
+			<input type="hidden" id="tplCode">
+			<input type="hidden" id="appId">
+			<div class="layui-tab">
+				  <ul class="layui-tab-title">
+				    <li class="layui-this">基本信息</li>
+				    <li>数据模板信息</li>
+				    
+				  </ul>
+				  <div class="layui-tab-content">
+				    <div class="layui-tab-item layui-show">
+				    	<form class="layui-form layui-form-pane" style="padding:20px 0 10px 20px">
+							<div class='layui-form-item'>
+							    <label class="layui-form-label">应用ID</label>
+							    <div class="layui-input-block matchCode">
+							    	<div name="select-main matchCode"  lay-filter='matchSel'>
+								     	 <input type="text" id="appId" placeholder="请输入应用ID" class="layui-input" v-model="applyData.appId" readonly>
+								     	
+									</div>
+							    </div>
+							</div>
+							<div class='layui-form-item'>
+							    <label class="layui-form-label">模板编号</label>
+							    <div class="layui-input-block">
+							     	 <input type="text" id="tplCode" placeholder="请输入模板编号" class="layui-input" v-model="applyData.tplCode" readonly>
+							    </div>
+							</div>
+							<div class='layui-form-item'>
+							    <label class="layui-form-label">模板名称</label>
+							    <div class="layui-input-block">
+							     	 <input type="text" placeholder="请输入模板名称" class="layui-input" v-model="applyData.tplName" readonly>
+							    </div>
+							</div>
+							<div class='layui-form-item'>
+							    <label class="layui-form-label">数据表编码</label>
+							    <div class="layui-input-block">
+							     	 <input type="text" placeholder="请输入模板名称" class="layui-input" v-model="applyData.docCode" readonly>
+							    </div>
+							</div>
+							<div class='layui-form-item'>
+							    <label class="layui-form-label">预测数据规模</label>
+							    <div class="layui-input-block">
+							     	 <input type="number" name="forecastDataSize" placeholder="请输入预测数据规模" class="layui-input" v-model="applyData.forecastDataSize" readonly>
+							    </div>
+							</div>
+							<div class='layui-form-item'>
+							    <label class="layui-form-label" style="height:100px;">模板详细描述</label>
+							    <div class="layui-input-block">
+							     	 <textarea style="height:100px;padding:5px;" placeholder="请输入模板详细描述" class="layui-input" v-model="applyData.tplDesc" readonly></textarea>
+							    </div>
+							</div>
+							<div class='layui-form-item'>
+							    <div class="layui-inline">模板内容</div>
+							    <div class="layui-input" style="min-height:400px;overflow-y:auto;">
+							    	<div><pre>{{result1}}</pre></div>
+							    	<div><pre>{{result2}}</pre></div>
+							    </div>
+							</div>
+						</form>
+						<form class="layui-form layui-form-pane" style="padding:20px 0 10px 20px">
+							<div class='layui-form-item'>
+							    <label class="layui-form-label" style="height:142px">申请描述</label>
+							    <div class="layui-input-block">
+							     	 <textarea class="textareaBox" placeholder="请输入申请描述" class="layui-input" v-model="applyDataReject.auditDesc"></textarea>
+							    </div>
+							</div>
+							<div class='layui-form-item' style="text-align:center;">
+							
+							    <div class="layui-inline">
+							     	 <a class="layui-btn" style="width:100px;" @click="reject" id="reject">驳回</a>
+							    </div>
+							    <div class="layui-inline">
+							     	 <a class="layui-btn" style="width:100px;" @click="pass"  id="pass">通过</a>
+							    </div>
+							</div>
+						</form>
+				    </div>
+				    <div class="layui-tab-item">
+				    	<table class="layui-table">
+							<thead>
+								<tr>
+									<th>字段Id</th>
+									<th>字段名</th>
+									<th>字段描述</th>
+									<th>数据类型</th>
+									<th>详细信息</th>
+								</tr>
+							</thead>
+							<tbody>
+								 <tr v-for="(list,index) in tableList" :key="index">
+									<td>{{list.id}}</td>
+									<td>{{list.fieldName}}</td>
+									<td>{{list.fieldComment}}</td>
+									<td>{{list.fieldType}}</td>
+									<td>{{list.extendMapObj}}</td>
+								</tr>
+							</tbody>
+						</table> 
+				    </div>
+				    
+				  </div>
+			</div>
+			
+		</div>
+	</body>
+	<a><span id='btn' onclick='btnClick()'></span></a>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script type="text/javascript" src="/assets/common/vue/vue.js"></script>
+		<script type="text/javascript">
+			var width,height,indexclose;
+			if(document.body.clientWidth<1500){
+				width='950px';
+				height="550px";
+			}else{
+				width='950px';
+				height="750px";
+			}
+			function btnClick() {
+				layui.use(['table', 'form', 'layedit', 'laydate','laypage','element'], function() {
+					var table = layui.table;
+					var form = layui.form;
+					var layedit = layui.layedit;
+					var laydate = layui.laydate;
+					var element = layui.element;
+					var $ = layui.jquery;
+					var vm = new Vue({
+						el: '#app',
+						data: {
+							applyData:{},
+							appIdList:[],
+							optionSelectShow:false,
+							editFlage:null,
+							tableList:[],
+							result1:'',
+							result2:'',
+							applyDataReject:{},
+						},
+						created:function(){
+							var that=this;
+							if($("#dataObj").val()){
+								that.applyData=JSON.parse($("#dataObj").val());
+								that.editFlage=true;
+							}
+							that.getList();
+							that.setParam();
+							that.getJson();
+							form.render();
+						},
+						mounted:function(){
+							var that=this;
+							that.getJson();
+						},
+						methods:{
+							save:save,
+							setParam:setParam,
+							getResultMethodsOther:getResultMethodsOther,
+							submitFun:submitFun,
+							getList:getList,
+							mouseleaveSelect:mouseleaveSelect,
+							optionSelect:optionSelect,
+							optionSelectInput:optionSelectInput,
+							getResultMethodsGet:getResultMethodsGet,
+							getJson:getJson,
+							pass:pass,
+							reject:reject,
+							getResultMethodsGetOne:getResultMethodsGetOne,
+						}
+					})
+					function reject(){
+						getResultMethodsGetOne('/template/audit',{appId:$("#appId").val(),auditStatus:'reject',auditDesc:vm.applyDataReject.auditDesc,tplCode:$('#tplCode').val()},function(d){
+							if(d.data){
+								layer.msg("审批成功")
+								setTimeout(()=>{
+									var index=parent.layer.getFrameIndex(window.name);
+									parent.layer.close(index);
+								},500)
+							}
+						}.bind(this))
+						
+					} 
+					function pass(){
+						getResultMethodsGetOne('/template/audit',{appId:$("#appId").val(),auditStatus:'pass',auditDesc:vm.applyDataReject.auditDesc,tplCode:$('#tplCode').val()},function(d){
+							 if(d.data){
+								 layer.msg("审批成功")
+								 setTimeout(()=>{
+									var index=parent.layer.getFrameIndex(window.name);
+									parent.layer.close(index);
+								},500); 
+							 }
+						}.bind(this)) 
+					}
+				 	function getJson(){
+						getResultMethodsGet("/template/mapping/view?appId="+$("#appId").val()+'&tplCode='+$("#tplCode").val(),'',function(d){
+							vm.result1 = JSON.stringify(JSON.parse(d.data.mappingTemplate), null, 4);
+							vm.result2 = JSON.stringify(JSON.parse(d.data.saveDataTemplate), null, 4);
+						})
+					} 
+					function optionSelectInput(){
+						if(!vm.editFlage){
+							vm.optionSelectShow=true;
+						}
+					}
+					function optionSelect(list){
+						vm.applyData.appId=list.appId;
+						vm.optionSelectShow=false;
+						form.render();
+					}
+					function mouseleaveSelect(){
+						vm.optionSelectShow=false;
+					}
+					function getList(){
+						var index = layer.load(2, {
+							shade: false
+						});
+						$.ajax({
+							type: 'get',
+							url: "/app/list",
+							cache: false,
+							data: {
+								pageNumber: 1,
+								pageSize: 9999
+							},
+							success: function(obj) {
+								layer.close(index);
+								vm.appIdList=obj.data.list;
+								if(obj.code != 0) {
+									layer.alert(obj.errorMsg, {
+										icon: 2
+									});
+									return;
+								}
+							}
+						})
+					}
+					function submitFun(){
+						getResultMethodsOther('/template/apply',vm.applyData,function(d){
+							layer.msg("申请成功");
+							setTimeout(()=>{
+								var index=parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+							},500);
+						})
+					}
+					function save(){
+						console.log(vm.applyData,"params");
+						getResultMethodsOther('/template/up?tpl_code='+vm.applyData.tplCode,vm.applyData,function(d){
+							layer.msg("修改成功");
+							setTimeout(()=>{
+								var index=parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+							},500);
+						})
+					}
+					function setParam(){
+						getResultMethodsGet("/template/field/list?docCode="+$("#tplCode").val()+"&appId="+$("#appId").val(),'',function(d){
+							vm.tableList=d.data;
+							
+						})
+					}
+					function getResultMethodsOther(url, prams, sufn) {
+						var index = layer.load(2, {shade: 0.01});
+					    $.ajax({
+					        url:  url,
+					        data: JSON.stringify(prams),
+					        contentType:'application/json',
+					        type: 'post',
+					        dataType: 'json',
+					        cache:false,
+					        success: function(d) {
+					        	layer.close(index);
+					        	if(d.code==0) {
+					        		if('function' === typeof sufn) sufn(d);
+					        	}else {
+					        		layer.msg(d.errorMsg);
+					        	}
+					        },
+						    error:function(){
+						    	layer.close(index);
+								layer.msg("请求出错");
+							}
+					    });
+					}
+					function getResultMethodsGet(url, prams, sufn) {
+						var index = layer.load(2, {shade: 0.01});
+					    $.ajax({
+					        url:  url,
+					        data: prams,
+					        processData:false,
+					        type: 'get',
+					        cache:false,
+					        success: function(d) {
+					        	layer.close(index);
+					        	if(d.code==0) {
+					        		if('function' === typeof sufn) sufn(d);
+					        	}else {
+					        		layer.msg(d.errorMsg);
+					        	}
+					        },
+						    error:function(){
+						    	layer.close(index);
+								layer.msg("请求出错");
+							}
+					    });
+					};
+					function getResultMethodsGetOne(url, prams, sufn) {
+						var index = layer.load(2, {shade: 0.01});
+					    $.ajax({
+					        url:  url,
+					        data: prams,
+					        type: 'get',
+					        cache:false,
+					        success: function(d) {
+					        	layer.close(index);
+					        	if(d.code==0) {
+					        		if('function' === typeof sufn) sufn(d);
+					        	}else {
+					        		layer.msg(d.errorMsg);
+					        	}
+					        },
+						    error:function(){
+						    	layer.close(index);
+								layer.msg("请求出错");
+							}
+					    });
+					};
+				})
+			}
+		</script>
+
+</html>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.efida.esearch.mapper.AppMapper">
+	<resultMap id="BaseResultMap"
+		type="com.efida.esearch.model.App">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="app_key" property="appKey" jdbcType="VARCHAR" />
+		<result column="app_secret" property="appSecret"
+			jdbcType="VARCHAR" />
+		<result column="app_name" property="appName" jdbcType="VARCHAR" />
+		<result column="apply_time" property="applyTime"
+			jdbcType="TIMESTAMP" />
+		<result column="apply_user_id" property="applyUserId"
+			jdbcType="VARCHAR" />
+		<result column="apply_user_name" property="applyUserName"
+			jdbcType="VARCHAR" />
+		<result column="audit_pass_time" property="auditPassTime"
+			jdbcType="TIMESTAMP" />
+		<result column="apply_desc" property="applyDesc"
+			jdbcType="VARCHAR" />
+		<result column="audit_desc" property="auditDesc"
+			jdbcType="VARCHAR" />
+		<result column="audit_status" property="auditStatus"
+			jdbcType="VARCHAR" />
+		<result column="is_lock" property="isLock" jdbcType="BIT" />
+		<result column="gmt_create" property="gmtCreate"
+			jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, app_id, app_key, app_secret, app_name, apply_time,
+		apply_user_id,
+		apply_user_name,
+		audit_pass_time, apply_desc, audit_desc,
+		audit_status, is_lock, gmt_create,
+		gmt_modified
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from app
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from app
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.efida.esearch.model.App">
+		insert into app (id, app_id,
+		app_key,
+		app_secret, app_name, apply_time,
+		apply_user_id,
+		apply_user_name, audit_pass_time,
+		apply_desc, audit_desc, audit_status,
+		is_lock, gmt_create, gmt_modified
+		)
+		values (#{id,jdbcType=BIGINT},
+		#{appId,jdbcType=VARCHAR},
+		#{appKey,jdbcType=VARCHAR},
+		#{appSecret,jdbcType=VARCHAR}, #{appName,jdbcType=VARCHAR},
+		#{applyTime,jdbcType=TIMESTAMP},
+		#{applyUserId,jdbcType=VARCHAR},
+		#{applyUserName,jdbcType=VARCHAR},
+		#{auditPassTime,jdbcType=TIMESTAMP},
+		#{applyDesc,jdbcType=VARCHAR},
+		#{auditDesc,jdbcType=VARCHAR}, #{auditStatus,jdbcType=VARCHAR},
+		#{isLock,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP},
+		#{gmtModified,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.efida.esearch.model.App">
+		insert into app
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="appId != null">
+				app_id,
+			</if>
+			<if test="appKey != null">
+				app_key,
+			</if>
+			<if test="appSecret != null">
+				app_secret,
+			</if>
+			<if test="appName != null">
+				app_name,
+			</if>
+			<if test="applyTime != null">
+				apply_time,
+			</if>
+			<if test="applyUserId != null">
+				apply_user_id,
+			</if>
+			<if test="applyUserName != null">
+				apply_user_name,
+			</if>
+			<if test="auditPassTime != null">
+				audit_pass_time,
+			</if>
+			<if test="applyDesc != null">
+				apply_desc,
+			</if>
+			<if test="auditDesc != null">
+				audit_desc,
+			</if>
+			<if test="auditStatus != null">
+				audit_status,
+			</if>
+			<if test="isLock != null">
+				is_lock,
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create,
+			</if>
+			<if test="gmtModified != null">
+				gmt_modified,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="appKey != null">
+				#{appKey,jdbcType=VARCHAR},
+			</if>
+			<if test="appSecret != null">
+				#{appSecret,jdbcType=VARCHAR},
+			</if>
+			<if test="appName != null">
+				#{appName,jdbcType=VARCHAR},
+			</if>
+			<if test="applyTime != null">
+				#{applyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="applyUserId != null">
+				#{applyUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="applyUserName != null">
+				#{applyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="auditPassTime != null">
+				#{auditPassTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="applyDesc != null">
+				#{applyDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="auditDesc != null">
+				#{auditDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="auditStatus != null">
+				#{auditStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="isLock != null">
+				#{isLock,jdbcType=TINYINT},
+			</if>
+			<if test="gmtCreate != null">
+				#{gmtCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="gmtModified != null">
+				#{gmtModified,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.efida.esearch.model.App">
+		update app
+		<set>
+			<if test="appId != null">
+				app_id = #{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="appKey != null">
+				app_key = #{appKey,jdbcType=VARCHAR},
+			</if>
+			<if test="appSecret != null">
+				app_secret = #{appSecret,jdbcType=VARCHAR},
+			</if>
+			<if test="appName != null">
+				app_name = #{appName,jdbcType=VARCHAR},
+			</if>
+			<if test="applyTime != null">
+				apply_time = #{applyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="applyUserId != null">
+				apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="applyUserName != null">
+				apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="auditPassTime != null">
+				audit_pass_time = #{auditPassTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="applyDesc != null">
+				apply_desc = #{applyDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="auditDesc != null">
+				audit_desc = #{auditDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="auditStatus != null">
+				audit_status = #{auditStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="isLock != null">
+				is_lock = #{isLock,jdbcType=TINYINT},
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="gmtModified != null">
+				gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.efida.esearch.model.App">
+		update app
+		set app_id = #{appId,jdbcType=VARCHAR},
+		app_key = #{appKey,jdbcType=VARCHAR},
+		app_secret =
+		#{appSecret,jdbcType=VARCHAR},
+		app_name = #{appName,jdbcType=VARCHAR},
+		apply_time = #{applyTime,jdbcType=TIMESTAMP},
+		apply_user_id =
+		#{applyUserId,jdbcType=VARCHAR},
+		apply_user_name =
+		#{applyUserName,jdbcType=VARCHAR},
+		audit_pass_time =
+		#{auditPassTime,jdbcType=TIMESTAMP},
+		apply_desc =
+		#{applyDesc,jdbcType=VARCHAR},
+		audit_desc =
+		#{auditDesc,jdbcType=VARCHAR},
+		audit_status =
+		#{auditStatus,jdbcType=VARCHAR},
+		is_lock = #{isLock,jdbcType=TINYINT},
+		gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+		gmt_modified =
+		#{gmtModified,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="selectAppByParams" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from app where 1=1
+		<if test="appId != null and appId !=''">
+			and app_id = #{appId}
+		</if>
+		<if test="keyword != null and keyword !=''">
+			and (app_name like CONCAT('%',#{keyword},'%') or audit_desc  like CONCAT('%',#{keyword},'%'))
+		</if>
+		<if test="auditStatus != null and auditStatus !=''">
+			and audit_status=#{auditStatus}
+		</if>
+		<if test="isLock != null">
+			and is_lock=#{isLock}
+		</if>
+		 order by id desc
+	</select>
+
+	<select id="selectAppByAppId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from app where app_id =#{appId,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

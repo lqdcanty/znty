@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<title>消息系统管理</title>
+<meta charset="UTF-8">
+<#include "/view/pages/common/head.html"/>
+<body class="app sidebar-mini rtl pace-done">
+	<#include "/view/pages/common/left.html"/>
+	  <div class="app-content" style='position: absolute; left: 230px; right: 0; top: 50px;bottom: 0;margin: 0;padding: 0;'>
+         <iframe id="iframeMain'" name="iframeMain"  style="width: 100%;height: 100%; position: absolute;left: 0px; border: none;" src="/pages/app/app_list"></iframe>
+	 </div>
+</body>
+ <!-- Essential javascripts for application to work-->
+    <script src="/assets/v2.0/js/jquery-3.2.1.min.js"></script>
+    <script src="/assets/v2.0/js/popper.min.js"></script>
+    <script src="/assets/v2.0/js/bootstrap.min.js"></script>
+    <script src="/assets/v2.0/js/main.js"></script>
+    <!-- The javascript plugin to display page loading on top-->
+    <script src="/assets/v2.0/js/plugins/pace.min.js"></script>
+    <!-- Page specific javascripts-->
+    <!-- Data table plugin-->
+    <script type="text/javascript" src="/assets/v2.0/js/plugins/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/assets/v2.0/js/plugins/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    <!-- Google analytics script-->
+    <script type="text/javascript">
+      $("a.app-menu__item").click(function(){
+    	  console.log($(this).data("href"));
+    	  $(".app-content").find("iframe")[0].src=$(this).data("href");
+      });
+    </script>
+</html>

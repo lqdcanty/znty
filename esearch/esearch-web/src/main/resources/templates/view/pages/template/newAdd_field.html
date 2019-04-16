@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>数据字段配置</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				width:150px!important;
+			}
+			.layui-form-pane .layui-input-block{
+				margin-left:150px;
+			}
+			.matchCode{
+				position:relative;
+				height:38px;
+			}
+			.matchCode input{
+				width:100%;
+				display:block;
+				height:38px;
+				border:1px solid #ccc;
+				border-radius:4px;
+				background:#fff;
+				padding:0 10px;
+				box-sizing:border-box;
+				-webkit-box-sizing:-webkit-border-box;
+				-moz-box-sizing:-moz-border-box;
+				-ms-box-sizing:-ms-border-box;
+			}
+			.selectBox{
+				width:100%;
+				height:250px;
+				overflow-y:scroll;
+				position:absolute;
+				left:0;
+				top:40px;
+				background:#fff;
+				z-index:100;
+				box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+				padding:5px 0;
+				border-radius: 4px;
+			}
+			.selectBox span{
+				line-height:36px;
+				display:block;
+				padding:0 8px;
+				cursor: pointer;
+			}
+			.tableBox{
+				min-height:350px;
+			}
+			.title{
+				padding:10px 0;
+			}
+			.selectFieldBox .layui-input-block{
+				margin-left:0;
+			}
+			.layui-form-item:after {
+			    content: '\20';
+			    clear: both;
+			    display: block;
+			    height: 0;
+			}
+			.layui-form-item {
+			    margin-bottom: 15px;
+			    clear: both;
+			}
+			.pane .layui-form-label {
+			    width: 110px;
+			    padding: 8px 15px;
+			    height: 38px;
+			    line-height: 20px;
+			    border-width: 1px;
+			    border-style: solid;
+			    border-radius: 2px 0 0 2px;
+			    border-color:#e6e6e6;
+			    text-align: center;
+			    background-color: #FBFBFB;
+			    overflow: hidden;
+			    white-space: nowrap;
+			    text-overflow: ellipsis;
+			    box-sizing: border-box;
+			    margin-right:-1;
+			}
+			/* .pane .layui-input-block {
+			    margin-left: 150px;
+			} */
+			.pane .layui-input {
+			    border-radius: 0 2px 2px 0;
+			}
+			.layui-input, .layui-select, .layui-textarea {
+			    height: 38px;
+			    line-height: 1.3;
+			    line-height: 38px\9;
+			    border-width: 1px;
+			    border-style: solid;
+			    background-color: #fff;
+			    border-radius: 2px;
+			}
+			.pane select{
+				width:300px;
+				height:38px;
+				border:1px solid #e6e6e6;
+			}
+			.pane select option{
+				height:36px;
+				line-height:36px;
+			}
+			body .modle-wrap{
+			    position: fixed;top: 0;right: 0;bottom: 0;left: 0;z-index: 1040;width: 100%;height: 100%;
+			}
+			body .modle-container{
+			    background:rgba(0, 0, 0, 0.5) none repeat scroll 0 0 !important;position: relative; width: 100%; height: 100%;
+			}
+			.layerLqd{
+				    background: #fff;
+			    width: 750px;
+			    left: 50%;
+			    margin-left: -375px;
+			    position: relative;
+			    top: 10px;
+			    max-height:450px;
+			    overflow-y:scroll;
+			    max-height:100%;
+			}
+			.btnDiv{
+				text-align:center;
+				padding:20px 0;
+			}
+			.btnDiv .btn{
+				width:140px;
+				border:1px solid #009688;
+			}
+			.btnDiv .btn.bgWhite{
+				background:#fff;
+				color:#009688;
+			}
+			.h1Title{
+				height:50px;
+				line-height:50px;
+				font-size: 16px;
+				color: #15BC9C;
+				text-align: left;
+				border-bottom:1px solid #15BC9C;
+				padding-left:20px;
+			}
+			.h1Title.fixed{
+				width:760px;
+			}
+			.h1Title i{
+				color:#009688;font-size:22px;
+				margin-right:15px;
+				float:right;
+				cursor: pointer;
+			}
+			.left {
+				width:400px;
+				
+				float:left;
+			}
+			.leftBox {
+				border:1px solid #ccc;
+				min-height:240px;
+				padding:5px;
+				overflow-x: hidden;
+   				overflow-y: scroll;
+			}
+			.right{
+				width:295px;
+				float:right;
+				margin-right:0px;
+			}
+			.right .top select{
+				width:100%;
+				height:36px;
+			}
+			.right .top input{
+				width:100%;
+				height:30px;
+			}
+			.top input{
+				width:100%;
+				height:30px;
+			}
+			.clearfix:after{display:block;clear:both;content:"";visibility:hidden;height:0};
+   			.clearfix{zoom:1};
+   			.lineBox{
+   			      position: relative!important;
+   			}
+   			.lineBox .field{
+   				font-size:14px;
+   				line-height:24px;
+   				cursor: pointer;
+   			}
+   			.lineBox .field.on{
+   				color:#009688;
+   			}
+   			.lineBox .layerBox{
+   				max-width:250px;
+   				display:none;
+   				border:1px solid #ccc;
+   				padding:5px;
+   				background:#e6e6e6;
+   				position: absolute;
+   				top:0;
+   				z-index:100;
+   				margin-left:10px;
+   			}
+   			.lineBox .icon{
+   				display:none;
+   			}
+   			.lineBox:hover .icon{
+   				display:inline-block;
+   			}
+   			.lineBox:hover .layerBox{
+   				display:inline-block;
+   			}
+   			.textareaJson{
+   				width:100%;
+   				min-height:200px;
+   				border:1px solid #e6e6e6;
+   				
+   			}
+   			[v-cloak] {
+				display: none;
+			}
+			.rightBox{
+				width:100%;
+				min-height:250px;
+				border:1px solid #ccc;
+			}
+			.layui-input-block.relative{
+				position:relative;
+			}
+			.layui-input-block.relative span,.layui-input-block.relative i{
+				display:none;
+			}
+			.layui-input-block.relative span{
+				width: 350px;
+			    position: absolute;
+			    color: black;
+			    padding: 8px;
+			}
+			.layui-input-block.relative:hover i,.layui-input-block.relative:hover span{
+				display:inline-block;
+			}
+		</style>
+	</head>
+
+	<body class="childrenBody" style="padding:20px 0 10px 20px">
+		<div id="app" v-cloak>
+			<input type="hidden" id="tplCode">
+			<input type="hidden" id="appId">
+			<input type="hidden" id="tplName">
+			<input type="hidden" id="obj">
+			<form class="layui-form layui-form-pane" name="form1" id="form1">
+				<!-- <blockquote class="layui-elem-quote quoteBox">
+					<div class="layui-form-item title" style="margin-bottom:0;">归属模板：文章动态搜索（search-dongtai)</div>
+				</blockquote> -->
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">字段名</label>
+				    <div class="layui-input-block">
+				     	 <input type="text" placeholder="请输入字段名" name="fieldName" class="layui-input" v-model="dataObj.fieldName">
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">字段描述</label>
+				    <div class="layui-input-block">
+				     	 <input type="text" placeholder="请输入字段描述" name="fieldComment" class="layui-input" v-model="dataObj.fieldComment">
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">字段类型</label>
+				    <div class="layui-input-block matchCode">
+				     	 <div name="select-main matchCode">
+							<input type="text" placeholder="请选择字段类型" readonly id="matchCode0"  :data-code="dataObj.typeName" name="fieldType" v-model="dataObj.fieldType" @click="optionSelectInput">	
+							<div class="layui-form-item selectBox" id="selectBox0"  v-if="optionSelectShow" @mouseleave="mouseleaveSelect">
+								<span v-for="list in getAllTypeList" :data-value="list.type" @click="optionSelect(list)">{{list.typeName}}({{list.type}})</span> 
+							</div>
+						</div>
+				    </div>
+				</div>
+			</form>
+			<form class="pane" name="form2" id="form2">
+				<div class="selectFieldBox" v-if="dataObjFieldType.userfullProperties">
+					<div class='layui-form-item' v-for="(fieldtype,index) in dataObjFieldType.userfullProperties">
+					    <label class="layui-form-label" >{{fieldtype.property}}属性</label>
+					    <div class="layui-input-block">
+					     	  <div class="layui-input-block relative" v-if="fieldtype.values"><!-- :disabled="fieldtype.onIndexTrue&&fieldtype.indexFlage?false:true" -->
+							      <select :name="fieldtype.property" @change="selectRechange(fieldtype)"  v-model="fieldtype.defaultVal" :disabled="selectDisabeld||fieldtype.indexFlage||!fieldtype.onIndexTrue?false:true">
+							      	<option v-for="op in fieldtype.values" :value="op">{{op}}</option>
+							      </select>
+							      <i class="layui-icon" style="color:#009688;">&#xe702;</i>
+							      <span  style="color:#009688;">{{fieldtype.comment}}</span>
+							   </div>
+							   <div class="layui-input-block relative" v-else>
+							      <input style="width:300px;display: inline-block;" type="text" style="width:300px" :name="fieldtype.property"  class="layui-input"  :disabled="selectDisabeld||fieldtype.indexFlage||!fieldtype.onIndexTrue?false:true" v-model="fieldtype.defaultVal" />
+							      <i class="layui-icon" style="color:#009688;">&#xe702;</i>
+							      <span  style="color:#009688;">{{fieldtype.comment}}</span>
+							   </div>
+					    </div>
+					</div>
+				</div>
+			</form>
+			<div v-if="extendPropertiesShow&&selectDisabeld">
+				<form class="layui-form layui-form-pane" name="form3" id="form3" >
+					<div class="layui-form-item">
+						<label class="layui-form-label">扩展属性</label>
+					    <div class="layui-input-block">
+					     	 <div class="layui-inline">
+					     	 	<a class="layui-btn" @click="extend">新增属性</a>
+					     	 </div>
+					     	 <div class="layui-inline">
+					     	 	<span style="line-height:36px;">(不同字段类型可添加不同属性)</span>
+					     	 </div> 
+					    </div>
+					</div>
+				    <table class="layui-table" v-if="extendTableShow" style="margin-bottom:15px;">
+				    	<thead>
+				    		<tr>
+				    			<th>属性</th>
+				    			<th>值</th>
+				    			<th>操作</th>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr v-for="list in extendTable">
+				    			<td>{{list.name}}</td>
+				    			<td>{{list.value}}</td>
+				    			<td>
+				    				<span class="layui-btn layui-btn-primary layui-btn-xs" @click="deleteFun(list)">
+							    		<i class="layui-icon">&#xe647;</i>删除
+							  		</span>
+				    			</td>
+				    		</tr>
+				    	</tbody>
+				    </table>
+				</form>
+			</div>
+			<div class="modle-wrap" v-if="editStatus">
+				<div class="modle-container">
+					<div class="layerLqd" style="background:#fff;">
+						<h1 class="h1Title">扩展属性 <i class="layui-icon" @click='colseEdit()'>&#x1006;</i></h1>
+						<form id="formExtend" class="pane" onsubmit="return false">
+						<div class="tableBox"> 
+							 	<div class="clearfix">
+							 		<div class="left">
+								 		<h5>字段名称</h5>
+								 		<div class="leftBox">
+								 			<div class="lineBox" style="position: relative!important;" v-for="(fieldtype,index) in dataObjFieldType.extendProperties" @click="extendFun(fieldtype,index)">
+								 				<span class="field" :class="{on:onIndex==index}">{{fieldtype.property}}</span>
+								 				<i class="layui-icon icon">&#xe702;</i>
+								 				<div class="layerBox">{{fieldtype.comment}}</div>
+								 			</div>
+								 		</div>
+									 </div>
+									 <div class="right">
+									 	<h5>可选值</h5>
+									 	<div class="rightBox">
+										 	<div v-show="extendObj.values">
+											 	<div class="top" >
+											 		<select :name="extendObj.property" v-model="extendObj.defaultVal">
+												 		<option v-for="list in extendObj.values" :value="list">{{list}}</option>
+												 	</select>
+											 	</div>
+										 	</div>
+										 	<div v-else>
+										 		<h5>值</h5>
+											 	<div class="top">
+											 		<input type="text" name="extendObj.property" v-model="extendObj.defaultVal" />
+											 	</div>
+										 	</div>
+									 	</div>
+									 </div>
+							 	</div>
+								 <div class="layui-form-item btnDiv">
+									<div class="layui-inline">
+										<a class="layui-btn btn"  data-type="reload" @click="extendSave">确定</a>
+									</div>
+									<div class="layui-inline">
+										<a class="layui-btn btn bgWhite"  @click='colseEdit()'>取消</a>
+									</div>
+								</div>
+							</div> 
+						</form>
+					</div>	
+				</div>
+			</div><!-- 弹层结束 -->
+			<form class="layui-form layui-form-pane">
+				<div class='layui-form-item'>
+					 <label class="layui-form-label">模板类容</label>
+				    <div class="layui-input-block">
+				     	 <div name="select-main matchCode">
+							<div class="layui-inline">
+					     	 	<a class="layui-btn" @click="scane">点击刷新模板内容</a>
+					     	 </div>
+						</div>
+				    </div>
+				</div>
+				<div class='layui-form-item' style="margin-bottom:0;">
+					<label class="layui-form-label" style="border:0;background:#fff;"></label>
+				    <div class="layui-input-block"  >
+				     	 <textarea readonly v-if="textareaJsonShow" class="textareaJson" v-model="JSON.stringify(endSubmitObj)" style="display:none;"></textarea>
+				     	 <div id="jsonGS" style="min-height:300px;overflow-y:auto;" class="layui-input">
+				     	 	<pre>{{result1}}</pre>
+				     	 </div>
+				    </div>
+				</div>
+			</form>
+			<div class='layui-form-item' style="margin-top:20px;">
+				<div class='layui-form-item' style="text-align:center;">
+				    <!-- <div class="layui-inline">
+				     	 <a class="layui-btn" style="width:100px;">保存</a>
+				    </div> -->
+				    <div class="layui-inline">
+				     	 <a class="layui-btn" style="width:100px;" @click="submitFun">保存</a>
+				    </div>
+				</div>
+			</div>
+		</div>
+		<a><span id='btn' onclick='btnClick()'></span></a>
+	</body>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script type="text/javascript" src="/assets/common/vue/vue.js"></script>
+	<script>
+		function btnClick(){
+			layui.use(['form'], function() {
+				var form = layui.form,
+					$ = layui.jquery;
+				var vm=new Vue({
+					el:'#app',
+					data:{
+						editStatus:false,
+						dataObj:{},
+						dataObjList:{},
+						dataObjFieldType:{},
+						getAllTypeList:[],
+						optionSelectShow:false,
+						matchCodeSelect:'',
+						propertiesShow:false,
+						editStatus:false,
+						extendObj:{},
+						selectDisabeld:false,
+						extendPropertiesShow:false,
+						onIndex:null,
+						extendForm:{},
+						extendTable:[],
+						extendTableShow:false,
+						textareaJsonShow:false,
+						extendFormSubmit:{},
+						endSubmitObj:{},
+						result1:'',
+					},
+					created:function(){
+						var that=this;
+						that.getAllType();
+						if($("#obj").val()) that.dataObj=JSON.parse($("#obj").val());
+						form.render();
+					},
+					undated:function(){
+						form.render();
+					},
+					mounted:function(){
+						//$(".textareaJson").numberedtextarea();
+						form.render();
+					},
+					methods:{
+						getAllType:getAllType,
+						optionSelectInput:optionSelectInput,
+						mouseleaveSelect:mouseleaveSelect,
+						optionSelect:optionSelect,
+						getResultGet:getResultGet,
+						radioFun:radioFun,
+						submitFun:submitFun,
+						serializeObject:serializeObject,
+						getResultPost:getResultPost,
+						colseEdit:colseEdit,
+						extend:extend,
+						optionSelectInput:optionSelectInput,
+						extendFun:extendFun,
+						selectRechange:selectRechange,
+						extendSave:extendSave,
+						deleteFun:deleteFun,
+						scane:scane,
+					}
+				})
+				 function scane(){
+					vm.textareaJsonShow=true;
+					var obj1 = vm.serializeObject($("#form1").serializeArray());
+					var old = {appId:$("#appId").val(),docCode:$("#tplCode").val(),docName:$("#tplName").val()};
+					var obj2 = vm.serializeObject($("#form2").serializeArray());
+					var extendMapObj={},newObj={};
+					if(Object.assign){
+						newObj=Object.assign(old,obj1);
+					}else{
+						newObj=$.extend({},old, obj1)
+					}
+					if(Object.assign){
+						extendMapObj=Object.assign(obj2,vm.extendFormSubmit);
+					}else{
+						extendMapObj=$.extend({},obj2,vm.extendFormSubmit);
+					}
+					vm.endSubmitObj=newObj;
+					vm.endSubmitObj.extendMapObj=extendMapObj;
+					vm.result1 = JSON.stringify(vm.endSubmitObj, null, 4);
+				}
+				function deleteFun(list){
+					vm.extendTable.forEach(function(v,i) {
+						if(v.name==list.name){
+							var indexopen=layer.open({
+						        type: 1
+						        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+						        ,btn: ['确定','取消']
+						        ,btnAlign: 'c' //按钮居中
+						        ,shade: 0 //不显示遮罩
+								,btn2: function(layero){//bt1的按钮
+						        	  layer.close(indexopen);  
+						        },
+						        yes: function(index, layero){
+						        	layer.msg("删除成功");
+						        	vm.extendTable.splice(i, 1);
+						        	layer.close(indexopen);
+						        	if(vm.extendTable.length==0){
+						        		vm.extendTableShow=false;
+						        	}
+						        }	
+						      });
+						}
+					});
+					
+				}
+				function extendSave(){
+					//if()
+					if(JSON.stringify(vm.extendObj)=='{}'){
+						layer.msg("请选择字段");
+						return;
+					}
+					vm.extendForm={};
+					var obj = vm.serializeObject($("#formExtend").serializeArray());
+					if(Object.assign){
+						vm.extendFormSubmit=Object.assign(vm.extendFormSubmit,obj);
+					}else{
+						vm.extendFormSubmit=$.extend({},vm.extendFormSubmit,obj);
+					}
+					for (var p in obj){
+							vm.extendForm.name=p;
+							vm.extendForm.value=obj[p];
+					}
+					console.log(vm.extendForm,"vm.extendForm")
+					var sum=0;
+					for(var i=0;i<vm.extendTable.length;i++){
+						if(vm.extendTable[i].name==vm.extendForm.name){
+							layer.msg("该属性已添加，将自动修改改属性的值");
+						    vm.extendTable[i].value=vm.extendForm.value;
+						}else{
+							sum++;
+						}
+					}
+					if(sum==vm.extendTable.length) vm.extendTable.push(vm.extendForm);
+					vm.editStatus=false;
+					vm.extendTableShow=true;
+				}
+				function selectRechange(list){
+					if(list.property=='index'){
+						console.log(list,"index",list.defaultVal);
+						if(list.defaultVal==true){
+							vm.selectDisabeld=true;
+							console.log(list.defaultVal,"list.defaultVal")
+							console.log(vm.selectDisabeld,"rechange1");
+						}else if(list.defaultVal==false){
+							vm.selectDisabeld=false;
+							console.log(list.defaultVal,"list.defaultVal2")
+							console.log(vm.selectDisabeld,"rechange2");
+						}
+					}
+					form.render();
+				}
+				function extendFun(item,index){
+					vm.extendObj=item;
+					vm.onIndex=index;
+				}
+				function extend(){
+					vm.editStatus=true;
+				}
+				function colseEdit(){
+					vm.editStatus=false;
+				}
+				function serializeObject(a) {
+			        var o = {};
+			        a.forEach(function(v,i) {
+			            if (o[v.name]) {
+			                if (!o[v.name].push) {
+			                    o[v.name] = [ o[v.name] ];
+			                }
+			                o[v.name].push(v.value || '');
+			            } else {
+			                o[v.name] = v.value || '';
+			            }
+			        });
+			        return o;
+			    };
+				function submitFun(){
+					var obj1 = vm.serializeObject($("#form1").serializeArray());
+					var obj2 = vm.serializeObject($("#form2").serializeArray());
+					var old = {appId:$("#appId").val(),docCode:$("#tplCode").val(),docName:$("#tplName").val()}
+					var newObj = {},extendMapObj={};
+					if(Object.assign){
+						newObj=Object.assign(old,obj1);
+					}else{
+						newObj=$.extend({},old, obj1)
+					}
+					
+					if(Object.assign){
+						extendMapObj=Object.assign(obj2,vm.extendFormSubmit);
+					}else{
+						extendMapObj=$.extend({},obj2,vm.extendFormSubmit)
+					}
+					vm.endSubmitObj=newObj;
+					vm.endSubmitObj.extendMapObj=extendMapObj;
+					getResultPost('/template/field/add',vm.endSubmitObj,function(d){
+						layer.msg("提交成功");
+						setTimeout(()=>{
+							var index=parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						},500);
+					}.bind(this))
+				}
+				function radioFun(fieldtype,booleanV){
+					fieldtype.defaultVal=booleanV;
+				}
+				function optionSelect(list){
+					vm.dataObj.fieldType=list.type;
+					vm.dataObjFieldType=list;
+					console.log(vm.dataObjFieldType,"obj");
+					vm.extendTable=[];
+					vm.optionSelectShow=false;
+					vm.extendTableShow=false;
+					vm.extendObj={};
+					vm.onIndex=null;
+					if(vm.dataObjFieldType.extendProperties.length){
+						vm.extendPropertiesShow=true;
+					}else{
+						vm.extendPropertiesShow=false;
+					}
+					if(vm.dataObjFieldType.userfullProperties){
+						for(let v of vm.dataObjFieldType.userfullProperties) {
+						  	 if(v.property=='index'){
+						  		Vue.set(v,"indexFlage",true);
+						  		if(v.defaultVal==true){
+						  			vm.selectDisabeld=true;
+						  		}else{
+						  			vm.selectDisabeld=false;
+						  		}
+						  	} 
+						} 
+					}
+				}
+				
+				function mouseleaveSelect(){
+					vm.optionSelectShow=false;
+				}
+				function optionSelectInput(){
+					vm.optionSelectShow=true;
+				}
+				function getAllType(){
+					getResultGet('/template/field/filed/alltype','',function(d){
+						vm.getAllTypeList=d.data;
+					}.bind(this))
+				}
+				function getResultGet(url, prams, sufn) {
+					var index = layer.load(2, {shade: 0.01});
+				    $.ajax({
+				        url:  url,
+				        data: prams,
+				        type: 'get',
+				        dataType: 'json',
+				        cache:false,
+				        success: function(d) {
+				        	layer.close(index);
+				        	if(d.code==0) {
+				        		if('function' === typeof sufn) sufn(d);
+				        	}else {
+				        		layer.msg(d.errorMsg);
+				        	}
+				        },
+					    error:function(){
+					    	layer.close(index);
+							layer.msg("请求出错");
+						}
+				    });
+				};
+				function getResultPost(url, prams, sufn) {
+					var index = layer.load(2, {shade: 0.01});
+				    $.ajax({
+				        url:  url,
+				        data: JSON.stringify(prams),
+				        type: 'post',
+				        contentType:'application/json',
+				        dataType: 'json',
+				        cache:false,
+				        success: function(d) {
+				        	layer.close(index);
+				        	if(d.code==0) {
+				        		if('function' === typeof sufn) sufn(d);
+				        	}else {
+				        		layer.msg(d.errorMsg);
+				        	}
+				        },
+					    error:function(){
+					    	layer.close(index);
+							layer.msg("请求出错");
+						}
+				    });
+				};
+			});
+		}
+	</script>
+
+</html>

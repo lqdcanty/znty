@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>索引模板管理</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				padding: 9px 10px 0 0;
+			}
+			.layui-form-item {
+				margin-bottom: 10px
+			}
+.layui-elem-quote.quoteBox{
+				border-left:none!important;
+			}
+			.width182{
+				width:210px!important;
+			}
+			.width182 input{
+				width:210px!important;
+			}	
+			table{
+				width:100%!important;
+			}
+			.layui-table-cell{
+				padding:0 5px!important;
+			}	
+			
+			</style>
+	</head>
+
+	<body class="childrenBody">
+		<blockquote class="layui-elem-quote quoteBox">
+			<form class="layui-form">
+				<div class='layui-form-item mb0'>
+					<div class="layui-inline">
+						<label class="layui-form-label">应用</label>
+						<div class="layui-inline width182">
+							<select id="appId">
+								<option value="">全部</option>
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">关键词</label>
+						<div class="layui-inline width182">
+							<input class="layui-input" id="keyword" placeholder="模板编号、模板名、模板描述" autocomplete="off">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">状态</label>
+						<div class="layui-inline width182">
+							<select id="status">
+								<option value="">全部</option>
+								<option value="pass">审核通过</option>
+								<option value="wait_audit">待审核</option>
+								<option value="true">正常</option>
+								<option value="false">锁定</option>
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-btn" id="search" style='margin-left: 20px'>搜索</label>
+					</div>
+				</div>
+				
+			</form>
+		</blockquote>
+		<div class="layui-form-item" >
+			<div class="layui-inline">
+				<span class="layui-btn" id="apply_indexes" lay-event="apply">
+		    		申请索引模板
+		  		</span>
+			</div>
+		</div>
+		<table class="layui-hide" id="tableDemo" lay-filter="tableDemo"></table>
+		<div id='pageWrap'></div>
+	</body>
+	<script type="text/html" id="btnBar">
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">
+    		<i class="layui-icon">&#xe647;</i>详情
+  		</span>
+		{{# if(d.auditStatus !== 'pass'){ }}
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">
+    		<i class="layui-icon">&#xe647;</i>编辑
+  		</span>
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">
+    		<i class="layui-icon">&#xe647;</i>删除
+  		</span>
+		{{# } }}
+		{{# if(d.auditStatus == 'reject'){ }}
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="apply">
+    		<i class="layui-icon">&#xe647;</i>提交申请
+  		</span>
+		{{# } }}
+		{{# if(d.auditStatus == 'wait_audit'){ }}
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="auditing">
+    		<i class="layui-icon">&#xe647;</i>审核
+  		</span>
+		{{# } }}
+		
+		
+	</script>
+	<script type="text/html" id="auditStatusT">
+		{{# if(d.auditStatus == 'wait_audit'){ }}
+		<span style="color: #1E9FFF">待审批</span>
+        {{# } else if(d.auditStatus == 'pass'){ }}
+		<span style="color: #5cb85c;">审批通过</span> 
+        {{# } else if(d.auditStatus == 'reject') { }}
+		<span style="color:#FF5722">驳回</span>
+ 		{{# } }}
+	</script>
+
+	<script id="endDate" type="text/html">
+		{{getDate(d.gmtCreate)}}
+	</script>
+
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script>
+		var width,height,indexclose;
+		if(document.body.clientWidth<1500){
+			width='950px';
+			height="550px";
+		}else{
+			width='950px';
+			height="750px";
+		}
+		
+		layui.use(['table', 'form', 'layedit', 'laydate','laypage','layer'], function() {
+			var table = layui.table;
+			var form = layui.form;
+			var layedit = layui.layedit;
+			var laydate = layui.laydate;
+			var laypage=layui.laypage;
+			var layer = layui.layer;
+			var limit = 1000;
+			var pageNumber = 1;
+			var pageSize=10;
+			//日期
+			laydate.render({
+				elem: '#startTime'
+			});
+			laydate.render({							
+				elem: '#endTime'
+			});
+			//展示已知数据
+			
+			
+				
+				var tableIns=table.render({
+					elem: '#tableDemo',
+					id: 'tableDemo',
+				
+					cols: [
+						[
+						{
+							field: 'id',
+							title: '序号',
+							width: 60,
+						},
+						{
+							field: 'appId',
+							title: '应用ID',
+							width: 100
+						},
+						 {
+								field: 'tplCode',
+								title: '模板编号',
+								width: 200
+							},
+							{
+								field: 'tplName',
+								title: '模板名',
+								width: 200
+							},
+							/* {
+								field: 'tplDesc',
+								title: '模板说明',
+								width: 250
+							}, */
+							 {
+								field: 'isLock',
+								title: '锁定状态',
+								templet: function(d){
+									return '<input type="checkbox" name="zzz" lay-skin="switch" lay-filter="sysDispaly" lay-text="锁定|未锁定" '+isDisplay(d.isLock)+' data-tplcode="'+d.tplCode+'" data-appId="'+d.appId+'">'
+								},
+								width: 80
+							},
+							{
+								field: 'auditStatus',
+								title: '状态',
+								templet: '#auditStatusT',
+								width: 80
+							},
+							 {
+								field: 'applyUserId',
+								title: '申请者账号',
+								width: 80
+							}, 
+							 {
+								field: 'modifyUserId',
+								title: '修改者账号',
+								width: 90
+							},
+							 /* {
+								field: 'forecastDataSize',
+								title: '预测数据规模',
+								width: 150
+							}, */
+							 {
+								title: '操作',
+								templet:'#btnBar',
+								fixed: "right",
+								width: 400
+							}
+							
+						]
+					],
+				});
+			
+			getData(pageNumber, pageSize);
+			getList();
+			function getList(){
+				var index = layer.load(2, {
+					shade: false
+				});
+				$.ajax({
+					type: 'get',
+					url: "/app/list/avalible",
+					cache: false,
+					data: {
+						pageNumber: 1,
+						pageSize: 9999
+					},
+					success: function(obj) {
+						layer.close(index);
+						for(var i=0;i<obj.data.list.length;i++){
+							$("#appId").append('<option value="'+obj.data.list[i].appId+'">'+obj.data.list[i].appId+'('+obj.data.list[i].appName+')</option>');
+						}
+						form.render("select");
+						if(obj.code != 0) {
+							layer.alert(obj.errorMsg, {
+								icon: 2
+							});
+							return;
+						}
+					}
+				})
+			}
+			function isDisplay(status) {
+				 
+				if(status == true) {
+					
+					return 'checked'
+				} else {
+					
+					return ''
+				} 
+			}
+			table.on('tool(tableDemo)', function(obj) {
+				var layEvent = obj.event,
+					data = obj.data;
+				if(layEvent == 'detail') { //编辑
+					var index = layer.open({
+						title: "详情",
+						type: 2,
+						content: "indexes_detail.html",
+						id: 'indexesDetail',
+						area: [width, "450px"],
+						success: function(layero, index) {
+							var body = layui.layer.getChildFrame('body', index);
+							body.find('#dataObj').val(JSON.stringify(data));
+							body.find('#tplCode').val(data.tplCode);
+							body.find('#appId').val(data.appId);
+							body.find('#btn').click();
+						}
+					})
+					layui.layer.full(index);
+					$(window).on("resize", function() {
+						layui.layer.full(index);
+					})
+				}else if(layEvent == 'edit'){
+					var index = layer.open({
+						title: "编辑",
+						type: 2,
+						content: "apply_indexes.html",
+						id: 'applyIndexes',
+						area: [width, height],
+						success: function(layero, index) {
+							var body = layui.layer.getChildFrame('body', index);
+							body.find('#dataObj').val(JSON.stringify(data));
+							body.find('#submitBtn').hide();
+							body.find('#saveBtn').show();
+							body.find('#tplCode').attr('readonly',true);
+							body.find('#tplCode').attr('style','background:#ccc');
+							body.find('#appId').attr('readonly',true);
+							body.find('#appId').attr('style','background:#ccc');
+							body.find('#btn').click();
+						},
+						end:function(){
+							getData(pageNumber, pageSize);
+						}
+					})
+					layui.layer.full(index);
+					$(window).on("resize", function() {
+						layui.layer.full(index);
+					})
+				}else if(layEvent == 'auditing'){
+					var index = layui.layer.open({
+						title: "申请",
+						type: 2,
+						content: "indexes_auditing.html",
+						id: 'indexesAuditing',
+						area: [width, '300px'],
+						success: function(layero, index) {
+							var body = layui.layer.getChildFrame('body', index);
+							body.find('#appId').val(data.appId);
+							body.find('#tplCode').val(data.tplCode);
+							body.find('#dataObj').val(JSON.stringify(data));
+							
+							body.find('#btn').click();
+						},
+						end:function(){
+							getData(pageNumber, pageSize);
+						}
+					})
+					layui.layer.full(index);
+					$(window).on("resize", function() {
+						layui.layer.full(index);
+					})
+				}else if(layEvent == 'apply'){
+					 layer.open({
+				        type: 1
+				        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+				        ,btn: ['确定','取消']
+				        ,btnAlign: 'c' //按钮居中
+				        ,shade: 0 //不显示遮罩
+						,btn2: function(layero){//bt1的按钮
+				        	  layer.closeAll();  
+				        },
+				        yes: function(index, layero){
+				        	layer.closeAll();
+				        	  $.get("/template/replay/apply", {
+				        		  	appId:data.appId,
+				        		  	tplCode:data.tplCode 
+								}, function(data) {
+									if(data.code == 0) {
+										layer.msg("提交成功");
+										getData(pageNumber, pageSize);
+										return;
+									} else {
+										layer.msg(data.errorMsg);
+									}
+								})
+			        	  }
+				      });
+				}else if(layEvent == 'delete'){
+					layer.open({
+				        type: 1
+				        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+				        ,btn: ['确定','取消']
+				        ,btnAlign: 'c' //按钮居中
+				        ,shade: 0 //不显示遮罩
+						,btn2: function(layero){//bt1的按钮
+				        	  layer.closeAll();  
+				        },
+				        yes: function(index, layero){
+				        	layer.closeAll();
+				        	  $.get("/template/del", {
+				        		  tplCode:data.tplCode,
+				        		  appId:data.appId 
+								}, function(data) {
+									if(data.code == 0) {
+										layer.msg("删除成功");
+										getData(pageNumber, pageSize);
+										return;
+									} else {
+										layer.msg(data.errorMsg);
+									}
+								})
+			        	  }
+				      });
+				}
+				
+			})
+			
+			form.on('switch(sysDispaly)', function(data) {
+			console.log(data,"dat")
+				layer.open({
+			        type: 1
+			        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+			        ,btn: ['确定','取消']
+			        ,btnAlign: 'c' //按钮居中
+			        ,shade: 0 //不显示遮罩
+					,btn2: function(layero){//bt1的按钮
+						 data.elem.checked=!data.elem.checked;
+			        	  form.render('checkbox');
+			        	  layer.closeAll();  
+			        },
+			        yes: function(index, layero){
+			        	layer.closeAll();
+			        	  $.get("/template/lock", {
+			        		  	tplCode:data.elem['dataset'].tplcode,
+			        		  	appId:data.elem['dataset'].appid,
+								isLock: data.elem.checked ? true : false
+							}, function(data) {
+								if(data.code == 0) {
+									form.render('checkbox');
+									layer.msg("修改成功");
+									return;
+								} else {
+									data.elem.checked=!data.elem.checked;
+						        	 form.render('checkbox');
+									layer.msg(data.errorMsg);
+								}
+							})
+		        	  }
+			        ,cancel: function(){ 
+		        	    //右上角关闭回调
+		        	    data.elem.checked=!data.elem.checked;
+		        	    form.render('checkbox');
+		        	   // return false 开启该代码可禁止点击该按钮关闭
+		        	  }
+			      });
+			}); 
+			
+			//获取列表数据
+				function getData(pageNumber, pageSize) {
+					var status = $('#status').val();
+					var keyword = $('#keyword').val();
+					var appId = $("#appId").val();
+					var index = layer.load(2, {
+						shade: false
+					}); //0代表加载的风格，支持0-2
+				
+					$.ajax({
+						type: 'get',
+						url: "/template/list",
+						cache: false,
+						data: {
+							status: status,
+							keyword: keyword,
+							appId:appId,
+							pageNumber: pageNumber,
+							pageSize: pageSize,
+							fresh: Math.random()
+						},
+						success: function(obj) {
+							layer.close(index);
+							if(obj.code != 0) {
+								layer.alert(obj.errorMsg, {
+									icon: 2
+								});
+								return;
+							}
+							tableIns.reload({
+								data: obj.data.list
+							});
+							laypage.render({
+								elem: 'pageWrap',
+								count: obj.data.allRow,
+								curr: obj.data.currentPage,
+								layout: ['count', 'prev', 'page', 'next', 'skip'],
+								jump: function(res, first) {
+									console.log(first);
+									console.log(res);
+									if(!first) {
+										pageNumber=res.curr;
+										getData(res.curr, pageSize);
+									}
+								}
+							});
+						}
+					})
+				}
+			$('#search').on('click', function() {
+				getData(1, 10);
+			});
+			$("#apply_indexes").on('click',function(){
+				var indexopen = layer.open({
+					title: "申请索引",
+					type: 2,
+					content: "apply_indexes.html",
+					id: 'applyIndexes',
+					area: [width, height],
+					success: function(layero, index) {
+						var body = layui.layer.getChildFrame('body', index);
+						body.find('#submitBtn').show();
+						body.find('#saveBtn').hide();
+						body.find('#btn').click();
+					},
+					end:function(){
+						getData(pageNumber, pageSize);
+					}
+				})
+				layer.full(indexopen);
+				$(window).on("resize", function() {
+					layer.full(indexopen);
+				})
+			})
+		});
+	</script>
+
+</html>

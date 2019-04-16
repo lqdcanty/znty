@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>审核</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				width:150px!important;
+			}
+			.layui-form-pane .layui-input-block{
+				margin-left:150px;
+			}
+			.textareaBox{
+			    min-height: 130px;
+			    padding: 5px;
+			    width: 98%;
+			    border-color: #e6e6e6;
+			}
+			
+		</style>
+	</head>
+
+	<body class="childrenBody" >
+		<div id="app">
+			<input type='hidden' id='appId'>
+			<input type='hidden' id='addIframIndex'>
+			<div class="tableBox">
+				<table class="tableWidth">
+				    <tr>
+				        <td class='infoItem'>应用ID</td>
+						<td class='valueWidth'>{{calllogInfo.appId}}</td>
+						<td class='infoItem'>应用名</td>
+						<td class='valueWidth'>{{calllogInfo.appName}}</td>
+					</tr>
+					<tr>
+						<td class='infoItem'>序列号</td>
+						<td class='valueWidth'>{{calllogInfo.appKey}}</td>
+						<td class='infoItem'>密钥</td>
+						<td class='valueWidth'>{{calllogInfo.appSecret}}</td>
+					</tr>
+					<tr >
+						<td class='infoItem'>申请描述</td>
+						<td class='valueWidth'>{{calllogInfo.applyDesc}}</td>
+						<td class='infoItem'>是否锁定</td>
+						<td class='valueWidth'>
+							<span v-if="calllogInfo.isLock==true">锁定</span>
+							<span v-else>未锁定</span>
+						</td>
+					</tr>
+					<tr >
+						<td class='infoItem'>申请账号</td>
+						<td class='valueWidth'>{{calllogInfo.applyUserId}}</td>
+						<td class='infoItem'>申请用户名</td>
+						<td class='valueWidth'>{{calllogInfo.applyUserName}}</td>
+					</tr>
+					<tr >
+					    <td class='infoItem'>申请时间</td>
+						<td class='valueWidth'>{{calllogInfo.applyTimeStr}}</td>
+						<td class='infoItem'>创建时间</td>
+						<td class='valueWidth'>{{calllogInfo.gmtCreateStr}}</td>
+					</tr>
+					<tr >
+						
+						<td class='infoItem'>修改时间</td>
+						<td class='valueWidth'>{{calllogInfo.gmtModifiedStr}}</td>
+					</tr>
+				</table>
+			</div>
+			<form class="layui-form layui-form-pane" style="padding:0px 0 10px 20px">
+				<div class='layui-form-item'>
+				    <label class="layui-form-label" style="height:142px">申请描述</label>
+				    <div class="layui-input-block">
+				     	 <textarea class="textareaBox" placeholder="请输入申请描述" class="layui-input" v-model="applyData.auditDesc"></textarea>
+				    </div>
+				</div>
+				<div class='layui-form-item' style="text-align:center;">
+				
+				    <div class="layui-inline">
+				     	 <a class="layui-btn" style="width:100px;" @click="reject" id="reject">驳回</a>
+				    </div>
+				    <div class="layui-inline">
+				     	 <a class="layui-btn" style="width:100px;" @click="pass"  id="pass">通过</a>
+				    </div>
+				</div>
+			</form>
+		</div>
+		<a><span id='btn' onclick='btnClick()'></span></a>
+	</body>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script type="text/javascript" src="/assets/common/vue/vue.js"></script>
+		<script type="text/javascript">
+			
+			function btnClick() {
+				layui.use(['table', 'form', 'layedit', 'laydate','laypage'], function() {
+					var table = layui.table;
+					var form = layui.form;
+					var layedit = layui.layedit;
+					var laydate = layui.laydate;
+					var $ = layui.jquery;
+					var vm = new Vue({
+						el: '#app',
+						data: {
+							applyData:{
+								auditDesc:''
+							},
+							calllogInfo: {},
+							status: true,
+						},
+						created: function() {
+							var that = this;
+							 var unitModel = $("#addIframIndex").val();
+							if(unitModel != undefined && unitModel != null &&
+									unitModel != '') {
+								that.calllogInfo = JSON.parse(unitModel);
+							} 
+						},
+						updated:function(){
+							var that=this;
+							
+						},
+						mounted:function(){
+							var that=this;
+							form.render("checkbox");	
+						},
+						methods:{
+							reject:reject,
+							pass:pass,
+							getResultMethodsOther:getResultMethodsOther,
+						}
+					})
+					 function reject(){
+						getResultMethodsOther('/app/audit',{appId:$("#appId").val(),auditStatus:'reject',auditDesc:vm.applyData.auditDesc},function(d){
+							if(d.data){
+								layer.msg("审批成功")
+								setTimeout(()=>{
+									var index=parent.layer.getFrameIndex(window.name);
+									parent.layer.close(index);
+								},500)
+							}
+						}.bind(this))
+						
+					} 
+					function pass(){
+						 getResultMethodsOther('/app/audit',{appId:$("#appId").val(),auditStatus:'pass',auditDesc:vm.applyData.auditDesc},function(d){
+							 if(d.data){
+								 layer.msg("审批成功")
+								 setTimeout(()=>{
+									var index=parent.layer.getFrameIndex(window.name);
+									parent.layer.close(index);
+								},500); 
+							 }
+						}.bind(this)) 
+					}
+					function getResultMethodsOther(url, prams, sufn) {
+						var index = layer.load(2, {shade: 0.01});
+					    $.ajax({
+					        url:  url,
+					        data: prams,
+					       /*  contentType:'application/json', */
+					        type: 'get',
+					        dataType: 'json',
+					        cache:false,
+					        success: function(d) {
+					        	layer.close(index);
+					        	if(d.code==0) {
+					        		if('function' === typeof sufn) sufn(d);
+					        	}else {
+					        		layer.msg(d.errorMsg)
+					        	}
+					        },
+						    error:function(){
+						    	layer.close(index);
+								layer.msg("请求出错");
+							}
+					    });
+					};
+				})
+			}
+		</script>
+
+</html>

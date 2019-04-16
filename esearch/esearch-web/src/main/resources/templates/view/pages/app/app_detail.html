@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>详情</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="format-detection" content="telephone=no">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			[v-cloak] {
+				display: none;
+			}
+			
+			.icon-view .fa {
+				font-size: 34px;
+			}
+		
+		</style>
+	</head>
+
+	<body>
+		<div id='app'>
+			<input type='hidden' id='addIframIndex'>
+			<div class="tableBox">
+				<table class="tableWidth">
+				    <tr>
+				        <td class='infoItem'>应用ID</td>
+						<td class='valueWidth'>{{calllogInfo.appId}}</td>
+						<td class='infoItem'>应用名</td>
+						<td class='valueWidth'>{{calllogInfo.appName}}</td>
+					</tr>
+					<tr>
+						<td class='infoItem'>序列号</td>
+						<td class='valueWidth'>{{calllogInfo.appKey}}</td>
+						<td class='infoItem'>密钥</td>
+						<td class='valueWidth'>{{calllogInfo.appSecret}}</td>
+					</tr>
+					<tr >
+						<td class='infoItem'>申请描述</td>
+						<td class='valueWidth'>{{calllogInfo.applyDesc}}</td>
+						<td class='infoItem'>是否锁定</td>
+						<td class='valueWidth'>
+							<span v-if="calllogInfo.isLock==true">锁定</span>
+							<span v-else>未锁定</span>
+						</td>
+					</tr>
+					<tr >
+						<td class='infoItem'>申请账号</td>
+						<td class='valueWidth'>{{calllogInfo.applyUserId}}</td>
+						<td class='infoItem'>申请用户名</td>
+						<td class='valueWidth'>{{calllogInfo.applyUserName}}</td>
+					</tr>
+					<tr >
+						<td class='infoItem'>审批描述</td>
+						<td class='valueWidth'>{{calllogInfo.auditDesc}}</td>
+					</tr>
+					<tr >
+					    <td class='infoItem'>申请时间</td>
+						<td class='valueWidth'>{{calllogInfo.applyTimeStr}}</td>
+						<td class='infoItem'>审核通过时间</td>
+						<td class='valueWidth'>{{calllogInfo.auditPassTimeStr}}</td>
+					</tr>
+					<tr >
+						<td class='infoItem'>创建时间</td>
+						<td class='valueWidth'>{{calllogInfo.gmtCreateStr}}</td>
+						<td class='infoItem'>修改时间</td>
+						<td class='valueWidth'>{{calllogInfo.gmtModifiedStr}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<a><span id='btn' onclick='btnClick()'></span></a>
+		</body> 
+		<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+		<script type="text/javascript" src="/assets/common/vue/vue.js"></script>
+		
+		<script type="text/javascript">
+			function btnClick(){
+				layui.use(['layer', 'form'], function() {
+					var layer = layui.layer,
+			         form = layui.form,
+			         $ = layui.jquery;
+					//vue
+					var vm = new Vue({
+						el: '#app',
+						data: {
+							calllogInfo: {},
+							status: true,
+						},
+						created: function() {
+							var that = this;
+							 var unitModel = $("#addIframIndex").val();
+							if(unitModel != undefined && unitModel != null &&
+									unitModel != '') {
+								that.calllogInfo = JSON.parse(unitModel);
+							} 
+						},
+					})
+				});
+			}
+		</script>
+	
+</html>

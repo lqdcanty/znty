@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.efida.esearch.mapper.AppDocTplMapper">
+	<resultMap id="BaseResultMap"
+		type="com.efida.esearch.model.AppDocTpl">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="tpl_code" property="tplCode" jdbcType="VARCHAR" />
+		<result column="tpl_name" property="tplName" jdbcType="VARCHAR" />
+		<result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+		<result column="tpl_desc" property="tplDesc" jdbcType="VARCHAR" />
+		<result column="forecast_data_size" property="forecastDataSize"
+			jdbcType="BIGINT" />
+		<result column="apply_user_id" property="applyUserId"
+			jdbcType="VARCHAR" />
+		<result column="apply_user_name" property="applyUserName"
+			jdbcType="VARCHAR" />
+		<result column="audit_status" property="auditStatus"
+			jdbcType="VARCHAR" />
+		<result column="audit_pass_time" property="auditPassTime"
+			jdbcType="TIMESTAMP" />
+		<result column="is_lock" property="isLock" jdbcType="BIT" />
+		<result column="modify_user_id" property="modifyUserId"
+			jdbcType="VARCHAR" />
+		<result column="gmt_create" property="gmtCreate"
+			jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified"
+			jdbcType="TIMESTAMP" />
+		<result column="mapping_tpl_content"
+			property="mappingTplContent" jdbcType="LONGVARCHAR" />
+		<result column="data_tpl_content" property="dataTplContent"
+			jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, app_id, tpl_code, tpl_name, doc_code, tpl_desc,
+		forecast_data_size,
+		apply_user_id,
+		apply_user_name, audit_status,
+		audit_pass_time, is_lock, modify_user_id, gmt_create,
+		gmt_modified,mapping_tpl_content, data_tpl_content
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from app_doc_tpl
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="selectByAppIdAndDocTplCode"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from app_doc_tpl
+		where app_id = #{appId,jdbcType=VARCHAR} and
+		tpl_code=#{docTplCode,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		app_doc_tpl
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.efida.esearch.model.AppDocTpl">
+		insert into app_doc_tpl (id, app_id, tpl_code,
+		tpl_name,
+		doc_code, tpl_desc,
+		forecast_data_size, apply_user_id, apply_user_name,
+		audit_status, audit_pass_time, is_lock,
+		modify_user_id, gmt_create,
+		gmt_modified,
+		mapping_tpl_content, data_tpl_content
+		)
+		values
+		(#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR},
+		#{tplCode,jdbcType=VARCHAR},
+		#{tplName,jdbcType=VARCHAR},
+		#{docCode,jdbcType=VARCHAR}, #{tplDesc,jdbcType=VARCHAR},
+		#{forecastDataSize,jdbcType=BIGINT}, #{applyUserId,jdbcType=VARCHAR},
+		#{applyUserName,jdbcType=VARCHAR},
+		#{auditStatus,jdbcType=VARCHAR},
+		#{auditPassTime,jdbcType=TIMESTAMP}, #{isLock,jdbcType=TINYINT},
+		#{modifyUserId,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
+		#{gmtModified,jdbcType=TIMESTAMP},
+		#{mappingTplContent,jdbcType=LONGVARCHAR},
+		#{dataTplContent,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.efida.esearch.model.AppDocTpl">
+		insert into app_doc_tpl
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="appId != null">
+				app_id,
+			</if>
+			<if test="tplCode != null">
+				tpl_code,
+			</if>
+			<if test="tplName != null">
+				tpl_name,
+			</if>
+			<if test="docCode != null">
+				doc_code,
+			</if>
+			<if test="tplDesc != null">
+				tpl_desc,
+			</if>
+			<if test="forecastDataSize != null">
+				forecast_data_size,
+			</if>
+			<if test="applyUserId != null">
+				apply_user_id,
+			</if>
+			<if test="applyUserName != null">
+				apply_user_name,
+			</if>
+			<if test="auditStatus != null">
+				audit_status,
+			</if>
+			<if test="auditPassTime != null">
+				audit_pass_time,
+			</if>
+			<if test="isLock != null">
+				is_lock,
+			</if>
+			<if test="modifyUserId != null">
+				modify_user_id,
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create,
+			</if>
+			<if test="gmtModified != null">
+				gmt_modified,
+			</if>
+			<if test="mappingTplContent != null">
+				mapping_tpl_content,
+			</if>
+			<if test="dataTplContent != null">
+				data_tpl_content,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="tplCode != null">
+				#{tplCode,jdbcType=VARCHAR},
+			</if>
+			<if test="tplName != null">
+				#{tplName,jdbcType=VARCHAR},
+			</if>
+			<if test="docCode != null">
+				#{docCode,jdbcType=VARCHAR},
+			</if>
+			<if test="tplDesc != null">
+				#{tplDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="forecastDataSize != null">
+				#{forecastDataSize,jdbcType=BIGINT},
+			</if>
+			<if test="applyUserId != null">
+				#{applyUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="applyUserName != null">
+				#{applyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="auditStatus != null">
+				#{auditStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="auditPassTime != null">
+				#{auditPassTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isLock != null">
+				#{isLock,jdbcType=TINYINT},
+			</if>
+			<if test="modifyUserId != null">
+				#{modifyUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="gmtCreate != null">
+				#{gmtCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="gmtModified != null">
+				#{gmtModified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="mappingTplContent != null">
+				#{mappingTplContent,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="dataTplContent != null">
+				#{dataTplContent,jdbcType=LONGVARCHAR},
+			</if>
+
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.efida.esearch.model.AppDocTpl">
+		update app_doc_tpl
+		<set>
+			<if test="appId != null">
+				app_id = #{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="tplCode != null">
+				tpl_code = #{tplCode,jdbcType=VARCHAR},
+			</if>
+			<if test="tplName != null">
+				tpl_name = #{tplName,jdbcType=VARCHAR},
+			</if>
+			<if test="docCode != null">
+				doc_code = #{docCode,jdbcType=VARCHAR},
+			</if>
+			<if test="tplDesc != null">
+				tpl_desc = #{tplDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="forecastDataSize != null">
+				forecast_data_size = #{forecastDataSize,jdbcType=BIGINT},
+			</if>
+			<if test="applyUserId != null">
+				apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="applyUserName != null">
+				apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="auditStatus != null">
+				audit_status = #{auditStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="auditPassTime != null">
+				audit_pass_time = #{auditPassTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isLock != null">
+				is_lock = #{isLock,jdbcType=TINYINT},
+			</if>
+			<if test="modifyUserId != null">
+				modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="gmtModified != null">
+				gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="mappingTplContent != null">
+				mapping_tpl_content =
+				#{mappingTplContent,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="dataTplContent != null">
+				data_tpl_content =
+				#{dataTplContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.efida.esearch.model.AppDocTpl">
+		update app_doc_tpl
+		set app_id =
+		#{appId,jdbcType=VARCHAR},
+		tpl_code = #{tplCode,jdbcType=VARCHAR},
+		tpl_name = #{tplName,jdbcType=VARCHAR},
+		doc_code =
+		#{docCode,jdbcType=VARCHAR},
+		tpl_desc = #{tplDesc,jdbcType=VARCHAR},
+		forecast_data_size = #{forecastDataSize,jdbcType=BIGINT},
+		apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+		apply_user_name =
+		#{applyUserName,jdbcType=VARCHAR},
+		audit_status =
+		#{auditStatus,jdbcType=VARCHAR},
+		audit_pass_time =
+		#{auditPassTime,jdbcType=TIMESTAMP},
+		is_lock =
+		#{isLock,jdbcType=TINYINT},
+		modify_user_id =
+		#{modifyUserId,jdbcType=VARCHAR},
+		gmt_create =
+		#{gmtCreate,jdbcType=TIMESTAMP},
+		gmt_modified =
+		#{gmtModified,jdbcType=TIMESTAMP},
+		mapping_tpl_content =
+		#{mappingTplContent,jdbcType=LONGVARCHAR},
+		data_tpl_content =
+		#{dataTplContent,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="selectAppTemplatesParams" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from app_doc_tpl where 1=1
+		<if test="appId != null and appId !=''">
+			and app_id = #{appId}
+		</if>
+		<if test="keyword != null and keyword !=''">
+			and (tpl_code like CONCAT('%',#{keyword},'%') or tpl_name
+			like CONCAT('%',#{keyword},'%') or
+			tpl_desc like
+			CONCAT('%',#{keyword},'%'))
+		</if>
+		<if test="auditStatus != null and auditStatus !=''">
+			and audit_status=#{auditStatus}
+		</if>
+		<if test="isLock != null">
+			and is_lock=#{isLock}
+		</if>
+		order by id desc
+	</select>
+
+
+</mapper>

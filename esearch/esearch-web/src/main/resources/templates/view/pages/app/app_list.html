@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>应用管理</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				padding: 9px 10px 0 0;
+			}
+			
+			.layui-form-item {
+				margin-bottom: 10px
+			}
+.layui-elem-quote.quoteBox{
+				border-left:none!important;
+			}
+			.width182{
+				width:210px!important;
+			}
+			.width182 input{
+				width:210px!important;
+			}	
+			table{
+				width:100%!important;
+			}
+			/* .layui-table-cell{
+				padding:0 5px!important;
+			}	 */
+			
+			</style>
+	</head>
+
+	<body class="childrenBody">
+		<blockquote class="layui-elem-quote quoteBox">
+			<form class="layui-form">
+				<div class='layui-form-item mb0'>
+					<!-- <div class="layui-inline">
+						<label class="layui-form-label">应用</label>
+						<div class="layui-inline width182">
+							<select id="appId">
+								<option value="">全部</option>
+							</select>
+						</div>
+					</div> -->
+					<div class="layui-inline">
+						<label class="layui-form-label">关键词</label>
+						<div class="layui-inline width182">
+							<input class="layui-input" id="keyword" placeholder="应用名" autocomplete="off">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">状态</label>
+						<div class="layui-inline width182">
+							<select id="status">
+								<option  value="">全部</option>
+								<!-- <option value="">待提交</option> -->
+								<option value="wait_audit">待审批</option>
+								<option value="pass">审批通过</option>
+								<option value="true">锁定</option>
+								<option value="false">未锁定</option>
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-btn" id="search" style='margin-left: 20px'>搜索</label>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-btn" id="apply_app" style='margin-left: 20px'>应用申请</label>
+					</div>
+				</div>
+				
+			</form>
+		</blockquote>
+		<table class="layui-hide" id="tableDemo" lay-filter="tableDemo"></table>
+		<div id='pageWrap'></div>
+	</body>
+	<script type="text/html" id="btnBar">
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">
+    		<i class="layui-icon">&#xe647;</i>详情
+  		</span>
+		{{# if(d.auditStatus !== 'pass'){ }}
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">
+    		<i class="layui-icon">&#xe647;</i>编辑
+  		</span>
+		{{# } }}
+		{{# if(d.auditStatus == 'reject'){ }}
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="apply">
+    		<i class="layui-icon">&#xe647;</i>提交申请
+  		</span>
+		{{# } }}
+		{{# if(d.auditStatus == 'wait_audit'){ }}
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="auditing">
+    		<i class="layui-icon">&#xe647;</i>审核
+  		</span>
+		{{# } }}
+	</script>
+	<script type="text/html" id="auditStatusT">
+		{{# if(d.auditStatus == 'wait_audit'){ }}
+		<span style="color: #1E9FFF">待审批</span>
+        {{# } else if(d.auditStatus == 'pass'){ }}
+		<span style="color: #5cb85c;">审批通过</span> 
+        {{# } else if(d.auditStatus == 'reject') { }}
+		<span style="color:#FF5722">驳回</span>
+ 		{{# } }}
+	</script>
+	 
+	<script id="endDate" type="text/html">
+		{{getDate(d.gmtCreate)}}
+	</script>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script>
+		var width,height,indexclose;
+		if(document.body.clientWidth<1500){
+			width='750px';
+			height="450px";
+		}else{
+			width='750px';
+			height="450px";
+		}
+		
+		layui.use(['table', 'form', 'layedit', 'laydate','laypage','layer'], function() {
+			var table = layui.table;
+			var form = layui.form;
+			var $ = layui.jquery;
+			var layedit = layui.layedit;
+			var laydate = layui.laydate;
+			var laypage=layui.laypage;
+			var layer = layui.layer;
+			var limit = 1000;
+			var pageNumber = 1;
+			var pageSize=10;
+			//日期
+			laydate.render({
+				elem: '#startTime'
+			});
+			laydate.render({							
+				elem: '#endTime'
+			});
+			//展示已知数据
+				var tableIns=table.render({
+					elem: '#tableDemo',
+					id: 'tableDemo',
+					cols: [
+						[
+						{
+							field: 'id',
+							title: '序号',
+							width: 60,
+						},
+						{
+							field: 'appId',
+							title: '所属应用',
+							width: 100
+						},
+						{
+							field: 'appKey',
+							title: '序列号',
+							width: 150,
+						},
+						{
+							field: 'appName',
+							title: '应用名',
+							width: 150
+						},
+						
+						{
+							field: 'auditStatus',
+							title: '状态',
+							templet:'#auditStatusT',
+							width: 100
+						},
+						 {
+							field: 'isLock',
+							title: '锁定状态',
+							templet: function(d){
+								return '<input type="checkbox" name="zzz" lay-skin="switch" lay-filter="sysDispaly" lay-text="锁定|未锁定" '+isDisplay(d.isLock)+' data-appId="'+d.appId+'">'
+							},
+							width: 100
+						},
+							 {
+								field: 'applyUserName',
+								title: '申请用户名',
+								width: 100
+							} 
+							 ,
+							{
+								field: 'applyTimeStr',
+								title: '申请时间',
+								width: 180
+							},
+							
+							 {
+								title: '操作',
+								templet:'#btnBar',
+								fixed: "right",
+								width: 350
+							}
+							
+						]
+					],
+				});
+			
+			getData(pageNumber, pageSize);
+
+			table.on('tool(tableDemo)', function(obj) {
+				var layEvent = obj.event,
+					data = obj.data;
+				if(layEvent == 'detail') { //编辑
+					var index = layer.open({
+						title: "详情",
+						type: 2,
+						content: "app_detail.html",
+						id: 'appdetail',
+						area: [width, height],
+						success: function(layero, index) {
+							var body = layui.layer.getChildFrame('body', index);
+							body.find('#addIframIndex').val(JSON.stringify(data));
+							body.find('#btn').click();
+						},
+						end:function(){
+							getData(pageNumber, pageSize);
+						}
+					})
+					
+				}else if(layEvent == 'edit'){
+					var index = layer.open({
+						title: "编辑",
+						type: 2,
+						content: "app_apply.html",
+						id: 'appApply',
+						area: [width, height],
+						success: function(layero, index) {
+							var body = layui.layer.getChildFrame('body', index);
+							body.find('#addIframIndex').val(JSON.stringify(data));
+							body.find('#save').show();
+							body.find('#submitBtn').hide();
+							body.find('#appId').attr('readonly',true);
+							body.find('#appId').attr('style','background:#ccc');
+							body.find('#btn').click();
+						},
+						end:function(){
+							getData(pageNumber, pageSize);
+						}
+					})
+				}else if(layEvent == 'auditing'){
+					var index = layui.layer.open({
+						title: "申请",
+						type: 2,
+						content: "app_auditing.html",
+						id: 'appAuditing',
+						area: [width, "560px"],
+						success: function(layero, index) {
+							var body = layui.layer.getChildFrame('body', index);
+							body.find('#appId').val(data.appId);
+							body.find('#addIframIndex').val(JSON.stringify(data));
+							body.find('#btn').click();
+						},
+						end:function(){
+							getData(pageNumber, pageSize);
+						}
+					})
+				}else if(layEvent == 'apply'){
+					 layer.open({
+				        type: 1
+				        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+				        ,btn: ['确定','取消']
+				        ,btnAlign: 'c' //按钮居中
+				        ,shade: 0 //不显示遮罩
+						,btn2: function(layero){//bt1的按钮
+				        	  layer.closeAll();  
+				        },
+				        yes: function(index, layero){
+				        	layer.closeAll();
+				        	  $.get("/app/replay/apply", {
+				        		  	appId:data.appId,
+								}, function(data) {
+									if(data.code == 0) {
+										layer.msg("提交成功");
+										getData(pageNumber, pageSize);
+										return;
+									} else {
+										layer.msg(data.errorMsg);
+									}
+								})
+			        	  }
+				      });
+				}
+				
+			})
+			function isDisplay(status) {
+					 
+					if(status == true) {
+						
+						return 'checked'
+					} else {
+						
+						return ''
+					} 
+				}
+			form.on('switch(sysDispaly)', function(data) {
+				console.log(data,'data')
+				layer.open({
+			        type: 1
+			        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+			        ,btn: ['确定','取消']
+			        ,btnAlign: 'c' //按钮居中
+			        ,shade: 0 //不显示遮罩
+					,btn2: function(layero){//bt1的按钮
+						 data.elem.checked=!data.elem.checked;
+			        	  form.render('checkbox');
+			        	  layer.closeAll();  
+			        },
+			        yes: function(index, layero){
+			        	layer.closeAll();
+			        	  $.get("/app/lock", {
+			        		  	appId:data.elem['dataset'].appid,
+								isLock: data.elem.checked ? true : false
+							}, function(data) {
+								if(data.code == 0) {
+									form.render('checkbox');
+									layer.msg("修改成功");
+									return;
+								} else {
+									data.elem.checked=!data.elem.checked;
+						        	 form.render('checkbox');
+									layer.msg(data.errorMsg);
+								}
+							})
+		        	  }
+			        ,cancel: function(){ 
+		        	    //右上角关闭回调
+		        	    data.elem.checked=!data.elem.checked;
+		        	    form.render('checkbox');
+		        	   // return false 开启该代码可禁止点击该按钮关闭
+		        	  }
+			      });
+			}); 
+			
+			//获取列表数据
+				function getData(pageNumber, pageSize) {
+					var status = $('#status').val();
+					var keyword = $('#keyword').val();
+					var appId = $('#appId').val();
+					var index = layer.load(2, {
+						shade: false
+					}); //0代表加载的风格，支持0-2
+					$.ajax({
+						type: 'get',
+						url: "/app/list",
+						cache: false,
+						data: {
+							appId:appId,
+							status: status,
+							keyword: keyword,
+							pageNumber: pageNumber,
+							pageSize: pageSize,
+							fresh: Math.random()
+						},
+						success: function(obj) {
+							layer.close(index);
+							if(obj.code != 0) {
+								layer.alert(obj.errorMsg, {
+									icon: 2
+								});
+								return;
+							}
+							tableIns.reload({
+								data: obj.data.list
+							});
+							laypage.render({
+								elem: 'pageWrap',
+								count: obj.data.allRow,
+								curr: obj.data.currentPage,
+								limit:pageSize,
+								layout: ['count', 'prev', 'page', 'next', 'skip'],
+								jump: function(res, first) {
+									
+									if(!first) {
+										console.log(res.curr);
+										pageNumber=res.curr;
+										getData(res.curr, pageSize);
+									}
+								}
+							});
+						}
+					})
+				}
+				getList();
+			function getList(){
+				var index = layer.load(2, {
+					shade: false
+				});
+				$.ajax({
+					type: 'get',
+					url: "/app/list",
+					cache: false,
+					data: {
+						pageNumber: 1,
+						pageSize: 9999
+					},
+					success: function(obj) {
+						layer.close(index);
+						 console.log(obj.data.list);
+						
+						for(var i=0;i<obj.data.list.length;i++){
+							$("#appId").append('<option value="'+obj.data.list[i].appId+'">'+obj.data.list[i].appId+'</option>');
+						}
+						form.render("select");
+						if(obj.code != 0) {
+							layer.alert(obj.errorMsg, {
+								icon: 2
+							});
+							return;
+						}
+					}
+				})
+			}
+			$('#search').on('click', function() {
+				getData(1, 10);
+			});
+			$("#apply_app").on('click',function(){
+				var indexopen = layui.layer.open({
+					title: "申请应用",
+					type: 2,
+					content: "app_apply.html",
+					id: 'appApply',
+					area: [width, height],
+					success: function(layero, index) {
+						var body = layui.layer.getChildFrame('body', index);
+						body.find('#save').hide();
+						body.find('#submitBtn').show();
+						body.find('#btn').click();
+					},
+					end:function(){
+						getData(pageNumber, pageSize);
+					}
+				})
+				/* layui.layer.full(indexopen);
+				$(window).on("resize", function() {
+					layui.layer.full(indexopen);
+				}) */
+			})
+		});
+	</script>
+
+</html>

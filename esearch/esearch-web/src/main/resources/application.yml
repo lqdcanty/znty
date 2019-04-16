@@ -1,0 +1,275 @@
+# 默认的profile为dev，其他环境通过指定启动参数使用不同的profile，比如：  
+#   测试环境：java -jar xxx.jar --server.port=18080 --spring.profiles.active=test  
+#   生产环境：java -jar xxx.jar --server.port=18080 --spring.profiles.active=product
+#   开发环境  
+spring:  
+  profiles:  
+    active: dev
+  session:
+    store-type: none
+  aop:
+    auto: true
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+    timeout: 8000 
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+#    url: jdbc:mysql://localhost:3306/esearch?useUnicode=true&characterEncoding=utf8&useSSL=false
+#    username: root
+#    password: 123456
+#    driver-class-name: com.mysql.jdbc.Driver
+#    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://113.106.54.90:13306/esearch?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: esearch
+    password: DevUP2Vc32yUq63YyuQ8
+    initialize: true
+    minIdle: 2
+    maxActive: 100
+    initialSize: 5
+    timeBetweenEvictionRunsMillis: 3000
+    minEvictableIdleTimeMillis: 300000
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+  freemarker:
+    suffix: .html
+    cache: false
+    charset: UTF-8
+    templateEncoding: UTF-8
+    template-loader-path: classpath:/templates/
+    settings:
+      number_format: 0.##
+      tag_syntax: auto_detect
+      date_format: yyyy-MM-dd
+      time_format: HH:mm:ss
+      datetime_format: yyyy-MM-dd HH:mm:ss
+  http:
+    ecoding: 
+      charset: UTF-8
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/static/,classpath:/templates/,file:${web.upload-path}
+  dubbo:
+      protocol:
+        name: dubbo
+      application:
+        name: esearch
+        owner: tangping
+      registry:
+#        address: zookeeper://192.168.8.4:9075
+        address: zookeeper://127.0.0.1:2181
+        port: 21804
+      base-package: com.efida.esearch.dubbo
+      consumer:
+        timeout: 20000 
+        check: false                        # 服务启动时检查被调用服务是否可用
+        retries: 2
+  scoreCert:
+    isConfigFirst: true
+auth: 
+    webAuth: false     #管理页面是否鉴权
+server:
+    port: 18081
+    context-path: /
+    tomcat:
+      uri-encoding: UTF-8
+mybatis-plus:
+  mapper-locations: classpath*:/mapping/**Mapper.xml
+  type-aliases-package: com.efida.esearch.model
+logging:
+  level:
+    com.efida.esearch: debug
+es:
+  hosts:
+  - host: 127.0.0.1
+    port: 9200
+  headers:
+  - name: Content-Type
+    value: application/json; charset=UTF-8
+# 测试环境配置
+---
+spring:  
+  profiles:  test
+  session:
+    store-type: none
+  aop:
+    auto: true
+  redis:
+    database: 0
+    host: redis.zntyydh.com
+    port: 7000
+    password: DevZNTY5lqUdYE7oA6C18
+    timeout: 8000
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://113.106.54.90:13306/esearch?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: esearch
+    password: DevUP2Vc32yUq63YyuQ8
+    initialize: true
+    minIdle: 2
+    maxActive: 100
+    initialSize: 5
+    timeBetweenEvictionRunsMillis: 3000
+    minEvictableIdleTimeMillis: 300000
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+  freemarker:
+    suffix: .html
+    cache: false
+    charset: UTF-8
+    templateEncoding: UTF-8
+    template-loader-path: classpath:/templates/
+    settings:
+      number_format: 0.##
+      tag_syntax: auto_detect
+      date_format: yyyy-MM-dd
+      time_format: HH:mm:ss
+      datetime_format: yyyy-MM-dd HH:mm:ss
+  http:
+    ecoding:
+      charset: UTF-8
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/static/,classpath:/templates/,file:${web.upload-path}
+  dubbo:
+    protocol:
+      name: dubbo
+    application:
+      name: esearch
+      owner: tangping
+    registry:
+      #        address: zookeeper://192.168.8.4:9075
+      address: zookeeper://zookeeper.zntyydh.com:9075
+      port: 21804
+    base-package: com.efida.esearch.dubbo
+    consumer:
+      timeout: 20000
+      check: false                        # 服务启动时检查被调用服务是否可用
+      retries: 2
+    scoreCert:
+      isConfigFirst: true
+auth: 
+    webAuth: true     #管理页面是否鉴权
+server:
+  port: 18081
+  context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+mybatis-plus:
+  mapper-locations: classpath*:/mapping/**Mapper.xml
+  type-aliases-package: com.efida.esearch.model
+logging:
+  level:
+    com.efida.esearch: debug
+es:
+  hosts:
+  - host: 10.64.34.150
+    port: 9200
+  headers:
+  - name: Authorization
+    value: Basic ZWxhc3RpYzpjaGFuZ2VtZQ==
+  - name: Content-Type
+    value: application/json; charset=UTF-8
+---
+# 正式环境配置
+spring:
+  profiles: product
+  aop:
+    auto: true
+  redis:  
+    password: ZNTY5lqUdYE7oA6C18 
+    timeout: 8000 
+    cluster:
+      nodes: redis1.zntyydh.com:7000,redis2.zntyydh.com:7000,redis3.zntyydh.com:7000,redis4.zntyydh.com:7000,redis5.zntyydh.com:7000,redis6.zntyydh.com:7000
+      maxRedirects: 6
+    pool:
+      max-idle: 50    
+      min-idle: 10    
+      max-active: 500
+      max-wait: 300
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://esearch.mysql.zntyydh.com:3306/esearch
+    username: esearch
+    password: UP2Vc32yUq63YyuQ8
+    initialize: true
+    minIdle: 10
+    maxActive: 300
+    initialSize: 10
+    timeBetweenEvictionRunsMillis: 3000
+    minEvictableIdleTimeMillis: 300000
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+  freemarker:
+    suffix: .html
+    cache: false
+    charset: UTF-8
+    templateEncoding: UTF-8
+    template-loader-path: classpath:/templates/
+    settings:
+      number_format: 0.##
+      tag_syntax: auto_detect
+      date_format: yyyy-MM-dd
+      time_format: HH:mm:ss
+      datetime_format: yyyy-MM-dd HH:mm:ss
+  http:
+    ecoding:
+      charset: UTF-8
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/static/,classpath:/templates/,file:${web.upload-path}
+  dubbo:
+    protocol:
+      name: dubbo
+    application:
+      name: esearch
+      owner: tangping
+    registry:
+      #        address: zookeeper://192.168.8.4:9075
+      address: zookeeper://zookeeper.zntyydh.com:9075
+      port: 21804
+    base-package: com.efida.esearch.dubbo
+    consumer:
+      timeout: 20000
+      check: false                        # 服务启动时检查被调用服务是否可用
+      retries: 2
+    scoreCert:
+      isConfigFirst: true
+auth:
+  webAuth: true     #管理页面是否鉴权
+server:
+  port: 18081
+  context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+mybatis-plus:
+  mapper-locations: classpath*:/mapping/**Mapper.xml
+  type-aliases-package: com.efida.esearch.model
+logging:
+  level:
+    com.efida.esearch: debug
+es:
+  hosts:
+  - host: 10.64.34.157
+    port: 9200
+  headers:
+  - name: Authorization
+    value: Basic ZWxhc3RpYzpjaGFuZ2VtZQ==
+  - name: Content-Type
+    value: application/json; charset=UTF-8

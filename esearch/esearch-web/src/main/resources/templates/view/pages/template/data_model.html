@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>数据模型配置</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				padding: 9px 10px 0 0;
+			}
+			
+			.layui-form-item {
+				margin-bottom: 10px
+			}
+.layui-elem-quote.quoteBox{
+				border-left:none!important;
+			}
+			.width182{
+				width:210px!important;
+			}
+			.width182 input{
+				width:210px!important;
+			}	
+			table{
+				width:100%!important;
+			}	
+			
+			</style>
+	</head>
+
+	<body class="childrenBody" style="padding:20px 0 10px 20px">
+		<input type="hidden" id="appId">
+		<input type="hidden" id="tplCode">
+		<input type="hidden" id="tplName">
+		<blockquote class="layui-elem-quote quoteBox">
+			<form class="layui-form">
+				<div class='layui-form-item mb0'>
+					<div class="layui-inline">
+						<a class="layui-btn" style='margin-left: 20px' id="newAddFieldId">新增数据字段</a>
+					</div>
+					<div class="layui-inline">
+						<a class="layui-btn" id="search" style='margin-left: 20px'>刷新</a>
+					</div>
+				</div>
+			</form>
+		</blockquote>
+		<table class="layui-hide" id="tableDemo" lay-filter="tableDemo"></table>
+		<a><span id='btn' onclick='btnClick()'></span></a>
+	</body>
+	<script type="text/html" id="btnBar">
+		
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">
+    		<i class="layui-icon">&#xe647;</i>编辑
+  		</span>
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">
+    		<i class="layui-icon">&#xe647;</i>删除
+  		</span>
+	</script>
+	<script id="endDate" type="text/html">
+		{{getDate(d.gmtCreate)}}
+	</script>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script>
+	function btnClick(){
+		
+	
+		var width,height,indexclose;
+		if(document.body.clientWidth<1500){
+			width='950px';
+			height="550px";
+		}else{
+			width='950px';
+			height="750px";
+		}
+		
+		layui.use(['table', 'form', 'layedit', 'laydate','laypage'], function() {
+			var table = layui.table;
+			var form = layui.form;
+			var layedit = layui.layedit;
+			var laydate = layui.laydate;
+			var $ = layui.jquery;
+			var laypage=layui.laypage;
+			var tplCode = $("#tplCode").val();
+			var tplName = $("#tplName").val();
+			var appId = $("#appId").val();
+			//日期
+			laydate.render({
+				elem: '#startTime'
+			});
+			laydate.render({							
+				elem: '#endTime'
+			});
+			//展示已知数据
+				var tableIns=table.render({
+					elem: '#tableDemo',
+					id: 'tableDemo',
+					cols: [
+						[
+						{
+							field: 'zizeng',
+							title: '序号',
+							width: 80,
+							type:'numbers',
+						},
+						{
+							field: 'fieldName',
+							title: '字段名',
+							width: 180,
+						},
+						{
+							field: 'fieldComment',
+							title: '字段描述',
+							width: 200
+						},
+						 {
+								field: 'fieldType',
+								title: '字段类型',
+								width: 80
+							},
+							 {
+								title: '操作',
+								templet:'#btnBar',
+								align:'center',
+								width: 150
+							}
+						]
+					],
+				});
+			
+			 table.on('tool(tableDemo)', function(obj) {
+				var layEvent = obj.event,
+					data = obj.data;
+				console.log(data,"abc");
+				if(layEvent == 'edit') { //编辑
+					if(data.fieldName=='doc_source_id'){
+						layer.msg("该字段不允许编辑");
+						return;
+					}
+					var indexopen = parent.layer.open({
+						title: "修改字段 _归属模板：文章动态搜索（search-dongtai)",
+						type: 2,
+						content: "newAdd_fieldup.html",
+						id: 'newAddFieldup',
+						area: [width, height],
+						success: function(layero, index) {
+							var body = parent.layer.getChildFrame('body', index);
+							body.find('#appId').val(appId);
+							body.find('#tplCode').val(tplCode);
+							body.find('#tplName').val(tplName);
+							body.find('#obj').val(JSON.stringify(data));
+							body.find('#btn').click();
+						},
+						end:function(){
+							getData();
+						}
+					})
+				}else if(layEvent == 'delete'){
+					if(data.fieldName=='doc_source_id'){
+						layer.msg("该字段不能删除");
+						return;
+					}
+					layer.open({
+				        type: 1
+				        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+				        ,btn: ['确定','取消']
+				        ,btnAlign: 'c' //按钮居中
+				        ,shade: 0 //不显示遮罩
+						,btn2: function(layero){//bt1的按钮
+				        	  layer.closeAll();  
+				        },
+				        yes: function(index, layero){
+				        	layer.closeAll();
+				        	  $.get("/template/field/del", {
+				        		  id:data.id
+								}, function(data) {
+									if(data.code == 0) {
+										layer.msg("删除成功");
+										getData();
+										return;
+									} else {
+										layer.msg(data.errorMsg);
+									}
+								})
+			        	  }
+				      });
+				}
+			}) 
+			
+			//获取列表数据
+				function getData() {
+					var index = layer.load(2, {
+						shade: false
+					}); //0代表加载的风格，支持0-2
+					$.ajax({
+						type: 'get',
+						url: "/template/field/list?docCode="+tplCode+"&appId="+appId,
+						cache: false,
+						processData:false,
+						success: function(obj) {
+							layer.close(index);
+							if(obj.code != 0) {
+								layer.alert(obj.errorMsg, {
+									icon: 2
+								});
+								return;
+							}
+							tableIns.reload({
+								data: obj.data
+							});
+						}
+					})
+				}
+			getData();
+			$('#search').on('click', function() {
+				getData();
+			});
+			
+			$("#newAddFieldId").on('click',function(){
+				var indexopen = parent.layer.open({
+					title: "新增字段_归属模板：文章动态搜索（search-dongtai)",
+					type: 2,
+					content: "newAdd_field.html",
+					id: 'newAddField',
+					area: [width, height],
+					success: function(layero, index) {
+						var body = parent.layer.getChildFrame('body', index);
+						body.find('#appId').val(appId);
+						body.find('#tplCode').val(tplCode);
+						body.find('#tplName').val(tplName);
+						body.find('#btn').click();
+					},
+					end:function(){
+						getData();
+					}
+				})
+			})
+			
+
+		});
+	}
+	</script>
+
+</html>

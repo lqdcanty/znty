@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>数据字段配置</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				width:150px!important;
+			}
+			.layui-form-pane .layui-input-block{
+				margin-left:150px;
+			}
+			
+		</style>
+	</head>
+
+	<body class="childrenBody">
+		<div id="app">
+			<form class="layui-form layui-form-pane">
+				<div>归属模板：文章动态搜索（search-dongtai)</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">字段名</label>
+				    <div class="layui-input-block">
+				     	 <input type="text" placeholder="请输入字段名" class="layui-input">
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">字段描述</label>
+				    <div class="layui-input-block">
+				     	 <input type="text" placeholder="请输入字段描述" class="layui-input">
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">字段类型</label>
+				    <div class="layui-input-block">
+				     	 <select>
+				     	 	<option>字符串</option>
+				     	 	<option>日期</option>
+				     	 	<option>布尔</option>
+				     	 	<option>数字</option>
+				     	 </select>
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">是否排序</label>
+				    <div class="layui-input-block">
+				     	 <select>
+				     	 	<option>不参与排序</option>
+				     	 	<option>排序</option>
+				     	 </select>
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">排序权重</label>
+				    <div class="layui-input-block">
+				     	  <input type="text" placeholder="请输入排序权重" class="layui-input">
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">写入分词算法</label>
+				    <div class="layui-input-block">
+				     	 
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">搜索分词算法</label>
+				    <div class="layui-input-block">
+				     	 
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">扩展属性</label>
+				    <div class="layui-input-block">
+				     	 <a class="layui-btn">新增属性</a>
+				     	 <div class="layui-inline">(不同字段类型可添加不同属性)</div>
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <table class="layui-table">
+				    	<thead>
+				    		<tr>
+				    			<th>属性</th>
+				    			<th>操作</th>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr>
+				    			<td>doc_values</td>
+				    			<td>
+									<button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">
+						    			<i class="layui-icon">&#xe640;</i>删除
+						  			</button>
+								</td>
+				    		</tr>
+				    	</tbody>
+				    </table>
+				    <div class='layui-form-item'>
+					    <div class="layui-inline">模板内容（下述模板通过配置数据模型自动生成,请勿随意更改）</div>
+					    <textarea class="layui-input" style="min-height:300px;"></textarea>
+					</div>
+					<div class='layui-form-item' style="text-align:center;">
+					    <div class="layui-inline">
+					     	 <a class="layui-btn" style="width:100px;">保存</a>
+					    </div>
+					    <div class="layui-inline">
+					     	 <a class="layui-btn" style="width:100px;">提交申请</a>
+					    </div>
+					</div>
+				</div>
+			</form>
+			<!-- 数据字段配置弹层 -->
+			<!-- <div class="modle-wrap" v-if="editStatus" >
+				<div class="modle-container">
+					<div class="layerLqd" style="background:#fff;">
+						<div class="tableBox" style="width:100%;"> 
+							<form action="" class="layui-form" onsubmit="return false">
+								<div class="listbox layui-item ">
+									<div class="boxLeft layui-inline width300">
+										<button class="layui-btn" style="width:100%;">所有承办方</button>
+										<ul class="ulList left">
+											<li v-for="list in allUnitArr" @click.stop="fieldOne(list)">{{list.unitName}}<i class="layui-icon" >&#xe61f;</i></li>
+										</ul>
+									</div>
+									<div class="boxCenter layui-inline" style="width:105px;">
+										<svg class="icon" style="width:80px;color:#009688;margin-left: 13px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1264 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3098"><path d="M1250.057513 473.992162L794.480863 15.313483a50.054101 50.054101 0 0 0-72.069473 0l-72.00924 73.394612a52.22251 52.22251 0 0 0 0 73.213911l246.716726 247.680464H52.674262C23.551328 409.60247 0 432.491228 0 460.801009v102.397079c0 28.309781 23.551328 51.198539 52.704379 51.198539h841.613636l-246.837193 247.740697a52.342977 52.342977 0 0 0 0 73.304261l72.039356 73.424729c19.78673 20.178248 52.102043 20.178248 72.069474 0l458.467861-461.47954a52.824846 52.824846 0 0 0 0-73.394612" p-id="3099"></path></svg>
+									</div>
+									<div class="boxRight layui-inline width300">
+										<button class="layui-btn" style="width:100%;">关联承办方</button>
+										<ul class="ulList">
+											<li v-for="one in UnitArr">{{one.unitName}}<i class="layui-icon" style="font-size:16px;" @click="cancelOne(one)">&#x1007;</i></li>
+										</ul>
+									</div>
+								</div>
+								
+								 <div class="layui-form-item btnDiv">
+									<div class="layui-inline">
+										<a class="layui-btn btn"  data-type="reload"  @click="saveAddInfo">确定</a>
+									</div>
+									<div class="layui-inline">
+										<a class="layui-btn btn bgWhite"  @click='colseEdit()'>取消</a>
+									</div>
+								</div>
+							</form>
+						</div> 
+					</div>	
+				</div>
+			</div> -->
+		</div>
+	</body>
+	<a><span id='btn' onclick='btnClick()'></span></a>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script type="text/javascript" src="/assets/common/vue/vue.js"></script>
+	<script>
+		var realPath = "${ctx}";
+		var dataApi = realPath + "/dmp/api/player/list";
+		function btnClick(){
+			layui.use(['form'], function() {
+				var form = layui.form,
+					$ = layui.jquery;
+				var vm=new Vue({
+					el:'#app',
+					data:{
+						editStatus:false,
+					},
+					created:function(){
+						
+					},
+					methods:{
+						
+					}
+				})
+			});
+		}
+	</script>
+
+</html>

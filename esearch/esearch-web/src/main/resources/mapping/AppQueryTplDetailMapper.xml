@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.efida.esearch.mapper.AppQueryTplDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.efida.esearch.model.AppQueryTplDetail" >
+    <id column="app_id" property="appId" jdbcType="VARCHAR" />
+    <id column="doc_tpl_code" property="docTplCode" jdbcType="VARCHAR" />
+    <id column="query_tpl_code" property="queryTplCode" jdbcType="VARCHAR" />
+    <result column="is_simple_condition" property="isSimpleCondition" jdbcType="TINYINT" />
+    <result column="logic" property="logic" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.efida.esearch.model.AppQueryTplDetail" extends="BaseResultMap" >
+    <result column="condition" property="condition" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    app_id, doc_tpl_code, query_tpl_code, is_simple_condition, logic
+  </sql>
+  <sql id="Blob_Column_List" >
+    condition
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.efida.esearch.model.AppQueryTplDetailKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_query_tpl_detail
+    where app_id = #{appId,jdbcType=VARCHAR}
+      and doc_tpl_code = #{docTplCode,jdbcType=VARCHAR}
+      and query_tpl_code = #{queryTplCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.efida.esearch.model.AppQueryTplDetailKey" >
+    delete from app_query_tpl_detail
+    where app_id = #{appId,jdbcType=VARCHAR}
+      and doc_tpl_code = #{docTplCode,jdbcType=VARCHAR}
+      and query_tpl_code = #{queryTplCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.efida.esearch.model.AppQueryTplDetail" >
+    insert into app_query_tpl_detail (app_id, doc_tpl_code, query_tpl_code, 
+      is_simple_condition, logic, condition
+      )
+    values (#{appId,jdbcType=VARCHAR}, #{docTplCode,jdbcType=VARCHAR}, #{queryTplCode,jdbcType=VARCHAR}, 
+      #{isSimpleCondition,jdbcType=TINYINT}, #{logic,jdbcType=VARCHAR}, #{condition,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.efida.esearch.model.AppQueryTplDetail" >
+    insert into app_query_tpl_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="appId != null" >
+        app_id,
+      </if>
+      <if test="docTplCode != null" >
+        doc_tpl_code,
+      </if>
+      <if test="queryTplCode != null" >
+        query_tpl_code,
+      </if>
+      <if test="isSimpleCondition != null" >
+        is_simple_condition,
+      </if>
+      <if test="logic != null" >
+        logic,
+      </if>
+      <if test="condition != null" >
+        condition,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="docTplCode != null" >
+        #{docTplCode,jdbcType=VARCHAR},
+      </if>
+      <if test="queryTplCode != null" >
+        #{queryTplCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isSimpleCondition != null" >
+        #{isSimpleCondition,jdbcType=TINYINT},
+      </if>
+      <if test="logic != null" >
+        #{logic,jdbcType=VARCHAR},
+      </if>
+      <if test="condition != null" >
+        #{condition,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.efida.esearch.model.AppQueryTplDetail" >
+    update app_query_tpl_detail
+    <set >
+      <if test="isSimpleCondition != null" >
+        is_simple_condition = #{isSimpleCondition,jdbcType=TINYINT},
+      </if>
+      <if test="logic != null" >
+        logic = #{logic,jdbcType=VARCHAR},
+      </if>
+      <if test="condition != null" >
+        condition = #{condition,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where app_id = #{appId,jdbcType=VARCHAR}
+      and doc_tpl_code = #{docTplCode,jdbcType=VARCHAR}
+      and query_tpl_code = #{queryTplCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.efida.esearch.model.AppQueryTplDetail" >
+    update app_query_tpl_detail
+    set is_simple_condition = #{isSimpleCondition,jdbcType=TINYINT},
+      logic = #{logic,jdbcType=VARCHAR},
+      condition = #{condition,jdbcType=LONGVARCHAR}
+    where app_id = #{appId,jdbcType=VARCHAR}
+      and doc_tpl_code = #{docTplCode,jdbcType=VARCHAR}
+      and query_tpl_code = #{queryTplCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.efida.esearch.model.AppQueryTplDetail" >
+    update app_query_tpl_detail
+    set is_simple_condition = #{isSimpleCondition,jdbcType=TINYINT},
+      logic = #{logic,jdbcType=VARCHAR}
+    where app_id = #{appId,jdbcType=VARCHAR}
+      and doc_tpl_code = #{docTplCode,jdbcType=VARCHAR}
+      and query_tpl_code = #{queryTplCode,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="saveQueryTplConditionsBatch" useGeneratedKeys="true" parameterType="java.util.List">
+
+    insert into app_query_tpl_detail (add_time,emp_id,activity_id,flag)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.app_id},#{item.doc_tpl_code},#{item.query_tpl_code},#{item.is_simple_condition},#{item.logic,condition})
+    </foreach>
+  </insert>
+</mapper>

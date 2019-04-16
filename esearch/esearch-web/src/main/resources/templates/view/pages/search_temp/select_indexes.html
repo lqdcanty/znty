@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>选择索引模板</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				padding: 9px 10px 0 0;
+			}
+			
+			.layui-form-item {
+				margin-bottom: 10px
+			}
+.layui-elem-quote.quoteBox{
+				border-left:none!important;
+			}
+			.width182{
+				width:210px!important;
+			}
+			.width182 input{
+				width:210px!important;
+			}	
+			table{
+				width:100%!important;
+			}
+			.layui-table-cell{
+				padding:0 5px!important;
+			}	
+			
+			</style>
+	</head>
+
+	<body class="childrenBody"  style="padding:20px 0 10px 20px">
+		<input type="hidden" id="appId" >
+		<blockquote class="layui-elem-quote quoteBox">
+			<form class="layui-form">
+				<div class='layui-form-item mb0'>
+					<div class="layui-inline">
+						<label class="layui-form-label">关键词</label>
+						<div class="layui-inline width182">
+							<input class="layui-input" id="keyword" placeholder="索引模板编号/名称/描述" autocomplete="off">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-btn" id="search" style='margin-left: 20px'>搜索</label>
+					</div>
+				</div>
+			</form>
+		</blockquote>
+		<table class="layui-hide" id="tableDemo" lay-filter="tableDemo"></table>
+		<div id='pageWrap'></div>
+		<a><span id='btn' onclick='btnClick()'></span></a>
+	</body>
+	<script type="text/html" id="btnBar">
+		<span class="layui-btn layui-btn-primary layui-btn-xs" lay-event="select">
+    		<i class="layui-icon">&#xe643;</i>选择
+  		</span>
+	</script>
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script>
+		var width,height;
+		if(document.body.clientWidth<1500){
+			width='950px';
+			height="550px";
+		}else{
+			width='950px';
+			height="750px";
+		}
+		function btnClick(){
+			layui.use(['table', 'form', 'layedit', 'laydate','laypage','layer'], function() {
+				var table = layui.table;
+				var form = layui.form;
+				var layedit = layui.layedit;
+				var laydate = layui.laydate;
+				var laypage=layui.laypage;
+				var layer = layui.layer;
+				var limit = 1000;
+				var pageNumber = 1;
+				var pageSize=10;
+				//展示已知数据
+				var tableIns=table.render({
+					elem: '#tableDemo',
+					id: 'tableDemo',
+				
+					cols: [
+						[
+						 {
+								field: 'tplCode',
+								title: '索引模板编号',
+								width: 200
+							},
+							{
+								field: 'tplName',
+								title: '索引模板名',
+								width: 200
+							},
+							 {
+								title: '操作',
+								templet:'#btnBar',
+								fixed: "right",
+								width: 300
+							}
+							
+						]
+					],
+				});
+				getData(pageNumber, pageSize);
+				table.on('tool(tableDemo)', function(obj) {
+					var layEvent = obj.event,
+						data = obj.data;
+					if(layEvent == 'select') { //编辑
+						 var index = parent.layer.getFrameIndex(window.name);
+						//var body = parent.layer.getChildFrame('body',$("#indexId").val()); 
+					
+						setCookie("selectIndex",data.tplCode,7);
+						
+						parent.layui.layer.close(index);
+						
+					}
+				})
+				//获取列表数据
+				function getData(pageNumber, pageSize) {
+					var keyword = $('#keyword').val();
+					var index = layer.load(2, {
+						shade: false
+					}); //0代表加载的风格，支持0-2
+					$.ajax({
+						type: 'get',
+						url: "/template/list/avalible",
+						cache: false,
+						data: {
+							appId:$("#appId").val(),
+							keyword: keyword,
+							pageNumber: pageNumber,
+							pageSize: pageSize,
+							fresh: Math.random()
+						},
+						success: function(obj) {
+							layer.close(index);
+							if(obj.code != 0) {
+								layer.alert(obj.errorMsg, {
+									icon: 2
+								});
+								return;
+							}
+							tableIns.reload({
+								data: obj.data.list
+							});
+							laypage.render({
+								elem: 'pageWrap',
+								count: obj.data.allRow,
+								curr: obj.data.currentPage,
+								layout: ['count', 'prev', 'page', 'next', 'skip'],
+								jump: function(res, first) {
+									console.log(first);
+									console.log(res);
+									if(!first) {
+										pageNumber=res.curr;
+										getData(res.curr, pageSize);
+									}
+								}
+							});
+						}
+					})
+				}
+				function setCookie(key, value, iDay) {
+				    var oDate = new Date();
+				    oDate.setDate(oDate.getDate() + iDay);
+				    document.cookie = key + '=' + value + ';expires=' + oDate;
+
+				}
+				function removeCookie(key) {
+				    setCookie(key, '', -1);//这里只需要把Cookie保质期退回一天便可以删除
+				}
+				function getCookie(key) {
+				    var cookieArr = document.cookie.split(';');
+				    for(var i = 0; i < cookieArr.length; i++) {
+				        var arr = cookieArr[i].split('=');
+				        if(arr[0] === key) {
+				            return arr[1];
+				        }
+				    }
+				    return false;
+				}
+				$('#search').on('click', function() {
+					getData(1, 10);
+				});
+			});
+		}
+	</script>
+
+</html>

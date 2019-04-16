@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.efida.esearch.mapper.AppDocFieldsMapper">
+	<resultMap id="BaseResultMap"
+		type="com.efida.esearch.model.AppDocFields">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="doc_name" property="docName" jdbcType="VARCHAR" />
+		<result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+		<result column="field_name" property="fieldName"
+			jdbcType="VARCHAR" />
+		<result column="field_comment" property="fieldComment"
+			jdbcType="VARCHAR" />
+		<result column="field_type" property="fieldType"
+			jdbcType="VARCHAR" />
+		<result column="analyze_index" property="analyzeIndex"
+			jdbcType="VARCHAR" />
+		<result column="analyze_search" property="analyzeSearch"
+			jdbcType="VARCHAR" />
+		<result column="weight" property="weight" jdbcType="INTEGER" />
+		<result column="is_order" property="isOrder" jdbcType="BIT" />
+		<result column="order_num" property="orderNum"
+			jdbcType="INTEGER" />
+		<result column="extend_json_info" property="extendJsonInfo"
+			jdbcType="VARCHAR" />
+		<result column="gmt_create" property="gmtCreate"
+			jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, app_id, doc_name, doc_code, field_name, field_comment,
+		field_type,
+		analyze_index,
+		analyze_search, weight, is_order, order_num,
+		extend_json_info, gmt_create,
+		gmt_modified
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from app_doc_fields
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="selectByAppIdAndDocCode" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from app_doc_fields
+		where app_id = #{appId,jdbcType=VARCHAR} and
+		doc_code=#{docCode,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		app_doc_fields
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.efida.esearch.model.AppDocFields">
+		insert into app_doc_fields (id, app_id, doc_name,
+		doc_code, field_name, field_comment,
+		field_type, analyze_index,
+		analyze_search,
+		weight, is_order, order_num,
+		extend_json_info,
+		gmt_create, gmt_modified
+		)
+		values (#{id,jdbcType=BIGINT},
+		#{appId,jdbcType=VARCHAR},
+		#{docName,jdbcType=VARCHAR},
+		#{docCode,jdbcType=VARCHAR}, #{fieldName,jdbcType=VARCHAR},
+		#{fieldComment,jdbcType=VARCHAR},
+		#{fieldType,jdbcType=VARCHAR},
+		#{analyzeIndex,jdbcType=VARCHAR},
+		#{analyzeSearch,jdbcType=VARCHAR},
+		#{weight,jdbcType=INTEGER}, #{isOrder,jdbcType=BIT},
+		#{orderNum,jdbcType=INTEGER},
+		#{extendJsonInfo,jdbcType=VARCHAR},
+		#{gmtCreate,jdbcType=TIMESTAMP},
+		#{gmtModified,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.efida.esearch.model.AppDocFields">
+		insert into app_doc_fields
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="appId != null">
+				app_id,
+			</if>
+			<if test="docName != null">
+				doc_name,
+			</if>
+			<if test="docCode != null">
+				doc_code,
+			</if>
+			<if test="fieldName != null">
+				field_name,
+			</if>
+			<if test="fieldComment != null">
+				field_comment,
+			</if>
+			<if test="fieldType != null">
+				field_type,
+			</if>
+			<if test="analyzeIndex != null">
+				analyze_index,
+			</if>
+			<if test="analyzeSearch != null">
+				analyze_search,
+			</if>
+			<if test="weight != null">
+				weight,
+			</if>
+			<if test="isOrder != null">
+				is_order,
+			</if>
+			<if test="orderNum != null">
+				order_num,
+			</if>
+			<if test="extendJsonInfo != null">
+				extend_json_info,
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create,
+			</if>
+			<if test="gmtModified != null">
+				gmt_modified,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="appId != null">
+				#{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="docName != null">
+				#{docName,jdbcType=VARCHAR},
+			</if>
+			<if test="docCode != null">
+				#{docCode,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldName != null">
+				#{fieldName,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldComment != null">
+				#{fieldComment,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldType != null">
+				#{fieldType,jdbcType=VARCHAR},
+			</if>
+			<if test="analyzeIndex != null">
+				#{analyzeIndex,jdbcType=VARCHAR},
+			</if>
+			<if test="analyzeSearch != null">
+				#{analyzeSearch,jdbcType=VARCHAR},
+			</if>
+			<if test="weight != null">
+				#{weight,jdbcType=INTEGER},
+			</if>
+			<if test="isOrder != null">
+				#{isOrder,jdbcType=BIT},
+			</if>
+			<if test="orderNum != null">
+				#{orderNum,jdbcType=INTEGER},
+			</if>
+			<if test="extendJsonInfo != null">
+				#{extendJsonInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="gmtCreate != null">
+				#{gmtCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="gmtModified != null">
+				#{gmtModified,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.efida.esearch.model.AppDocFields">
+		update app_doc_fields
+		<set>
+			<if test="appId != null">
+				app_id = #{appId,jdbcType=VARCHAR},
+			</if>
+			<if test="docName != null">
+				doc_name = #{docName,jdbcType=VARCHAR},
+			</if>
+			<if test="docCode != null">
+				doc_code = #{docCode,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldName != null">
+				field_name = #{fieldName,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldComment != null">
+				field_comment = #{fieldComment,jdbcType=VARCHAR},
+			</if>
+			<if test="fieldType != null">
+				field_type = #{fieldType,jdbcType=VARCHAR},
+			</if>
+			<if test="analyzeIndex != null">
+				analyze_index = #{analyzeIndex,jdbcType=VARCHAR},
+			</if>
+			<if test="analyzeSearch != null">
+				analyze_search = #{analyzeSearch,jdbcType=VARCHAR},
+			</if>
+			<if test="weight != null">
+				weight = #{weight,jdbcType=INTEGER},
+			</if>
+			<if test="isOrder != null">
+				is_order = #{isOrder,jdbcType=BIT},
+			</if>
+			<if test="orderNum != null">
+				order_num = #{orderNum,jdbcType=INTEGER},
+			</if>
+			<if test="extendJsonInfo != null">
+				extend_json_info = #{extendJsonInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="gmtModified != null">
+				gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.efida.esearch.model.AppDocFields">
+		update app_doc_fields
+		set app_id =
+		#{appId,jdbcType=VARCHAR},
+		doc_name = #{docName,jdbcType=VARCHAR},
+		doc_code = #{docCode,jdbcType=VARCHAR},
+		field_name =
+		#{fieldName,jdbcType=VARCHAR},
+		field_comment =
+		#{fieldComment,jdbcType=VARCHAR},
+		field_type =
+		#{fieldType,jdbcType=VARCHAR},
+		analyze_index =
+		#{analyzeIndex,jdbcType=VARCHAR},
+		analyze_search =
+		#{analyzeSearch,jdbcType=VARCHAR},
+		weight = #{weight,jdbcType=INTEGER},
+		is_order = #{isOrder,jdbcType=BIT},
+		order_num =
+		#{orderNum,jdbcType=INTEGER},
+		extend_json_info =
+		#{extendJsonInfo,jdbcType=VARCHAR},
+		gmt_create =
+		#{gmtCreate,jdbcType=TIMESTAMP},
+		gmt_modified =
+		#{gmtModified,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<!-- 自定义查询 -->
+	<select id="selectByDocCode" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from app_doc_fields
+		where doc_code=#{docCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectOneByParams" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from app_doc_fields
+		<where>
+			<if test="appId != null">
+				and app_id=#{appId}
+			</if>
+			<if test="docCode != null">
+				and doc_code=#{docCode}
+			</if>
+			<if test="fieldName != null">
+				and field_name=#{fieldName}
+			</if>
+		</where>
+	</select>
+
+</mapper>

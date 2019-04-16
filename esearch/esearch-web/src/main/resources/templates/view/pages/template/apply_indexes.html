@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>报名列表</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				width:150px!important;
+			}
+			.layui-form-pane .layui-input-block{
+				margin-left:150px;
+			}
+			.matchCode{
+				position:relative;
+				height:38px;
+			}
+			.matchCode input{
+				width:100%;
+				display:block;
+				height:38px;
+				border:1px solid #ccc;
+				border-radius:4px;
+				background:#fff;
+				padding:0 10px;
+				box-sizing:border-box;
+				-webkit-box-sizing:-webkit-border-box;
+				-moz-box-sizing:-moz-border-box;
+				-ms-box-sizing:-ms-border-box;
+			}
+			.selectBox{
+				width:100%;
+				max-height:250px;
+				overflow-y:scroll;
+				position:absolute;
+				left:0;
+				top:40px;
+				background:#fff;
+				z-index:100;
+				box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+				padding:5px 0;
+				border-radius: 4px;
+			}
+			.selectBox span{
+				line-height:36px;
+				display:block;
+				padding:0 8px;
+				cursor: pointer;
+			}
+			.tableBox{
+				min-height:350px;
+			}
+			[v-cloak] {
+				display: none;
+			}
+			.layui-input-block.relative{
+				position:relative;
+			}
+			.layui-input-block.relative span,.layui-input-block.relative i{
+				display:none; 
+			}
+			.layui-inline.relative span{
+				width: 350px;
+			    position: absolute;
+			    color: black;
+			    padding: 8px;
+			}
+			.layui-input-block.relative:hover i,.layui-input-block.relative:hover span{
+				display:inline-block;
+			}
+		</style>
+	</head>
+
+	<body class="childrenBody">
+		<div id="app" v-cloak>
+			<input type="hidden" id="dataObj">
+			<input type="hidden" id="edit">
+			<form class="layui-form layui-form-pane" style="padding:20px 0 10px 20px">
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">应用</label>
+				    <div class="layui-input-block matchCode">
+				    	<div name="select-main matchCode"  lay-filter='matchSel'>
+					     	 <input type="text" id="appId" readonly placeholder="请选择应用" class="layui-input" v-model="applyData.appId" @click="optionSelectInput">
+					     	 <div class="layui-form-item selectBox" id="selectBox0"  v-if="optionSelectShow" @mouseleave="mouseleaveSelect">
+								<span v-for="list in appIdList" :data-value="list.appId" @click="optionSelect(list)">{{list.appId}}({{list.appName}})</span> 
+							</div>
+						</div>
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">模板编号</label>
+				    <div class="layui-input-block">
+				     	 <input type="text" id="tplCode" placeholder="请输入模板编号" class="layui-input" v-model="applyData.tplCode" @blur="blurFun" :disabled="applyFalse?true:false" />
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">模板名称</label>
+				    <div class="layui-input-block">
+				     	 <input type="text" placeholder="请输入模板名称" class="layui-input" v-model="applyData.tplName" :disabled="inputVarible?false:true">
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">预测数据规模</label>
+				    <div class="layui-input-block"><!--  onkeyup="if(/^d+$/.test(this.value)){('只能是整数');this.value='';}" -->
+				     	 <input type="number" min='1' :disabled="inputVarible?false:true" name="forecastDataSize"  onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"  placeholder="请输入预测数据规模" class="layui-input" v-model="applyData.forecastDataSize">
+				    </div>
+				</div>
+				<!-- <div class='layui-form-item'>
+				    <label class="layui-form-label">数据表编码</label>
+				    <div class="layui-input-block">
+				     	 <input type="text" placeholder="请输入数据表编码" class="layui-input" v-model="applyData.docCode">
+				    </div>
+				</div> -->
+				<div class='layui-form-item'>
+				    <label class="layui-form-label" style="height:100px;">模板详细描述</label>
+				    <div class="layui-input-block">
+				     	 <textarea :disabled="inputVarible?false:true" style="height:100px;padding:5px;" placeholder="请输入模板详细描述" class="layui-input" v-model="applyData.tplDesc"></textarea>
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">配置表结构</label>
+				    <div class="layui-input-block">
+				     	 <a class="layui-btn" @click="setParam">配置表结构</a>
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">模板内容</label>
+				    <div class="layui-input-block relative" style="margin-left:0;">
+				    <a class="layui-btn" @click="scane">点击刷新模板内容</a> 
+				    	<i class="layui-icon" style="color:#009688;">&#xe702;</i>
+						<span  style="color:#009688;">以下数据模板通过配置数据模型自动生成</span>
+				    </div>
+				    <textarea v-if="scaneShow" style="display:none" class="layui-input" style="min-height:300px;" v-model="applyData.mappingTplContent" readonly></textarea> 
+				    <div class="layui-input"  style="max-height:700px;min-height:500px;overflow-y:auto;margin-top:15px;">
+				    	<div id="jsonGS1"><pre>{{result1}}</pre></div>
+				    	<div id="jsonGS2"><pre>{{result2}}</pre></div>
+				    </div>
+				</div>
+				<div class='layui-form-item' style="text-align:center;">
+				
+				    <div class="layui-inline">
+				     	 <a class="layui-btn" id="saveBtn" style="width:100px;" @click="save">保存</a>
+				    </div>
+				   <div class="layui-inline">
+				     	 <a class="layui-btn" id="submitBtn" style="width:100px;" @click="submitFun">提交申请</a>
+				    </div> 
+				</div>
+			</form>
+		</div>
+	</body>
+	<a><span id='btn' onclick='btnClick()'></span></a>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script type="text/javascript" src="/assets/common/vue/vue.js"></script>
+		<script type="text/javascript">
+			var width,height;
+			if(document.body.clientWidth<1500){
+				width='950px';
+				height="550px";
+			}else{
+				width='950px';
+				height="750px";
+			}
+			function btnClick() {
+				layui.use(['table', 'form', 'layedit', 'laydate','laypage','layer'], function() {
+					var table = layui.table;
+					var form = layui.form;
+					var layedit = layui.layedit;
+					var layer = layui.layer;
+					var laydate = layui.laydate;
+					var $ = layui.jquery;
+					var vm = new Vue({
+						el: '#app',
+						data: {
+							applyData:{},
+							appIdList:[],
+							optionSelectShow:false,
+							editFlage:null,
+							scaneShow:false,
+							result1:'',
+							result2:'',
+							inputVarible:false,
+							upFalse:false,
+							applyFalse:false,
+							setSum:0,
+						},
+						created:function(){
+							var that=this;
+							if($("#dataObj").val()){
+								that.applyData=JSON.parse($("#dataObj").val());
+								that.editFlage=true;
+								that.applyFalse=true;
+								that.inputVarible=true;
+							}
+							that.getList();
+						},
+						methods:{
+							save:save,
+							setParam:setParam,
+							getResultMethodsOther:getResultMethodsOther,
+							submitFun:submitFun,
+							getList:getList,
+							mouseleaveSelect:mouseleaveSelect,
+							optionSelect:optionSelect,
+							optionSelectInput:optionSelectInput,
+							scane:scane,
+							getResultMethodsGet:getResultMethodsGet,
+							blurFun:blurFun,
+							open:open,
+						}
+					})
+					function blurFun(){
+						console.log(vm.applyFalse,"ab")
+						if(vm.applyFalse){
+							return;
+						}
+						if(vm.applyData.tplCode){
+							if(vm.applyData.appId){
+								getResultMethodsGet('/template/code/check',{appId:vm.applyData.appId,tplCode:vm.applyData.tplCode},function(d){
+									 if(d.data==true){
+										 	vm.inputVarible=false;
+											layer.msg("模板编号已被占用");
+											return;
+									 }else{
+										 vm.inputVarible=true;
+									 }
+								});
+							}else{
+								layer.msg("请选择应用编号");
+								return;
+							}
+						}else{
+							layer.msg("模板编号不能为空");
+							return;
+						}
+					}
+					function scane(){
+						vm.scaneShow=true;
+						getResultMethodsGet("/template/mapping/view",{tplCode:vm.applyData.tplCode,appId:vm.applyData.appId},function(d){
+							vm.applyData.mappingTplContent=d.data.mappingTemplate +'\n' + d.data.saveDataTemplate;
+							vm.result1 = JSON.stringify(JSON.parse(d.data.mappingTemplate), null, 4);
+							vm.result2 = JSON.stringify(JSON.parse(d.data.saveDataTemplate), null, 4);
+						})
+					}
+					function optionSelectInput(){
+						if(!vm.editFlage){
+							vm.optionSelectShow=true;
+						}
+					}
+					function optionSelect(list){
+						vm.applyData.appId=list.appId;
+						vm.optionSelectShow=false;
+						form.render();
+					}
+					function mouseleaveSelect(){
+						vm.optionSelectShow=false;
+					}
+					function getList(){
+						var index = layer.load(2, {
+							shade: false
+						});
+						$.ajax({
+							type: 'get',
+							url: "/app/list/avalible",
+							cache: false,
+							data: {
+								pageNumber: 1,
+								pageSize: 9999
+							},
+							success: function(obj) {
+								layer.close(index);
+								vm.appIdList=obj.data.list;
+								if(obj.code != 0) {
+									layer.alert(obj.errorMsg, {
+										icon: 2
+									});
+									return;
+								}
+							}
+						})
+					}
+					 function submitFun(){
+						 if(vm.inputVarible==false){
+								layer.msg('模板编号被暂用');
+								return;
+							}
+						if(!vm.applyData.appId){
+							layer.msg("请先选择应用");
+							return;
+						}
+						if(!vm.applyData.tplCode){
+							layer.msg("请先填写模板编号");
+							return;
+						}
+						if(!vm.applyData.tplName){
+							layer.msg("请先填写模名称");
+							return;
+						}
+						
+						if(vm.setSum==0){
+							getResultMethodsOther('/template/apply?tplCode='+vm.applyData.tplCode+'&appId='+vm.applyData.appId,vm.applyData,function(d){
+								layer.msg("申请成功");
+								setTimeout(()=>{
+									var index=parent.layer.getFrameIndex(window.name);
+									parent.layer.close(index);
+								},500);
+							},function(d){
+								layer.msg(d.errorMsg);
+							})
+						}else{
+							getResultMethodsOther('/template/up?tplCode='+vm.applyData.tplCode+'&appId='+vm.applyData.appId,vm.applyData,function(d){
+								layer.msg("修改成功");
+								setTimeout(()=>{
+									var index=parent.layer.getFrameIndex(window.name);
+									parent.layer.close(index);
+								},500);
+							},function(d){
+								layer.msg(d.errorMsg);
+							})
+						}
+						
+					} 
+					function save(){
+						console.log(vm.applyData,"params");
+						
+						getResultMethodsOther('/template/up?tplCode='+vm.applyData.tplCode+'&appId='+vm.applyData.appId,vm.applyData,function(d){
+							layer.msg("修改成功");
+							setTimeout(()=>{
+								var index=parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+							},500);
+						},function(d){
+							layer.msg(d.errorMsg);
+						})
+					}
+					function setParam(){
+						if(vm.inputVarible==false){
+							layer.msg('模板编号已被占用');
+							return;
+						}
+						if(!vm.applyData.appId){
+							layer.msg('请先选择应用');
+							return;
+						}
+						if(!vm.applyData.tplCode){
+							layer.msg('请先填写模板编号');
+							return;
+						}
+						if(!vm.applyData.tplName){
+							layer.msg('请先填写模板模板名称');
+							return;
+						}
+						 if($("#dataObj").val()||vm.applyFalse){
+							 getResultMethodsOther('/template/up?tplCode='+vm.applyData.tplCode+'&appId='+vm.applyData.appId,vm.applyData,function(d){
+								 vm.upFalse=true;
+								 vm.setSum++;
+								 vm.open();
+							 },function(d){
+								 layer.msg(d.errorMsg);
+								 vm.upFalse=false;
+							 });
+						 }else{
+							 getResultMethodsOther('/template/apply',vm.applyData,function(d){
+								 vm.setSum++;
+								 vm.applyFalse=true; 
+								 vm.open();
+							 },function(d){
+								 layer.msg(d.errorMsg);
+								 vm.applyFalse=false;
+							 });
+						 }
+						
+					}
+					function open(){
+						 var indexopen = parent.layer.open({
+								title: "数据模型配置",
+								type: 2,
+								content: "data_model.html",
+								id: 'dataModel',
+								area: [width, height],
+								success: function(layero, index) {
+									var body = parent.layer.getChildFrame('body', index);
+									body.find('#appId').val(vm.applyData.appId);
+									body.find('#tplCode').val(vm.applyData.tplCode);
+									body.find('#tplName').val(vm.applyData.tplName);
+									body.find('#btn').click();
+								}
+							})
+					}
+					function getResultMethodsOther(url, prams, sufn, erfn) {
+						var index = layer.load(2, {shade: 0.01});
+					    $.ajax({
+					        url:  url,
+					        data: JSON.stringify(prams),
+					        contentType:'application/json',
+					        type: 'post',
+					        dataType: 'json',
+					        cache:false,
+					        success: function(d) {
+					        	layer.close(index);
+					        	if(d.code==0) {
+					        		if('function' === typeof sufn) sufn(d);
+					        	}else {
+					        		if('function' === typeof erfn) erfn(d);
+					        	}
+					        },
+						    error:function(){
+						    	layer.close(index);
+								layer.msg("请求出错");
+							}
+					    });
+					};
+					function getResultMethodsGet(url, prams, sufn) {
+						var index = layer.load(2, {shade: 0.01});
+					    $.ajax({
+					        url:  url,
+					        data: prams,
+					        contentType:'application/json',
+					        type: 'get',
+					        dataType: 'json',
+					        cache:false,
+					        success: function(d) {
+					        	layer.close(index);
+					        	if(d.code==0) {
+					        		if('function' === typeof sufn) sufn(d);
+					        	}else {
+					        		layer.msg(d.errorMsg);
+					        	}
+					        },
+						    error:function(){
+						    	layer.close(index);
+								layer.msg("请求出错");
+							}
+					    });
+					};
+				})
+			}
+		</script>
+
+</html>

@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>报名列表</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="/assets/common/layui/css/layui.css" media="all" />
+		<link rel="stylesheet" href="/assets/common/css/public.css" media="all" />
+		<style>
+			.layui-form-item .layui-input-inline {
+				margin-right: 0
+			}
+			
+			.layui-form-label {
+				width:150px!important;
+			}
+			.layui-form-pane .layui-input-block{
+				margin-left:150px;
+			}
+			.matchCode{
+				position:relative;
+				height:38px;
+			}
+			.matchCode input{
+				width:100%;
+				display:block;
+				height:38px;
+				border:1px solid #ccc;
+				border-radius:4px;
+				background:#fff;
+				padding:0 10px;
+				box-sizing:border-box;
+				-webkit-box-sizing:-webkit-border-box;
+				-moz-box-sizing:-moz-border-box;
+				-ms-box-sizing:-ms-border-box;
+			}
+			.selectBox{
+				width:100%;
+				max-height:250px;
+				overflow-y:scroll;
+				position:absolute;
+				left:0;
+				top:40px;
+				background:#fff;
+				z-index:100;
+				box-shadow: 0px 3px 3px rgba(0,0,0,0.2);
+				padding:5px 0;
+				border-radius: 4px;
+			}
+			
+			.selectBox.eff{
+				height:auto;
+				max-height:150px;
+			}
+			.selectBox.eff.con{
+				/* bottom:38px; */
+				width:99%;
+				height:auto;
+				max-height:150px;
+			}
+			.selectBox span{
+				line-height:36px;
+				display:block;
+				padding:0 8px;
+				cursor: pointer;
+			}
+			.tableBox{
+				min-height:350px;
+			}
+			[v-cloak] {
+				display: none;
+			}
+			body .modle-wrap{
+			    position: fixed;top: 0;right: 0;bottom: 0;left: 0;z-index: 1040;width: 100%;height: 100%;
+			}
+			body .modle-container{
+			    background:rgba(0, 0, 0, 0.5) none repeat scroll 0 0 !important;position: relative; width: 100%; height: 100%;
+			}
+			.layerLqd{
+				background: #fff;
+			    width:860px;
+			    left: 50%;
+			    margin-left: -375px;
+			    position: relative;
+			    top: 100px;
+			    max-height:650px;
+			    overflow-y:scroll;
+			}
+			.btnDiv{
+				text-align:center;
+				padding:20px 0;
+			}
+			.btnDiv .btn{
+				width:140px;
+				border:1px solid #009688;
+			}
+			.btnDiv .btn.bgWhite{
+				background:#fff;
+				color:#009688;
+			}
+			.h1Title{
+				height:50px;
+				line-height:50px;
+				font-size: 16px;
+				color: #15BC9C;
+				text-align: left;
+				border-bottom:1px solid #15BC9C;
+				padding-left:20px;
+			}
+			.h1Title.fixed{
+				width:760px;
+			}
+			.h1Title i{
+				color:#009688;font-size:22px;
+				margin-right:15px;
+				float:right;
+				cursor: pointer;
+			}
+			.left {
+				width:300px;
+				
+				float:left;
+			}
+			.leftBox {
+				border:1px solid #ccc;
+				min-height:150px;
+				padding:8px 8px;
+				overflow-x: hidden;
+   				overflow-y: scroll;
+			}
+			.right{
+				width:495px;
+				float:right;
+				margin-right:0px;
+			}
+			.right .top select{
+				width:100%;
+				height:36px;
+			}
+			.right .top input{
+				width:100%;
+				height:30px;
+			}
+			.top input{
+				width:100%;
+				height:30px;
+			}
+			.clearfix:after{display:block;clear:both;content:"";visibility:hidden;height:0};
+   			.clearfix{zoom:1};
+   			.lineBox{
+   			    position: relative!important;
+			    padding:0 5px;
+			    line-height: 24px;
+   			}
+   			.lineBox .field{
+   				font-size:14px;
+   				line-height:24px;
+   				cursor: pointer;
+   				width: 100%;
+			    overflow: hidden;
+			    white-space: nowrap;
+   			}
+   			.lineBox .field.on{
+   				color:#009688;
+   			}
+   			.lineBox .layerBox{
+   				max-width:250px;
+   				display:none;
+   				border:1px solid #ccc;
+   				padding:5px;
+   				position: absolute;
+   				top:0;
+   				z-index:100;
+   				margin-left:10px;
+   			}
+   			.lineBox .icon{
+   				display:none;
+   			}
+   			.lineBox:hover .icon{
+   				display:inline-block;
+   			}
+   			.lineBox:hover .layerBox{
+   				display:inline-block;
+   			}
+   			.textareaJson{
+   				width:100%;
+   				min-height:200px;
+   				border:1px solid #e6e6e6;
+   			}
+   			.rightBox{
+   				height: 163px;
+			    overflow-y: auto;
+			    border: 1px solid #ccc;
+			    padding: 8px 0;
+   			}
+   			.rightBox .lineBox.on{
+   				background:#e6e6e6;
+   			}
+   			.selct_checkedBox span{
+   			    display: inline-block;
+   				 vertical-align: middle;
+   			}
+   			.selct_checkedBox{
+   				margin-right:10px;
+   				font-weight:100;
+   			}
+   			.selct_checkedBox .selct_checked{
+   				border:1px solid #ccc;
+   				width:16px;
+   				height:16px;
+   				margin-right:5px;
+   			}
+   			.selct_checkedBox .selct_checked.active{
+   				border-color:#15BC9C;
+   				background:#15BC9C;
+   			}
+   			.selct_checkedBox{
+   				line-height:24px;
+   			}
+   			.selct_checkedBox.eff{
+   				line-height:38px;
+   			}
+   			.effect{
+   				width:220px;
+			    display: inline-block;
+			    vertical-align: top;
+			    border: 1px solid #ccc;
+			    padding: 8px 10px;
+   			}
+   			.mrt15{
+   				margin-top:15px;
+   			}
+   			.symbolBoxSon{
+   				line-height:38px;
+   			}
+   			.layui-btn.on{
+   				border: 1px solid #C9C9C9;
+			    background-color: #fff;
+			    color: #555;
+   			}
+   			.logic.lineBox{
+   				padding:0 8px;
+   				padding: 0 8px;
+			    width: 100%;
+			    overflow-x: hidden;
+			    box-sizing: border-box;
+   				white-space: nowrap;
+   			}
+   			.pdt10{
+   				padding-bottom:10px;
+   			}
+   			.border{
+   				border:1px solid #ccc;
+   			}
+   			.layui-form-item.color{
+   				color:rgb(0, 150, 136);
+   				padding:5px 0px 5px 75px;
+   				margin-bottom:0;
+   			}
+   			.layui-input-block.relative{
+				position:relative;
+			}
+			.layui-input-block.relative span,.layui-input-block.relative i{
+				display:none;
+			}
+			.layui-input-block.relative span{
+				width: 350px;
+			    position: absolute;
+			    color: black;
+			    padding: 8px;
+			}
+			.layui-input-block.relative:hover i,.layui-input-block.relative:hover span{
+				display:inline-block;
+			}
+		</style>
+	</head>
+
+	<body class="childrenBody" >
+		<div id="app" v-cloak>
+			<input type="hidden" id="dataObj">
+			<input type="hidden" id="ceshi" value="12">
+			<form class="layui-form layui-form-pane" style="padding:20px 0 10px 20px">
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">应用ID</label>
+				    <div class="layui-input-block matchCode">
+				     	 <div name="select-main matchCode"  lay-filter='matchSel'>
+					     	 <input type="text" id="appId" readonly placeholder="请输入应用ID" class="layui-input" v-model="applyData.appId" >
+						</div>
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">模板编号</label>
+				    <div class="layui-input-block">
+				     	 <input type="text" id="tplCode" readonly placeholder="请输入模板编号" class="layui-input" v-model="applyData.tplCode">
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label">模板名称</label>
+				    <div class="layui-input-block">
+				     	 <input type="text" readonly placeholder="请输入模板名称" class="layui-input" v-model="applyData.tplName">
+				    </div>
+				</div>
+				<div class='layui-form-item'>
+				    <label class="layui-form-label" style="height:80px">模板详细描述</label>
+				    <div class="layui-input-block">
+				     	 <textarea readonly style="height:80px;padding:5px;" placeholder="请输入模板详细描述" class="layui-input" v-model="applyData.tplDesc"></textarea>
+				    </div>
+				</div>
+				<div class='layui-form-item' v-if="params.length>0">
+				   <table class="layui-table">
+				   		<thead>
+				   			<tr>
+				   				<th>变量名</th>
+				   			</tr>
+				   		</thead>
+				   		<tbody>
+				   			<tr v-for="(list,index) in params">
+				   				<td>{{list}}</td>
+				   				
+				   			</tr>
+				   		</tbody>
+				   </table>
+				</div>
+
+				<div class='layui-form-item' v-if="conditionListOut.length>0">
+				   <table class="layui-table">
+				   		<thead>
+				   			<tr>
+				   				<th>序号</th>
+				   				<th>关系</th>
+				   				<th style="width:60%">条件内容</th>
+				   			</tr>
+				   		</thead>
+				   		<tbody>
+				   			<tr v-for="(list,index) in conditionListOut">
+				   				<td>{{index+1}}</td>
+				   				<td>
+				   					<div class="matchCode" v-if="index==0">
+								     	 <div class="layui-form-item" style="text-align:center;" :data="list.logic=''">-</div>
+								    </div>
+				   					<div class="matchCode" v-if="index>0">
+								     	 <div class="select-main matchCode" v-if="index>0" style="text-align:center;">
+									     	{{list.logic}}
+										</div>
+								    </div>
+				   				</td>
+				   				<td>{{list}}</td>
+				   			</tr>
+				   		</tbody>
+				   </table>
+				</div>
+				<div class='layui-form-item'>
+				    <div class="layui-inline">模板内容（下述模板通过配置数据模型自动生成,请勿随意更改）</div>
+				    <div class="layui-inline"><a class="layui-btn" @click="scane">点击浏览</a></div>
+				    <textarea style="display:none" class="layui-input" style="min-height:300px;" v-model="applyData.mappingTplContent"></textarea>
+				    <div  class="layui-input"  style="max-height:700px;min-height:500px;overflow-y:auto;">
+				    	<div id="jsonGS1"><pre>{{result}}</pre></div>
+				    </div>
+				</div>
+				<div class="modle-wrap" v-if="paramsValueShow">
+					<div class="modle-container">
+						<div class="layerLqd" style="background:#fff;width:500px!important;margn-left:-250px;">
+							<h1 class="h1Title">参数值配置<i class="layui-icon"  @click='colseEdit(4)'>&#x1006;</i></h1>
+							<div class="tableBox" style="max-heigt:350px;min-height:0;"> 
+								<div class="layui-form-item " v-for="(value, key) in paramsobject">
+								    <label style="width:80px!important" class="layui-form-label" style="border:0;background:#fff;">{{key}}</label>
+								    <div class="layui-input-block" style="margin-left:80px;">
+								     	<input class="layui-input" type="text" :placeholder="'请输入变量'+key+'的值'" v-model="paramsobject[key]" />
+								    </div>
+								 </div>
+								 <div class="layui-form-item btnDiv">
+									<div class="layui-inline">
+										<a class="layui-btn btn"  data-type="reload" @click="paramsSave">确定</a>
+									</div>
+									<div class="layui-inline">
+										<a class="layui-btn btn bgWhite"  @click='colseEdit(4)'>取消</a>
+									</div>
+								</div>
+							</div> 
+						</div>	
+					</div>
+				</div><!-- 模板结束 -->
+			</form>
+		</div>
+	</body>
+	<a><span id='btn' onclick='btnClick()'></span></a>
+	<script type="text/javascript" src="/assets/common/layui/layui.js"></script>
+	<script type="text/javascript" src="/assets/common/vue/vue.js"></script>
+		<script type="text/javascript">
+			var width,height;
+			if(document.body.clientWidth<1500){
+				width='950px';
+				height="550px";
+			}else{
+				width='950px';
+				height="750px";
+			}
+			var ctx="${ctx}";
+			console.log(ctx,"ctx")
+			function btnClick() {
+				layui.use(['table', 'form', 'layedit', 'laydate','laypage'], function() {
+					var table = layui.table;
+					var form = layui.form;
+					var layedit = layui.layedit;
+					var laydate = layui.laydate;
+					var $ = layui.jquery;
+					var optionHtml='';
+					var vm = new Vue({
+						el: '#app',
+						data: {
+							applyData:{},
+							appIdList:[],
+							optionSelectShow:false,
+							editFlage:null,
+							selectIndex:null,
+							params:[],
+							editStatus:false,
+							dataObjFieldType:[],
+							onIndex:null,
+							symbolObj:{},
+							symbolListObj:{},
+							selectedboolea:[],
+							conditionObj:{},//最终提交的对象
+							pros:{'gt':false,'gte':false,'lt':false,'lte':false},
+							optionHtml:'',
+							editStatus_effect:false,
+							effect:{},
+							autoObj:{"optionSelectShow_e":false,"optionSelectShow_v":false,"optionSelectShow_c":false,
+								"symbolValue":"","symbolVarible":''},
+							effectText:'',
+							effectKey:'',
+							condEffect:{},
+							effectFlage:{"lt":false,"gt":false},
+							conditionListOut:[],
+							conditionListInner:[],
+							editStatus_sonCondition:false,
+							effectOneFlage:false,
+							effectOne:{},
+							valMethodLt:{},valMethodGt:{},
+							activeLt:null,activeGt:null,
+							scaneShow:false,
+							result:null,valueVariableNo:null,
+							valMethodLtBtn:false,valMethodGtBtn:false,valMethodBtn:false,
+							valMethod:null,
+							logicComment:'',
+							indexObj:{},
+							variableNo:false,
+							setVariableObj:{},paramsValueShow:false,paramsobject:{},
+						},
+						undated:function(){
+							var that=this;
+							form.on('checkbox(gt)', function(data) {
+								if(data.elem.checked) {
+									vm.selectedboolea.push('gt');
+								}else {
+									//vm.selectedboolea.push('gt');
+									vm.selectedboolea.forEach(function(v,index) {
+										if(v = 'gt') vm.selectedboolea.splice(index,1);
+									});
+								};
+							})
+							form.render();
+						},
+						created:function(){
+							var that=this;
+							if($("#dataObj").val()){
+								that.applyData=JSON.parse($("#dataObj").val());
+								console.log(that.applyData,"app");
+								that.params=that.applyData.params.split(",");
+								that.conditionListOut=JSON.parse(that.applyData.conditionJson).condition;
+								that.editFlage=true;
+							}
+							//Vue.set(that.conditionObj,'val_method',0); 
+							that.getList();
+							that.symbol();
+						},
+						mounted: function () {
+							form.render();
+						},
+						methods:{
+							save:save,
+							setParam:setParam,
+							getResultMethodsOther:getResultMethodsOther,
+							submitFun:submitFun,
+							getList:getList,
+							mouseleaveSelect:mouseleaveSelect,
+							optionSelect:optionSelect,
+							optionSelectInput:optionSelectInput,
+							selectIndexes:selectIndexes,
+							setCookie:setCookie,
+							removeCookie:removeCookie,
+							getCookie:getCookie,
+							addVariableFun:addVariableFun,
+							paramsDelete:paramsDelete,
+							addCondition:addCondition,
+							colseEdit:colseEdit,
+							fieldtypeFun:fieldtypeFun,
+							condtionSave:condtionSave,
+							getResultMethodsGet:getResultMethodsGet,
+							dataObjFieldTypeFun:dataObjFieldTypeFun,
+							symbol:symbol,
+							selectSymbolFun:selectSymbolFun,
+							fieldSmybolFun:fieldSmybolFun,
+							optionSelect_e:optionSelect_e,
+							optionSelectInput_e:optionSelectInput_e,
+							optionSelect_v:optionSelect_v,
+							addSonCondition:addSonCondition,
+							effectSave:effectSave,
+							optionSelectInput_c:optionSelectInput_c,
+							effCondition:effCondition,
+							effConditionOther:effConditionOther,
+							deleteContent:deleteContent,
+							deleteNull:deleteNull,
+							effectNull:effectNull,
+							symbolNull:symbolNull,
+							fieldNull:fieldNull,
+							effectSonSave:effectSonSave,
+							setEffect:setEffect,
+							addSonCondtionInner:addSonCondtionInner,
+							fieldSmybolFunOther:fieldSmybolFunOther,
+							scane:scane,
+							valueVariableFun:valueVariableFun,
+							optionSelectInput_logic:optionSelectInput_logic,
+							optionSelect_logic:optionSelect_logic,
+							optionSelectInput_va:optionSelectInput_va,
+							optionSelect_va:optionSelect_va,
+							mouseleaveSelect_va:mouseleaveSelect_va,
+							mouseleaveSelect_list:mouseleaveSelect_list,
+							paramsSave:paramsSave,
+						}
+					})
+					function mouseleaveSelect_list(list){
+						delete list.logicFlage;
+						vm.$forceUpdate();
+					}
+					function mouseleaveSelect_va(key){
+						vm.$forceUpdate();
+						delete vm.setVariableObj[key];
+						vm.$forceUpdate();
+					}
+					function optionSelect_va(list,key){
+						vm.$forceUpdate();
+						if(vm.symbolListObj.properties){
+							if(key=='variable2') vm.valMethodLt.variable=list;
+							if(key=='variable3') vm.valMethodGt.variable=list;
+						}else{
+							vm.conditionObj.variable=list;
+						}
+						
+						delete vm.setVariableObj[key];
+					}
+					function optionSelectInput_va(key){
+						vm.$forceUpdate();
+						vm.setVariableObj[key]=true;
+					}
+					function optionSelect_logic(list,op,key){
+						if(key=='inner'){
+							vm.$forceUpdate();
+							list.logic=op.type;
+							delete list.logicFlage;
+						}else if(key=='outer'){
+							vm.$forceUpdate();
+							list.logic=op.type;
+							delete list.logicFlage;
+						}
+						
+					}
+					function optionSelectInput_logic(key,list){
+						if(key=='inner'){
+							vm.$forceUpdate();
+							list.logicFlage=true;
+						}else if(key=='outer'){
+							vm.$forceUpdate();
+							list.logicFlage=true;
+						}
+					}
+					function valueVariableFun(key){
+						vm.conditionObj.val_method=key;
+						vm.valueVariableNo=key;
+					}
+					function paramsSave(){
+						vm.$forceUpdate();
+						var paramArr=[];
+						for(let key in vm.paramsobject){
+							console.log(key,"key",vm.paramsobject[key])
+							if(vm.paramsobject[key]===undefined){
+								vm.paramsobject[key]='';
+							}else if(vm.paramsobject[key]=='null'){
+								vm.paramsobject[key]=null;
+							}
+							paramArr.push(vm.paramsobject[key]);
+						}
+						vm.paramsString=paramArr.join();
+						var obj={};
+						obj.params=vm.params.join();
+						console.log(obj.params,"pa");
+						obj.conditions=vm.conditionListOut;
+						var sum=0;
+						vm.conditionListOut.forEach(function(v,i){
+							if(v.logic==''&&i>0){
+								layer.msg('请设置第'+(i+1)+'数据的关系');
+							}else sum++;
+						})
+						
+						if(sum==obj.conditions.length){
+							Vue.set(vm.applyData,'queryConfigJson',obj);
+							Vue.set(vm.applyData,'paramValues',vm.paramsobject);
+                            getResultMethodsOther('/template/query/view/query/tpl',vm.applyData,function(d){
+                            	vm.paramsValueShow=false;
+                            	vm.result = JSON.parse(d.data);
+							})
+						} 
+					}
+					function scane(){
+						if(vm.conditionListOut.length==0){
+							layer.msg("设置条件");
+							return;
+						}
+						if(vm.params.length>0){
+							vm.paramsValueShow=true;
+							for(let key of vm.params){
+								Vue.set(vm.paramsobject,key,undefined);
+								vm.$forceUpdate();
+							}
+						}else{
+							vm.paramsSave();
+						}
+						
+					}
+					function addSonCondtionInner(){
+						vm.editStatus=true;
+						//vm.conditionObj.is_simple_condition=true;
+						vm.conditionObj.simpleFlage=false;
+					}
+					function effectSonSave(){
+						var obj={};
+						obj.is_simple_condition=false;
+						if(vm.effectOne.isRelyVarBol==null||vm.effectOne.isRelyVarBol==''){
+							layer.msg('请设置生效条件');
+							return;
+						}
+						if(vm.conditionListInner.length==0){
+							layer.msg("请设置子条件");
+							return;
+						}
+						obj.effect=vm.effectOne;
+						obj.variable=vm.effectOne.variable;
+						obj.conditionObjList=vm.conditionListInner;
+						var sum=0;
+						obj.conditionObjList.forEach(function(v,i){
+							if(v.logic==''&&i!=0){
+								layer.msg('请设置第'+(i+1)+'数据的关系');
+							}else{
+								sum++;
+							}
+						})
+						if(sum==obj.conditionObjList.length){
+							obj.logic='';
+							vm.conditionListOut.push(obj);
+							vm.editStatus_sonCondition=false;
+						}
+						vm.conditionListInner=[];
+						vm.effectOne={};
+					}
+					function setEffect(){
+						vm.editStatus_effect=true;
+						vm.variableNo=true;
+						vm.effectFlage.lt=true;
+					}
+					function deleteContentInner(list,index){
+						vm.conditionListInner.forEach(function(v,i){
+							if(i==index){
+								var indexopen=layer.open({
+							        type: 1
+							        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+							        ,btn: ['确定','取消']
+							        ,btnAlign: 'c' //按钮居中
+							        ,shade: 0 //不显示遮罩
+									,yes: function(layero){//bt1的按钮
+										vm.conditionListInner.splice(i,1);
+							        	layer.msg("删除成功");
+							        	layer.close(indexopen);
+							        },
+							        btn2: function(index, layero){
+							        	layer.close(indexopen);
+							        }
+							      });
+								
+							}
+						})
+					}
+					function deleteContent(list,index){
+						vm.conditionListOut.forEach(function(v,i){
+							if(i==index){
+								var indexopen=layer.open({
+							        type: 1
+							        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+							        ,btn: ['确定','取消']
+							        ,btnAlign: 'c' //按钮居中
+							        ,shade: 0 //不显示遮罩
+									,yes: function(layero){//bt1的按钮
+										vm.conditionListOut.splice(i,1);
+							        	layer.msg("删除成功");
+							        	layer.close(indexopen);
+							        },
+							        btn2: function(index, layero){
+							        	layer.close(indexopen);
+							        }
+							      });
+								
+							}
+						})
+					}
+					function deleteNull(){
+						vm.conditionObj={};
+						vm.onIndex=null;
+						vm.symbolListObj={};
+						vm.condEffect={};
+						//vm.valMethod=null;
+						vm.effectFlage.lt=false;
+						vm.effectFlage.gt=false;
+					}
+					function fieldNull(){
+						vm.conditionObj.symbol=null;
+						vm.conditionObj.val_method=null;
+						vm.symbolNull();
+						vm.symbolListObj={};
+						vm.valMethodBtn=false;
+						vm.conditionObj.val_method=null,
+						vm.conditionObj.value=null;
+					}
+					function fieldtypeFun(fieldtype,index){
+						vm.onIndex=index;
+						vm.conditionObj.fieldName=fieldtype.fieldName;
+						vm.fieldNull();
+					}
+					function condtionSave(){
+						if(vm.conditionObj.fieldName==null){
+							layer.msg("请选择字段");
+							return;
+						}
+						if(vm.conditionObj.symbol==null){
+							layer.msg("请选择关系");
+							return;
+						}
+						
+						if(vm.symbolListObj.isHaveVal){
+							if(vm.symbolListObj.properties){
+								if(vm.conditionObj.selected_vars==null||vm.conditionObj.selected_vars.length==0){
+									layer.msg('请选择符号');
+									return;
+								}
+								if((vm.pros.lt||vm.pros.lte)&&vm.conditionObj.val_method==0&&!vm.valMethodLt.value){
+									layer.msg('请填写值');
+									return;
+								}
+								if((vm.pros.gt||vm.pros.gte)&&vm.conditionObj.val_method==0&&!vm.valMethodGt.value){
+									layer.msg('请填写值');
+									return;
+								}
+								if((vm.pros.gt||vm.pros.gte)&&vm.conditionObj.val_method==1&&!vm.valMethodGt.effect){
+									layer.msg('请设置生效条件');
+									return;
+								}
+								if((vm.pros.lt||vm.pros.lte)&&vm.conditionObj.val_method==1&&!vm.valMethodLt.effect){
+									layer.msg('请设置生效条件');
+									return;
+								}
+								for(var i=0;i<vm.conditionObj.selected_vars.length;i++){
+									if(vm.conditionObj.selected_vars[i]._var.substring(0,2)=='lt'){
+										vm.conditionObj.selected_vars[i].value=vm.valMethodLt.value;
+										vm.conditionObj.selected_vars[i].val_method=vm.activeLt;
+									}else if(vm.conditionObj.selected_vars[i]._var.substring(0,2)=='gt'){
+										vm.conditionObj.selected_vars[i].value=vm.valMethodGt.value;
+										vm.conditionObj.selected_vars[i].val_method=vm.activeGt;
+									}
+								}
+								if(vm.conditionObj.simpleFlage){
+									var obj=vm.conditionObj;
+									obj.is_simple_condition=true;
+									obj.effect={};
+									obj.logic='';
+									vm.conditionListOut.push(obj);
+									vm.deleteNull();
+								}else{
+									vm.conditionObj.logic='',
+									vm.conditionListInner.push(vm.conditionObj);
+									vm.deleteNull();
+								}
+								vm.editStatus=false;
+								vm.deleteNull();
+							}else{
+								if(!(vm.conditionObj.val_method==0||vm.conditionObj.val_method==1)){
+									layer.msg("请选择值或者变量");
+									return;
+								}
+								if(!vm.conditionObj.value&&vm.conditionObj.val_method==0){
+									layer.msg("请填写值");
+									return;
+								}
+								if(vm.conditionObj.val_method==1&&!vm.conditionObj.effect){
+									layer.msg('请设置生效条件');
+									return;
+								} 
+								if(vm.conditionObj.simpleFlage){
+									 var obj=vm.conditionObj;
+									 console.log(obj,"obj=")
+									obj.is_simple_condition=true;
+									//obj.effect={};
+									obj.logic='';
+									vm.conditionListOut.push(obj);
+									vm.deleteNull();
+								}else{
+									vm.conditionObj.logic='',
+									vm.conditionListInner.push(vm.conditionObj);
+									vm.deleteNull();
+								}
+								vm.editStatus=false;
+								vm.deleteNull();
+							}
+						}else{
+							if(vm.conditionObj.simpleFlage){
+								var obj={};
+								obj.is_simple_condition=true;
+								obj.conditionObjList=[];
+								obj.conditionObjList.push(vm.conditionObj);
+								obj.effect={};
+								obj.logic='';
+								vm.conditionListOut.push(obj);
+								vm.deleteNull();
+							}else{
+								vm.conditionObj.logic='',
+								vm.conditionListInner.push(vm.conditionObj);
+								vm.deleteNull();
+							}
+							console.log("没有其他的");
+							vm.editStatus=false;
+							vm.deleteNull();
+						}
+					}
+					function effectNull(){
+						vm.effect={};
+						vm.effectKey='';
+						vm.effectText='';
+						vm.effectFlage.lt=false;
+						vm.effectFlage.gt=false;
+						vm.variableNo=false;
+					}
+					function symbolNull(){
+						vm.valMethodLt={};
+						vm.valMethodGt={};
+						vm.activeLt=null;
+						vm.activeGt=null;
+						vm.conditionObj.val_method=null;
+						vm.valMethodLtBtn=false;
+						vm.valMethodGtBtn=false;
+						vm.valueVariableNo=null;
+						vm.valMethodBtn=false;
+						vm.effectNull();
+						vm.pros={'gt':false,'gte':false,'lt':false,'lte':false};
+					}
+					
+					function effConditionOther(){
+						if(!vm.conditionObj.variable){
+							layer.msg("请选择变量");
+							return;
+						}
+						vm.editStatus_effect=true;
+						vm.effectFlage.lt=false;
+						vm.effectFlage.gt=false;
+					}
+					function effCondition(item,key){
+						//vm.effectNull();
+						if(vm.symbolListObj.properties){
+							if(!vm.conditionObj.selected_vars){
+								layer.msg("请选择符号");
+								return;
+							}
+							vm.editStatus_effect=true;
+							 if(key=='lt'){
+								 if(!vm.valMethodLt.variable){
+									layer.msg("请选择变量");
+									return;
+								 }
+								vm.effectFlage.lt=true;
+							}else if(key=='gt'){
+								 if(!vm.valMethodGt.variable){
+									layer.msg("请选择变量");
+									return;
+								 }
+								vm.effectFlage.gt=true;
+							}
+						}
+					}
+					function optionSelectInput_c(key){
+						if(key=='condition'){
+							vm.autoObj.optionSelectShow_c=true;
+						}
+					}
+					function effectSave(){
+						if(vm.effect.isRelyVar==null){
+							layer.msg("请选择生效条件");
+							return;
+						}
+						if(vm.effect.isRelyVar&&vm.effect.variable==null&&vm.variableNo){
+							layer.msg("请选择变量");
+							return;
+						}
+						if(vm.effect.isRelyVar&&vm.effect.effectKey==null){
+							layer.msg("请选择条件");
+							return;
+						}
+						if(vm.effect.isRelyVar&&vm.effect.effectKey=='e_value'&&(vm.effect.value==''||vm.effect.value==null)){
+							layer.msg("请选填写条件值");
+							return;
+						}
+						if(vm.effectFlage.lt){
+							if(vm.conditionObj.selected_vars){
+								Vue.set(vm.valMethodLt,"effect",vm.effect);
+								for(var i=0;i<vm.conditionObj.selected_vars.length;i++){
+									if(vm.conditionObj.selected_vars[i]._var.substring(0,2)=='lt'){
+										if(Object.assign){
+											vm.conditionObj.selected_vars[i]=Object.assign(vm.conditionObj.selected_vars[i],vm.valMethodLt);
+										}else{
+											vm.conditionObj.selected_vars[i]=$.extend({},vm.conditionObj.selected_vars[i],vm.valMethodLt);
+										}
+									    if(vm.variableNo){
+											Vue.set(vm.conditionObj.selected_vars[i],"variable",vm.effect.variable);
+										}
+										vm.valMethodLtBtn=true;
+									}
+								}
+								vm.effectNull();
+								vm.effectFlage.lt=false;
+							}else{
+								var effect=vm.effect;
+								vm.effectOne=effect;
+								vm.effectNull();
+								vm.effectFlage.lt=false;
+							}
+						}else if(vm.effectFlage.gt){
+							Vue.set(vm.valMethodGt,"effect",vm.effect);
+							for(var i=0;i<vm.conditionObj.selected_vars.length;i++){
+								if(vm.conditionObj.selected_vars[i]._var.substring(0,2)=='gt'){
+									if(Object.assign){
+										vm.conditionObj.selected_vars[i]=Object.assign(vm.conditionObj.selected_vars[i],vm.valMethodGt);
+									}else{
+										vm.conditionObj.selected_vars[i]=$.extend({},vm.conditionObj.selected_vars[i],vm.valMethodGt);
+									}
+									if(vm.variableNo){
+										Vue.set(vm.conditionObj.selected_vars[i],"variable",vm.effect.variable);
+									}
+									vm.valMethodGtBtn=true;
+									vm.effectNull();
+								}
+							}
+							vm.effectNull();
+						}else{
+							Vue.set(vm.conditionObj,"effect",vm.effect);
+							//Vue.set(vm.conditionObj,"variable",vm.effect.variable);
+							vm.valMethodBtn=true;
+							vm.effectNull();
+						}
+						vm.editStatus_effect=false;
+						
+					}
+					function addSonCondition(){
+						
+						if(!vm.applyData.appId){
+							layer.msg("请选择应用");
+							return;
+						}
+						if(!vm.applyData.tplCode){
+							layer.msg("请填写模板编号");
+							return;
+						}
+						
+						if(!vm.applyData.docTplCode){
+							layer.msg("请先选择索引");
+							return;
+						}
+						vm.dataObjFieldTypeFun();
+						vm.editStatus_sonCondition=true;
+					}
+					function optionSelect_v(list){
+						vm.effect.variable=list;
+						vm.autoObj.optionSelectShow_v=false;
+					}
+					function optionSelectInput_e(key){
+						if(key=='effect'){vm.autoObj.optionSelectShow_e=true;}
+						else if(key=='varible') vm.autoObj.optionSelectShow_v=true;
+					}
+					function optionSelect_e(bol,text){
+						vm.effect.isRelyVar=bol;
+						vm.effect.isRelyVarBol=text;
+						vm.effectText=text;
+						vm.autoObj.optionSelectShow_e=false;
+						if(vm.effect.isRelyVar==false){
+							vm.effect.effectKey='';
+							vm.effect.value='';
+							vm.effect.variable='';
+						}
+					}
+					function fieldSmybolFunOther(key,flage,val){
+						if(flage=='effectKey'){
+							vm.$forceUpdate();
+							vm.effect.effectKey=key;
+							vm.effectKey=key;
+							vm.effect.effectKeyText=val;
+						}
+					}
+					function fieldSmybolFun(key,flage){
+						if(flage=='selected_vars'){
+							vm.effectFlage.lt=false;
+							vm.effectFlage.gt=false;
+							if(!vm.conditionObj.selected_vars){
+								vm.conditionObj.selected_vars=[];
+								vm.conditionObj.selected_vars.push({_var:key});
+								vm.pros[key]=true;
+							}else{
+								var sum=0;
+								for(var i=0;i<vm.conditionObj.selected_vars.length;i++){
+									if(vm.conditionObj.selected_vars[i]._var===key){
+										if(key=='lt'||key=='lte'){
+											vm.activeLt=null;
+											vm.valMethodLt={};
+											vm.valMethodLtBtn=false;
+										}else{
+											vm.valMethodGt={};
+											vm.activeGt=null;
+											vm.valMethodGtBtn=false;
+										} 
+										vm.conditionObj.selected_vars.splice(i,1);
+										vm.pros[key]=false;
+										
+										return false;
+									}else{
+										sum++;
+									}
+								}
+								if(sum==vm.conditionObj.selected_vars.length){
+									var sum0=0;
+									for(var j=0;j<vm.conditionObj.selected_vars.length;j++){
+										if(key.substring(0,2)==vm.conditionObj.selected_vars[j]._var.substring(0,2)){
+											layer.msg("不能同时选择大于和大于等于或不能同时选择小于和小于等于");
+										}else{
+											sum0++;
+										}
+									}
+									if(sum0==vm.conditionObj.selected_vars.length){
+										vm.conditionObj.selected_vars.push({_var:key});
+										vm.pros[key]=true;
+									}
+									
+								}
+							}
+						}else if(flage=='val_methodLt'){
+							//Vue.set(vm.valMethodLt,'val_method',key);
+							vm.activeLt=key;
+							
+						}else if(flage=='val_methodGt'){
+							//vm.valMethodGt.val_methode=key;
+						//	Vue.set(vm.valMethodGt,'val_method',key);
+							vm.activeGt=key;
+						}
+					}
+					function selectSymbolFun(list){
+						if(vm.conditionObj.fieldName==null){
+							layer.msg("请先选择字段");
+							return;
+						}
+						vm.symbolIndex=list.type;
+						vm.conditionObj.symbol=list.type;
+						vm.symbolListObj=list;
+						
+						vm.symbolNull();
+						vm.valMethodBtn=false;
+					}
+					function symbol(){
+						getResultMethodsGet('/template/query/sys/logic_symbol','',function(d){
+							vm.symbolObj=d.data;
+						})
+					}
+					function colseEdit(key){
+						if(key===1) {
+							vm.editStatus=false;
+							vm.deleteNull();
+							vm.effectNull();
+							vm.symbolNull();
+							vm.fieldNull();
+						}
+						else if(key===2) {
+							vm.editStatus_effect=false;
+							vm.effectNull();
+						}
+						else if(key===3) {
+							vm.editStatus_sonCondition=false;
+							vm.conditionListInner=[];
+							vm.effectOne={};
+						}else if(key===4){
+							vm.paramsValueShow=false;
+							vm.paramsobject={};
+						}
+					}
+					function addCondition(){
+						if(!vm.applyData.appId){
+							layer.msg("请选择应用");
+							return;
+						}
+						if(!vm.applyData.tplCode){
+							layer.msg("请填写模板编号");
+							return;
+						}
+						if(!vm.applyData.docTplCode){
+							layer.msg("请先选择索引");
+							return;
+						}
+						vm.dataObjFieldTypeFun();
+						vm.editStatus=true;
+						//vm.conditionObj.is_simple_condition=true;
+						vm.conditionObj.simpleFlage=true;
+					}
+					function dataObjFieldTypeFun(){
+						getResultMethodsGet('/template/field/list',{appId:vm.applyData.appId,docCode:vm.applyData.docTplCode},function(d){
+							vm.dataObjFieldType=d.data;
+						})
+					}
+					function paramsDelete(list,index){
+						var indexopen=layer.open({
+					        type: 1
+					        ,content: '<div style="padding: 20px 100px;">确定此操作吗？</div>'
+					        ,btn: ['确定','取消']
+					        ,btnAlign: 'c' //按钮居中
+					        ,shade: 0 //不显示遮罩
+							,yes: function(layero){//bt1的按钮
+								vm.params.splice(index,1);
+					        	layer.msg("删除成功");
+					        	layer.close(indexopen);
+					        },
+					        btn2: function(index, layero){
+					        	layer.close(indexopen);
+					        }
+					      });
+					}
+					function addVariableFun(){
+						var sum=0;
+						var addVariable=$("#addVariable").val()
+						if(addVariable==''){
+							layer.msg("输入变量不能为空");
+						}else{
+							if(vm.params.length==0){
+								vm.params.push(addVariable);
+							}else{
+								for(var a=0;a<vm.params.length;a++){
+									if(addVariable==vm.params[a]){
+										layer.msg("该变量已存在");
+										break;
+									}else{
+										sum++;
+									}
+								}
+							}
+							if(sum==vm.params.length){
+								vm.params.push(addVariable);
+							}
+						}
+					}
+					function selectIndexes(){
+						if(!vm.applyData.appId){
+							layer.msg("请选择应用");
+							return;
+						}
+						var indexopen = parent.layer.open({
+							title: "选择索引",
+							type: 2,
+							content: "select_indexes.html",
+							id: 'selectIndexes',
+							area: [width, height],
+							zIndex: layer.zIndex, //重点1
+							success: function(layero, index) {
+								var body = parent.layui.layer.getChildFrame('body', index);
+								vm.$forceUpdate();
+								body.find('#appId').val(vm.applyData.appId);
+								console.log(vm.applyData.appId,"appID")
+								body.find('#btn').click();
+							},
+							end:function(){
+								vm.$forceUpdate();
+								vm.applyData.docTplCode=vm.getCookie("selectIndex");
+								vm.removeCookie("selectIndex");
+							}
+						})
+					}
+					function optionSelectInput(){
+						if(!vm.editFlage){
+							vm.optionSelectShow=true;
+						}
+					}
+					function optionSelect(list){
+						vm.applyData.appId=list.appId;
+						vm.$forceUpdate();
+						console.log(vm.applyData.appId,"ceshi")
+						vm.optionSelectShow=false;
+						form.render();
+					}
+					function mouseleaveSelect(){
+						vm.optionSelectShow=false;
+						vm.autoObj.optionSelectShow_e=false;
+						vm.autoObj.optionSelectShow_v=false;
+						vm.autoObj.optionSelectShow_logic=false;
+						vm.autoObj.optionSelectShow_logicOut=false;
+					}
+					function getList(){
+						var index = layer.load(2, {
+							shade: false
+						});
+						$.ajax({
+							type: 'get',
+							url: "/app/list/avalible",
+							cache: false,
+							data: {
+								pageNumber: 1,
+								pageSize: 9999
+							},
+							success: function(obj) {
+								layer.close(index);
+								vm.appIdList=obj.data.list;
+								if(obj.code != 0) {
+									layer.alert(obj.errorMsg, {
+										icon: 2
+									});
+									return;
+								}
+							}
+						})
+					}
+					function submitFun(){
+						if(!vm.applyData.docTplCode){
+							layer.msg("请选择索引");
+							return;
+						}
+						if(vm.conditionListOut.length==0){
+							layer.msg("设置条件");
+							return;
+						}
+						Vue.set(vm.applyData,'params',vm.params.join());
+						var sum=0;
+						vm.conditionListOut.forEach(function(v,i){
+							if(v.logic==''&&i>0){
+								layer.msg('请设置第'+(i+1)+'数据的关系');
+							}else sum++;
+						})
+						if(sum==vm.conditionListOut.length){
+							Vue.set(vm.applyData,'condition',{condition:vm.conditionListOut});
+							vm.$forceUpdate();
+							//vm.result=vm.applyData;
+							console.log(vm.applyData,"app")
+							getResultMethodsOther('/template/query/apply',vm.applyData,function(d){
+								layer.msg("申请成功");
+								setTimeout(()=>{
+									var index=parent.layer.getFrameIndex(window.name);
+									parent.layer.close(index);
+								},500);
+							})
+						}
+						
+					}
+					function save(){
+						if(!vm.applyData.docTplCode){
+							layer.msg("请选择索引");
+							return;
+						}
+						if(vm.conditionListOut.length==0){
+							layer.msg("设置条件");
+							return;
+						}
+						Vue.set(vm.applyData,'params',vm.params.join());
+						var sum=0;
+						vm.conditionListOut.forEach(function(v,i){
+							if(v.logic==''&&i>0){
+								layer.msg('请设置第'+(i+1)+'数据的关系');
+							}else sum++;
+						})
+						if(sum==vm.conditionListOut.length){
+							Vue.set(vm.applyData,'condition',{condition:vm.conditionListOut});
+							vm.$forceUpdate();
+							vm.result=vm.applyData;
+							getResultMethodsOther('/template/query/up?tpl_code='+vm.applyData.tplCode,vm.applyData,function(d){
+								layer.msg("修改成功");
+								setTimeout(()=>{
+									var index=parent.layer.getFrameIndex(window.name);
+									parent.layer.close(index);
+								},500);
+							})
+						}
+					}
+					function setParam(){
+						var indexopen = layer.open({
+							title: "数据模型配置",
+							type: 2,
+							content: "data_model.html",
+							id: 'dataModel',
+							area: ['800px', '500px'],
+							zIndex: layer.zIndex, //重点1
+							success: function(layero, index) {
+								layer.setTop(layero); 
+								var body = layui.layer.getChildFrame('body', index);
+								body.find('#btn').click();
+							}
+						})
+					}
+					function getResultMethodsOther(url, prams, sufn) {
+						var index = layer.load(2, {shade: 0.01});
+					    $.ajax({
+					        url:  url,
+					        data: JSON.stringify(prams),
+					        contentType:'application/json',
+					        type: 'post',
+					        dataType: 'json',
+					        cache:false,
+					        success: function(d) {
+					        	layer.close(index);
+					        	if(d.code==0) {
+					        		if('function' === typeof sufn) sufn(d);
+					        	}else {
+					        		layer.msg(d.errorMsg);
+					        	}
+					        },
+						    error:function(){
+						    	layer.close(index);
+								layer.msg("请求出错");
+							}
+					    });
+					};
+					function getResultMethodsGet(url, prams, sufn) {
+						var index = layer.load(2, {shade: 0.01});
+					    $.ajax({
+					        url: url,
+					        data: prams,
+					        type: 'get',
+					        dataType: 'json',
+					        cache:false,
+					        success: function(d) {
+					        	layer.close(index);
+					        	if(d.code==0) {
+					        		if('function' === typeof sufn) sufn(d);
+					        	}else {
+					        		layer.msg(d.errorMsg);
+					        	}
+					        },
+						    error:function(){
+						    	layer.close(index);
+								layer.msg("请求出错");
+							}
+					    });
+					};
+					function setCookie(key, value, iDay) {
+					    var oDate = new Date();
+					    oDate.setDate(oDate.getDate() + iDay);
+					    document.cookie = key + '=' + value + ';expires=' + oDate;
+					}
+					function removeCookie(key) {
+					    setCookie(key, '', -1);//这里只需要把Cookie保质期退回一天便可以删除
+					}
+					function getCookie(key) {
+					    var cookieArr = document.cookie.split(';');
+					    for(var i = 0; i < cookieArr.length; i++) {
+					        var arr = cookieArr[i].split('=');
+					        if(arr[0] === key) {
+					            return arr[1];
+					        }
+					    }
+					    return false;
+					}
+				})
+			}
+		</script>
+
+</html>
