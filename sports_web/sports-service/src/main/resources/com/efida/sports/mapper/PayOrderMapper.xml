@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.PayOrderMapper">
+
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.efida.sports.entity.PayOrder">
+        <id column="id" property="id" />
+        <result column="order_code" property="orderCode" />
+        <result column="register_code" property="registerCode" />
+        <result column="order_status" property="orderStatus" />
+        <result column="order_type" property="orderType" />
+        <result column="order_amount" property="orderAmount" />
+        <result column="order_time" property="orderTime" />
+        <result column="order_ip" property="orderIp" />
+        <result column="order_referer_url" property="orderRefererUrl" />
+        <result column="order_return_url" property="orderReturnUrl" />
+        <result column="notify_url" property="notifyUrl" />
+        <result column="order_period" property="orderPeriod" />
+        <result column="cancel_reason" property="cancelReason" />
+        <result column="pay_way_code" property="payWayCode" />
+        <result column="pay_way_name" property="payWayName" />
+        <result column="remark" property="remark" />
+        <result column="trx_no" property="trxNo" />
+        <result column="expire_time" property="expireTime" />
+        <result column="pay_time" property="payTime" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 支付统计查询映射结果 -->
+    <resultMap id="BaseResultMap2" type="com.efida.sports.entity.PayOrder">
+        <result column="orderDate" property="orderDate" />
+        <result column="ordersTotal" property="ordersTotal" />
+        <result column="moneyTotal" property="moneyTotal" />
+        <result column="payOrdersTotal" property="payOrdersTotal" />
+        <result column="payMoneyTotal" property="payMoneyTotal" />
+    </resultMap>
+
+    <!-- 支付明细查询映射结果 -->
+    <resultMap id="BaseResultMap3" type="com.efida.sports.entity.PayOrder">
+        <result column="orderCode" property="orderCode" />
+        <result column="gameName" property="gameName" />
+        <result column="matchName" property="matchName" />
+        <result column="registerCode" property="registerCode" />
+        <result column="nickName" property="nickName" />
+        <result column="payMoney" property="payMoney" />
+        <result column="orderStatus" property="orderStatus" />
+        <result column="payWayName" property="payWayName" />
+        <result column="payTime" property="payTime" />
+        <result column="gmtCreate" property="gmtCreate" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_code, register_code, order_status,order_type, order_amount, order_time, order_ip, order_referer_url, order_return_url, notify_url, order_period, cancel_reason, pay_way_code, pay_way_name, remark, trx_no, expire_time, pay_time, gmt_create, gmt_modified
+    </sql>
+    
+    <update id="batchUpdateOrderCreater" parameterType="java.util.Map">
+   update  pay_order set register_code=#{newRegisterCode},gmt_modified=now()
+    where register_code=#{oldRegisterCode}
+  </update>
+
+    <!--支付统计查询-->
+    <select id="selectSettlementPayOrderList" parameterType="map" resultMap="BaseResultMap2">
+        select
+        DATE_FORMAT(a.orderDate,'%Y%m%d') as orderDate
+        ,sum(case when a.ordersTotal != '' then 1 else 0 end) as ordersTotal
+        ,sum(case when a.moneyTotal != '' then ROUND(a.moneyTotal/100,2) else 0.00 end) as moneyTotal
+        ,sum(case when a.payOrdersTotal != '' then 1 else 0 end)  as payOrdersTotal
+        ,sum(case when a.payMoneyTotal != '' then ROUND(a.payMoneyTotal/100,2) else 0.00 end)  as payMoneyTotal
+        from (
+        select
+        po.order_time as orderDate
+        ,po.order_code as ordersTotal
+        ,po.order_amount as moneyTotal
+        ,'' as payOrdersTotal
+        ,'' as payMoneyTotal
+        from sports.pay_order po left join sports.apply_info ai on ai.pay_order_code = po.order_code
+        <where>
+            1=1
+            and po.order_type = 'apply'
+            <if test="unitCode != null and unitCode !=''">
+                and ai.unit_code = #{unitCode,jdbcType=VARCHAR}
+            </if>
+            <if test="gameCode != null and gameCode !=''">
+                and ai.game_code = #{gameCode,jdbcType=VARCHAR}
+            </if>
+            <if test="matchCode != null and matchCode !=''">
+                and ai.match_code = #{matchCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime !='' ">
+                and <![CDATA[po.gmt_create >= #{startTime}]]>
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                and <![CDATA[po.gmt_create <= #{endTime}]]>
+            </if>
+        </where>
+        union all
+        select
+        po.order_time as orderDate
+        ,'' as ordersTotal
+        ,'' as moneyTotal
+        ,po.order_code as payOrdersTotal
+        ,po.order_amount as payMoneyTotal
+        from sports.pay_order po left join sports.apply_info ai on ai.pay_order_code = po.order_code
+        <where>
+            po.order_status = 'success'
+            and po.order_type = 'apply'
+            <if test="unitCode != null and unitCode !=''">
+                and ai.unit_code = #{unitCode,jdbcType=VARCHAR}
+            </if>
+            <if test="gameCode != null and gameCode !=''">
+                and ai.game_code = #{gameCode,jdbcType=VARCHAR}
+            </if>
+            <if test="matchCode != null and matchCode !=''">
+                and ai.match_code = #{matchCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime !='' ">
+                and <![CDATA[po.gmt_create >= #{startTime}]]>
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                and <![CDATA[po.gmt_create <= #{endTime}]]>
+            </if>
+        </where>
+        ) a
+        group by DATE_FORMAT(a.orderDate,'%Y%m%d')
+        order by DATE_FORMAT(a.orderDate,'%Y%m%d') desc
+    </select>
+    <!--支付统计总数查询 -->
+    <select id="selectSettlementPayOrderCount" parameterType="map" resultMap="BaseResultMap2">
+        select
+         sum(case when a.ordersTotal != '' then 1 else 0 end) as ordersTotal
+        ,sum(case when a.moneyTotal != '' then ROUND(a.moneyTotal/100,2) else 0.00 end) as moneyTotal
+        ,sum(case when a.payOrdersTotal != '' then 1 else 0 end)  as payOrdersTotal
+        ,sum(case when a.payMoneyTotal != '' then ROUND(a.payMoneyTotal/100,2) else 0.00 end)  as payMoneyTotal
+        from (
+        select
+         po.order_code as ordersTotal
+        ,po.order_amount as moneyTotal
+        ,'' as payOrdersTotal
+        ,'' as payMoneyTotal
+        from sports.pay_order po left join sports.apply_info ai on ai.pay_order_code = po.order_code
+        <where>
+            1=1
+            and po.order_type = 'apply'
+            <if test="unitCode != null and unitCode !=''">
+                and ai.unit_code = #{unitCode,jdbcType=VARCHAR}
+            </if>
+            <if test="gameCode != null and gameCode !=''">
+                and ai.game_code = #{gameCode,jdbcType=VARCHAR}
+            </if>
+            <if test="matchCode != null and matchCode !=''">
+                and ai.match_code = #{matchCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime !='' ">
+                and <![CDATA[po.gmt_create >= #{startTime}]]>
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                and <![CDATA[po.gmt_create <= #{endTime}]]>
+            </if>
+        </where>
+        union all
+        select
+         '' as ordersTotal
+        ,'' as moneyTotal
+        ,po.order_code as payOrdersTotal
+        ,po.order_amount as payMoneyTotal
+        from sports.pay_order po left join sports.apply_info ai on ai.pay_order_code = po.order_code
+        <where>
+            po.order_status = 'success'
+            and po.order_type = 'apply'
+            <if test="unitCode != null and unitCode !=''">
+                and ai.unit_code = #{unitCode,jdbcType=VARCHAR}
+            </if>
+            <if test="gameCode != null and gameCode !=''">
+                and ai.game_code = #{gameCode,jdbcType=VARCHAR}
+            </if>
+            <if test="matchCode != null and matchCode !=''">
+                and ai.match_code = #{matchCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime !='' ">
+                and <![CDATA[po.gmt_create >= #{startTime}]]>
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                and <![CDATA[po.gmt_create <= #{endTime}]]>
+            </if>
+        </where>
+        ) a
+    </select>
+    <!--支付明细查询-->
+    <select id="selectSettlementPayOrderDetail" parameterType="map" resultMap="BaseResultMap3">
+        select
+        po.order_code as orderCode
+        ,ai.game_name as gameName
+        ,ai.match_name as matchName
+        ,po.register_code as registerCode
+        ,r.nick_name as nickName
+        ,ROUND(po.order_amount/100,2) as payMoney
+        ,po.order_status as orderStatus
+        ,po.pay_way_name as payWayName
+        ,po.pay_time as payTime
+        ,po.gmt_create as gmtCreate
+        from pay_order po
+                left join apply_info ai on ai.pay_order_code = po.order_code
+                left join register r on r.register_code = po.register_code
+        <where>
+            po.order_type = 'apply'
+            <if test="orderCode != null and orderCode !=''">
+                and
+                po.order_code like
+                CONCAT('%',#{orderCode,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="registerCode != null and registerCode !=''">
+                and
+                po.register_code like
+                CONCAT('%',#{registerCode,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="nickName != null and nickName !=''">
+                and
+                r.nick_name like
+                CONCAT('%',#{nickName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="selectPayWayCode != null and selectPayWayCode !='' ">
+                and po.pay_way_code = #{selectPayWayCode,jdbcType=VARCHAR}
+            </if>
+            <if test="orderStatusCode != null and orderStatusCode !='' ">
+                and po.order_status = #{orderStatusCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime !='' ">
+                and <![CDATA[po.order_time >= #{startTime}]]>
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                and <![CDATA[po.order_time <= #{endTime}]]>
+            </if>
+        </where>
+        order by po.gmt_create desc
+    </select>
+	
+</mapper>

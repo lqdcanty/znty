@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>我的报名</title>
+
+    <!-- Custom styles for this template -->
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+    <!-- <link href="${stx}/css/page.css" rel="stylesheet"> -->
+    <link href="${stx}/css/pagination.css" rel="stylesheet">
+    <link rel="stylesheet" href="${stx}/laydate/theme/default/laydate.css">
+    <link rel="stylesheet" href="${stx}/layui/css/layui.css"  media="all">
+    <style>
+	
+		body{background:url(${stx}/img/bg_baoming.jpg) repeat; width: 100%;height: 100%;}
+		  [v-cloak] {
+		  display: none;
+		}
+    </style>
+  </head>
+	<body>
+	 <#include "common/alert.html">
+	<div id="order_content" class="content_height" v-cloak >
+			
+            <#include "common/nav.html">
+		<div class="container registration_content clear" id='mainWrap'>
+             <#include "common/left_menu.html">
+		     <div class="registration_content_aside pull-right" style="min-height:660px;">
+	        <ul class="clear pay_ul">
+		       <li v-for = "(tab,index) in tab" :class="{active: indexs == index}" @click="tabClick(index,tab.id)"><a><i></i>[[tab.text]]</a></li>
+	        </ul>
+ 	  	    <div class="registration_lie clear">
+ 	  	    	<div class="registration_nav medal_nav">
+ 	  	    		<span class="custom_width">订单项目</span>
+ 	  	    		<span>数量</span>
+ 	  	    		<span>金额</span>
+ 	  	    		 <span>领取人</span> 
+ 	  	    		<span>订单状态</span>
+ 	  	    		<span class="custom_width2">操作</span>
+ 	  	    	</div>
+ 	  	    	
+ 	  	    	<div style="margin-bottom: 20px;" v-show="orderData && orderData.length">
+	 	  	    	<div class="lists">
+	                     <div class="order_list order_list2 clear" v-for = "(orderData,index) in orderData">
+		                     <p class="title"><span>[[orderData.orderTime]]</span> <b class="rechangeCss">订单号：[[orderData.orderCode]]</b></p> 
+		                     <div class="lie_left clear pull-left">
+			                     <span class="pull-left">
+			                     	<img style="height:135px;" src="${stx}/img/goods_2.jpg">
+			                     	<!-- <img style="height:135px;" src="${stx}/img/img_dd_zhang.png"> -->
+			                     </span>
+			                      <div class="pull-left sign_msy">
+				                       <p class="f_c">[[orderData.goodsTitle]]</p>
+				                       <p class="f_12"></p> 
+				                       <p class="phone_l"><img src="${stx}/img/icon_tel.png">联系电话：[[orderData.mobile]]</p>
+				                       <p class="address_l"><img src="${stx}/img/icon_add2.png">收货地址：[[orderData.province]][[orderData.city]][[orderData.area]][[orderData.address]]</p>
+			                       </div>
+		                     </div> 
+	                       <span class="pull-left c_width">[[orderData.goodsNum]]</span> 
+	                       <span class="pull-left c_width">￥[[orderData.orderPriceStr]]<br>
+	                                                         [[orderData.payWayName]]
+	                       </span> 
+	                        <span class="pull-left c_width addCss">[[orderData.realname]] </span> 
+	                       <span class="pull-left c_width"> [[orderData.orderStatusDesc]] </span> 
+	                       <span class="pull-left c_width_last" v-if="orderData.orderStatus == 'wait_pay' ">
+	                       <a class="pay" @click="gopay(orderData.orderCode)" >
+		 	  	    		 	去支付</a><br> <!---->
+		 	  	    	  </span>
+		 	  	    	</div>
+	 	  	    	</div>
+	 	  	    	
+	 	  	    	<!-- 分页  -->
+	  	  	        <div v-if="totalSize > 5">
+	 	  	    	     <div id="pagination" class="m-style"></div>
+	 	  	    	</div> 
+ 	  	    	</div>
+ 	  	    	
+  	  	    	<div v-if="orderData && !orderData.length" class="no_data indexNo_data">
+ 	  	    	 	<img src="${stx}/img/img_weikong.png">
+ 	  	    	    <p>暂无奖章订单</p>
+ 	  	    	</div> 
+ 	  	    </div>
+		
+		    </div>
+		</div>
+		 <div class="footer footer_bottom">
+	    	 <div class="container clear">
+	    	 	  <div class="pull-left">
+	    	 	  	   <p class="footer_nav">
+	    	 	  	   	  <a href="http://www.zntyydh.com/index.jsp">首页</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=114">新闻中心</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=107">赛事信息</a>   |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=109">智体百科</a>  |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=105">全球征集</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=106"> 联系我们</a>
+	    	 	  	   </p>
+	    	 	  	   <p class="simpleText">
+	    	 	  	   	浙ICP备18028500号-1<br>
+                                                版权所有：全国智能体育大赛 未经授权不得使用
+	    	 	  	   </p>
+	    	 	  </div>
+	    	 	  <div class="pull-right footer_code">
+	    	 	       <img src="${ctx}/img/img_footer.png">
+	    	 	  </div>
+	    	 </div>
+		   </div>
+	</div>
+	</body>
+	<script type="text/javascript" src="${stx}/js/jquery-2.1.1.min.js"></script>
+	<script src="${stx}/js/vue.js"></script>
+	<script src="${stx}/js/page.js"></script>
+	<script src="${stx}/js/jquery.pagination.js"></script>
+	<script src="${stx}/js/config.js"></script>
+	<script src="${stx}/laydate/laydate.js"></script>
+	<script src="${stx}/layui/layui.js" charset="utf-8"></script>
+	<script>
+	
+/* 	/user/order/list
+	
+	orderStatus 订单状态(WAIT_PAY:待支付,已成功：SUCCESS)
+	currentPage
+	pageSize */
+    
+	var vm = null;       //全局声明vue对象
+	
+	var vueData = {			
+		orderData: {},
+		indexs:0,
+		activeTab: '',
+		totalSize:'',
+		tab:[
+	        {id: '', text: '全部',lists: []},
+            {id: 'WAIT_PAY', text: '待支付',lists: []},
+            {id: 'SUCCESS', text: '已完成',lists: []}
+		],
+	};
+	
+
+	/**
+	 * 页面加载完毕 $.ready
+	 */
+	$(function(){	
+	    vueInit(); 
+	    pageInt();
+	    $(".indexNo_data").attr("style","display:block");
+	});
+	
+	/**
+	 * 页面初始化，dom操作
+	 */
+	 function pageInt(){
+		getDatalists();
+	    style();		
+	};
+	
+    function style(){
+    	$("#medal").addClass("active");
+    	$("#medalEm").addClass("active");
+    };
+	 
+	 /**
+	  * vue初始化，dom操作
+	  */
+	  
+	//Vue.config.delimiters = ['${', '}$'];
+	  function vueInit () {
+		 vm = new Vue({
+			 delimiters: ['[[', ']]'],
+			 el:"#order_content",
+			 data:vueData ,
+
+			 methods:{
+				 tabClick: tabClick,
+				 getDatalists: getDatalists,
+				 getOtherStatus: getOtherStatus,
+				 gopay:gopay,
+			 },
+		 });
+	 };
+	 
+	 //跟据后台返回status，获取对应的中文
+	 function getOtherStatus(status) {
+		 var text = '';
+		 vueData.tab.forEach(function(d) {
+			 if(d.id == status) text = d.text;
+		 });
+		 
+		 return text;
+	 };
+
+	 
+     function tabClick(str,id){
+    	 vueData.indexs=str
+    	 vueData.activeTab = id;
+    	 getDatalists();
+     };
+
+     function createTimestamp () {
+      	  return parseInt(new Date().getTime() / 1000) + '';
+        };
+
+     
+     function getDatalists(page) {
+    	 var params = {orderStatus: vueData.activeTab, currentPage: 1, pageSize:5};
+    	 
+    	 if(page) params.currentPage = page;
+    	 var url =  "${ctx}/shop/user/order/list?"  + createTimestamp ();
+    	 getResultMethods(url, params, function(d){
+    		console.log(d)
+    		/* d.page.records.forEach(function(d){if(d.orderStatus == 'WAIT_PAY') d.timer = ''}); */
+  			vueData.orderData = d.list;
+  			vueData.totalSize = d.totalRow;
+  			console.log(vueData.orderData)
+  		
+  			 setTimeout(function(){
+	  		     $('#pagination').pagination({
+	  	    	    jump: true,
+	  	    	    totalData: d.totalRow,
+	  	    	   /*  showData: d.size, */
+	  	    	    current: d.currentPage,
+	  	    	    pageCount: d.totalPage,
+	  	    	    coping: true,
+	  	    	    homePage: '首页',
+	  	    	    endPage: '末页',
+	  	    	    prevContent: '上页',
+	  	    	    nextContent: '下页',
+	  	    	    callback: function (api) {
+	  	    	        getDatalists(api.getCurrent());
+	  	    	    }
+	  		     });
+  			}, 100)
+  		     
+
+  		 });
+     };
+     
+     
+     function gopay(code){
+    	 window.location.href="${ctx}/static/pay_goods_order?code="+code +" "
+     }
+	</script>
+</html>

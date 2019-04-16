@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2018年全国智能体育大赛参赛奖牌</title>
+        <link href="${stx}/css/layout.css" rel="stylesheet">
+	<link href="${stx}/css/pagination.css" rel="stylesheet">
+    <link rel="stylesheet" href="${stx}/goodsInfo/swiper.min.css">
+    <link href="${stx}/goodsInfo/goodsInfo.css" rel="stylesheet">
+</head>
+<body>
+ <#include "common/nav.html">
+ <#include "common/alert.html">
+    <div class="container">
+        <div class="goods-info-top clear mt20">
+            <div class="pull-left">
+                <div class="swiper-container goods-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="${stx}/img/goods_2.jpg">
+                        </div>
+                    </div>
+                    <!-- 如果需要分页器 -->
+                    <!-- <div class="swiper-pagination"></div> -->
+
+                    <!-- 如果需要导航按钮 -->
+                <!--     <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div> -->
+                    <!-- 如果需要滚动条 -->
+                    <div class="swiper-scrollbar"></div>
+                </div>
+            </div>
+            <div class="pull-left left-wrap">
+                <div class="goods-title">
+                    2018年全国智能体育大赛参赛奖牌
+                </div>
+                <div class="goods-price">
+                    <span>价格</span>
+                    <span>¥</span>
+                    <span>19.90</span>
+                </div>
+                <div class="goods-num clear">
+                    <div class="pull-left">数量</div>
+                    <div class="goods-num-info pull-left">
+                        <span class="num-less">-</span>
+                        <input type="text" value="1" class="num-input" onkeyup="clearNoNum(this)">
+                        <span class="num-more">+</span>
+                    </div>
+                </div>
+                <div>
+                	<div class='errorMsg' style='cursor: pointer;position: absolute; bottom: 59px;color: red;display:none'>至少购买数量为一个</div>
+                    <a class="buy-btn">立即购买</a>
+                </div>
+            </div>
+        </div>
+        <div class='mt20' style="text-align: center;">
+        	<img src="${stx}/img/goodsInfo.jpg">
+        </div>
+    </div>
+     <#include "common/footer.html">
+    <script src="${stx}/js/jquery-2.1.1.min.js"></script>
+    <script src="${stx}/layer/layer.js"></script>
+    <script src="${stx}/goodsInfo/swiper.min.js"></script>
+    <script>
+        var mySwiper = new Swiper ('.swiper-container', {
+    
+
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination',
+            },
+
+    /*         // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            }, */
+
+            // 如果需要滚动条
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            },
+        })
+        function clearNoNum(obj) {
+            //必须保证第一个为数字而不是0
+            obj.value = obj.value.replace(/^0/g, "1");
+            //先把非数字的都替换掉，除了数字
+            obj.value = obj.value.replace(/[^0-9]/g, "");
+            if(obj.value>200){
+            	$("#animationTipBox").show().children(".tip").children(".dec_txt").text("数量值最大不能超过200");
+            }else{
+            	$("#animationTipBox").hide()
+            }
+        }
+        $('.num-more').click(function(){
+        	var num=$('.num-input').val();
+        	//var num=198;
+        	if(num==""){
+        		num=0;
+        	}
+        	if(parseInt(num)<200) $('.num-input').val(parseInt(num)+1)
+        	else {
+        		$("#animationTipBox").show().children(".tip").children(".dec_txt").text("数量值最大不能超过200");
+        	}
+        	
+        	
+        })
+        $('.num-less').click(function(){
+        	if(parseInt($('.num-input').val())==1 || $('.num-input').val()==""){
+        		return
+        	}
+        	$('.num-input').val(parseInt($('.num-input').val())-1)
+        })
+        $('.buy-btn').click(function(){
+        /* 	$.ajax({ //检测登陆
+  				url:"/shop/user/check/login",
+  				type:'GET',
+  			 	dataType: 'JSON',
+  			    contentType: 'application/json;charset=UTF-8',
+  				success:function(res){
+  					console.log(res)
+  					if(res.resultCode==200){
+  						window.location.href='${ctx}/static/goods_order?num='+$('.num-input').val()
+  					}else{
+  						window.location.href='${ctx}/user/login/index'
+  					}
+  				}
+  			}); */
+  			if($('.num-input').val()==""){
+  				$('.errorMsg').show()
+  				return
+  			}
+  			if($('.num-input').val()>200){
+  				$('.errorMsg').show().text("数量值最大不能超过200");
+  				return
+  			}
+  			window.location.href='${ctx}/static/goods_order?num='+$('.num-input').val()	
+        })
+        
+    </script>
+</body>
+</html>

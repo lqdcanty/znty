@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.FinancialStatisticsReportMapper">
+
+    <!--根据订单时间或支付时间，查询结算报表字段-->
+    <select id="selectPayOrderListByOrderOrPayTime" parameterType="map" resultType="com.efida.sports.entity.FinancialStatisticsReport">
+        select
+        id,
+        order_code as orderCode,
+        register_code as orderCode,
+        order_status as orderStatus,
+        order_type as orderType,
+        order_amount as orderAmount,
+        order_time as orderTime,
+        pay_way_code as payWayCode,
+        pay_way_name as payWayName,
+        pay_time as payTime
+        from pay_order
+        <where>
+            <if test="startTimeByOrder != null ">
+                and <![CDATA[order_time >= #{startTimeByOrder}]]>
+            </if>
+            <if test="endTimeByOrder != null ">
+                and <![CDATA[order_time <= #{endTimeByOrder}]]>
+            </if>
+            <if test="startTimeByPay != null ">
+                and <![CDATA[pay_time >= #{startTimeByPay}]]>
+            </if>
+            <if test="endTimeByPay != null ">
+                and <![CDATA[pay_time <= #{endTimeByPay}]]>
+            </if>
+            <if test="orderStatus != null and orderStatus !='' ">
+                and order_status = #{orderStatus}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateReportByOrderCode" parameterType="com.efida.sports.entity.FinancialStatisticsReport">
+        UPDATE
+            financial_statistics_report
+        SET
+          order_status = #{orderStatus},
+          pay_time = #{payTime},
+          pay_way_code = #{payWayCode},
+          pay_way_name = #{payWayName}
+        WHERE
+          order_code = #{orderCode}
+    </update>
+
+    <select id="selectFinancialStatistics" resultType="com.efida.sports.entity.FinancialStatisticsReport">
+        SELECT
+        report_date as reportDate,
+        sum( CASE is_delete when 2 then 0 ELSE 1 END) as ordersTotal,
+        sum(CASE when order_amount then ROUND(order_amount/100,2) else 0.00 end) as moneyTotal,
+        sum( CASE order_status when  'success' then 1 ELSE 0 END)  as payOrdersTotal,
+        sum( CASE order_status when  'success' then ROUND(order_amount/100,2) else 0.00 end) as payMoneyTotal
+        from financial_statistics_report
+        where order_type = 'apply' and is_delete != 1
+        <if test="unitCode != null and unitCode !=''">
+            and unit_code = #{unitCode,jdbcType=VARCHAR}
+        </if>
+        <if test="gameCode != null and gameCode !=''">
+            and game_code = #{gameCode,jdbcType=VARCHAR}
+        </if>
+        <if test="matchCode != null and matchCode !=''">
+            and match_code = #{matchCode,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime !='' ">
+            and <![CDATA[report_date >= #{startTime}]]>
+        </if>
+        <if test="endTime != null and endTime !='' ">
+            and <![CDATA[report_date <= #{endTime}]]>
+        </if>
+        group by report_date
+        order by report_date desc
+    </select>
+
+    <select id="selectFinancialStatisticsCount" resultType="com.efida.sports.entity.FinancialStatisticsReport">
+        SELECT
+        sum( CASE is_delete when 2 then 0 ELSE 1 END) as ordersTotal,
+        sum(CASE when order_amount !='' then ROUND(order_amount/100,2) else 0.00 end) as moneyTotal,
+        sum( CASE order_status when  'success' then 1 ELSE 0 END)  as payOrdersTotal,
+        sum( CASE order_status when  'success' then ROUND(order_amount/100,2) else 0.00 end) as payMoneyTotal
+        from financial_statistics_report
+        where order_type = 'apply' and is_delete != 1
+        <if test="unitCode != null and unitCode !=''">
+            and unit_code = #{unitCode,jdbcType=VARCHAR}
+        </if>
+        <if test="gameCode != null and gameCode !=''">
+            and game_code = #{gameCode,jdbcType=VARCHAR}
+        </if>
+        <if test="matchCode != null and matchCode !=''">
+            and match_code = #{matchCode,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime !='' ">
+            and <![CDATA[report_date >= #{startTime}]]>
+        </if>
+        <if test="endTime != null and endTime !='' ">
+            and <![CDATA[report_date <= #{endTime}]]>
+        </if>
+
+    </select>
+
+    <select id="selectFinancialStatisticsDetail" parameterType="map" resultType="com.efida.sports.entity.FinancialStatisticsReport">
+        select
+        order_code as orderCode
+        ,game_name as gameName
+        ,match_name as matchName
+        ,register_code as registerCode
+        ,nick_name as nickName
+        ,ROUND(order_amount/100,2) as payMoney
+        ,order_status as orderStatus
+        ,pay_way_name as payWayName
+        ,pay_time as payTime
+        ,order_time as orderTime
+        from financial_statistics_report
+        <where>
+            order_type = 'apply' and is_delete = 0
+            <if test="unitCode != null and unitCode !=''">
+                and unit_code = #{unitCode,jdbcType=VARCHAR}
+            </if>
+            <if test="gameCode != null and gameCode !=''">
+                and game_code = #{gameCode,jdbcType=VARCHAR}
+            </if>
+            <if test="matchCode != null and matchCode !=''">
+                and match_code = #{matchCode,jdbcType=VARCHAR}
+            </if>
+            <if test="orderCode != null and orderCode !=''">
+                and
+                order_code like
+                CONCAT('%',#{orderCode,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="registerCode != null and registerCode !=''">
+                and
+                register_code like
+                CONCAT('%',#{registerCode,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="nickName != null and nickName !=''">
+                and
+                nick_name like
+                CONCAT('%',#{nickName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="selectPayWayCode != null and selectPayWayCode !='' ">
+                and pay_way_code = #{selectPayWayCode,jdbcType=VARCHAR}
+            </if>
+            <if test="orderStatusCode != null and orderStatusCode !='' ">
+                and order_status = #{orderStatusCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime !='' ">
+                and <![CDATA[order_time >= #{startTime}]]>
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                and <![CDATA[order_time <= #{endTime}]]>
+            </if>
+        </where>
+        order by order_time desc
+    </select>
+
+
+</mapper>

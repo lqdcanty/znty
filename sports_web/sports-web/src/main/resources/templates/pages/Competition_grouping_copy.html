@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>选择比赛分组</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?css?v=${cssV}" />
+	</head>
+	<body>
+		<div id="app">
+			<div id="wrapper">
+				<div class="alert">请至少选择一个比赛分组</div>
+				<input type="hidden" value="${(matchCode)!''}" id="matchCode">
+				<div class="details_page flex flex-pack-justify flex-align-center" onClick="javascript:window.location.href='${ctx}/game/detail/${(matchCode)!''}'">
+					 <div>
+					 	<p class="details_title">${(match.matchName)!''}
+					 	<#if match?? && match.matchName??>，
+					 	 查看详情
+					 	</#if>
+					 	</p>
+					 	<p class="game_time"><img src="${staticPath}/img/icon_time_1.png">${(match.startTime?string("yyyy年MM月dd日"))!''} ${(match.endTime?string("yyyy年MM月dd日"))!''}</p>
+					 </div>
+					 <span style="display:flex;justify-content: center;align-items: center"><img src="${staticPath}/img/icon_right.png"></span>
+				</div>
+				
+				<div class="match_field common_layout custom_title" id="checkMatch">
+					<div class="mb20 bg_white">
+						<p class="title flex flex-pack-justify">
+							<span><i></i>选择分赛场</span>
+						</p>
+						<p class="title flex flex-pack-justify mb20" id="region_btn" style="padding-top:0rem;">
+							<span><img class="ml30 location mr20" src="${staticPath}/img/icon_add.png"><span id="selected_region">比赛地区，请选择</span></span>
+							<span><img class="rightArrow" src="${staticPath}/img/icon_right.png"></span>
+						</p>
+					</div>
+
+
+				 <!-- <#if sites?? && (sites?size > 0) >
+				 				<#list  sites as site>
+				 				<div class="match_field_lie">
+				 					 <div class="match_top flex flex-pack-justify flex-align-center border_bottom">
+				 					 	   <span class="top_lie1"><img src="${staticPath}/img/icon_name_1.png">${(site.fieldName)}</span>
+				 					 	   <span class="top_lie2"><img src="${staticPath}/img/icon_time_1.png"> ${(site.startTime?string("yyyy-MM-dd"))!''} ${(site.endTime?string("yyyy-MM-dd"))!''}  </span>
+				 					 </div>
+				 					 <div class="match_bottom flex flex-pack-justify flex-align-center">
+				 					 	   <span class="top_lie1 address_top"><img src="${staticPath}/img/icon_add.png">${(site.fieldAddress)}</span>
+				 					 	   <span class="top_lie2 choose_btn choose "   data-sitecode="${(site.siteCode)!''}"></span>
+				 					 </div>
+				 				</div>
+				 				</#list>
+				 			</#if> -->
+					
+				</div>
+				<div class="bg_wrap">
+					<div class="select_region">
+						<p class="region_title border_b flex flex-pack-justify">
+							<span class="acopy color_orange" id="close_region">取消</span>
+							<span class="acopy color_333">比赛地区</span>
+							<span class="acopy color_orange" id="sure_region">确定</span>
+						</p>
+						<p class="region_title flex flex-pack-center">
+							<span class="region flex-1 selected" id="province">请选择</span>
+							<span class="region flex-1" id="city">请选择</span>
+							<span class="region flex-1" id="area">请选择</span>
+						</p>
+						<div class="region_list">
+							<ul class="region_name">
+								
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="match_field common_layout custom_title" id="checkMatchActive">
+					<p class="title" id="groupTitle"><i></i>选择分组</p>
+					<div id="item-lists">
+					
+					</div>
+				</div>
+				<!-- 无赛事列表  -->
+				<div class="none_data_form none_data" style="display:none;">
+					 <div class="none_img">
+					 	  <p><img src="${staticPath}/img/img_no.png" /></p>
+					 	  <span>暂无比赛数据</span>
+					 </div>
+	             </div>
+				 <div class="kong_margin"></div>
+				<p class="button" id="nextStep">下一步</p>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="${staticPath}/js/vue.js"></script>
+	<script>
+	var path = "${ctx}";
+	var socialDomain="${socialDomain}"
+    </script>
+	<script type="text/javascript" src="${staticPath}/js/config.js"></script>
+	<script>		
+	
+	var matchItemCheck = []; var path = "${ctx}";
+	//var matchCode="${(matchCode)!''}";
+	var matchCode="match201806122022461412";
+	var parentArea='',province='',city='', area='';
+	console.log(matchCode,"sais")
+	var siteCode="";
+	//getResultMethods(url, prams, fn)
+	//matchCode=match201806122022461412&areaType=city&parentArea=四川省
+	
+/**
+ * 页面加载完毕 $.ready
+ */
+$(function(){
+	myCheckGroupInit("checkMatch", true, matchGroupHandle);
+	
+ 	$("#match-refesh").click(function() {
+ 		refesh()
+	}); 
+		
+	$("#nextStep").click(nextStep);
+
+	$("#close_region").click(function(){
+		$(".bg_wrap").hide();
+	})
+	$("#sure_region").click(function(){
+		$(".bg_wrap").hide();
+		province=$("#province").text()!='请选择'?$("#province").text():'';
+		city=$("#city").text()!='请选择'?$("#city").text():'';
+		area=$("#area").text()!='请选择'?$("#area").text():'';
+		$("#selected_region").text(province+city+area);
+
+	})
+	$("#region_btn").click(function(){
+		$(".bg_wrap").show();
+	})
+
+	getResultMethods(path + "/game/match/area",{matchCode:matchCode,areaType:'province',parentArea:''},function(data){
+		console.log(data);
+		if(data.resultCode==200){
+			var html='',lengthList=data.result.list.length;
+			for(var i=0;i<lengthList;i++){
+				html+='<li>'+data.result.list[i]+'</li>';
+			}
+			$(".region_name").html(html);
+				$(".region_name li").click(function(){
+					$("#province").text($(this).text()).removeClass("selected").siblings("#city").addClass("selected");
+					var province=$(this).text();
+			})	
+		}
+		
+	})
+
+
+	
+});
+
+function refesh(){
+	
+    $("#checkMatch").children(".match_field_lie").show().removeClass('active');
+	$("#groupTitle").hide();
+	$('#item-lists').html("");
+	$(".none_data_form").hide();
+	matchItemCheck=[];
+}
+
+function refeshCheck(){
+	 $("#checkMatch").siblings().find(".match_field_lie").show().removeClass('active');
+		$("#groupTitle").hide();
+		$('#item-lists').html("");
+		$(".none_data_form").hide();
+		matchItemCheck=[];
+}
+/* 选择分赛场点击回调 */
+function matchGroupHandle(_this, check) {
+	if(check){
+	_this.siblings(".match_field_lie").hide();
+	}
+	$("#item-lists").html("");
+
+	if(check) {
+		$("#groupTitle").show();
+		siteCode=_this.find('.choose_btn').attr("data-sitecode");
+		getResultMethods(path + "/game/events", {siteCode: _this.find('.choose_btn').attr("data-sitecode")}, function(d) {
+			console.log(d);
+			var data = d.result;
+		
+			if(d.resultCode === 200) {
+				
+				if(data.groups.length) {
+					
+					data.groups.forEach(function(list) {
+						
+						var table = $('<table class="sign_group" id="employee_clone_temp"></table>');
+						
+						var headTr = $("<tr  class='border_bottom'><th style='width: 1.34rem;'>"+list.groupName+"</th><th style='width: 0.85rem;'>比赛时间</th><th style='width: 0.44rem;'>报名费</th><th style='width: 0.59rem;'>剩余名额</th></tr>");
+						
+						table.append(headTr);
+						
+						if(list.events && list.events.length) {
+							var trFragment =  document.createDocumentFragment();
+							list.events.forEach(function(item_list) {
+								var itemTr = $('<tr><td class="flex flex-align-center my-radio" itemId="'+ item_list.itemCode +'" canapply="'+item_list.canApply+'" isvalid="'+item_list.isValid+'"><span class="choose choose_btn"></span><span class="itemName">'+ item_list.itemName +'</span></td><td>&nbsp;<span>'+ format(item_list.startTime) +'</span> <br> <span>'+ format(item_list.endTime)+ '</span></td><td>'+ item_list.entryFeeStr +'元</td><td>'+ item_list.surplusQuota+ '</td></tr>');
+								if(!item_list.canApply|| !item_list.isValid){
+									itemTr = $('<tr><td class="flex flex-align-center my-radio" itemId="'+ item_list.itemCode +'" canapply="'+item_list.canApply+'" isvalid="'+item_list.isValid+'"><span class="choose choose_btn choose-after-no"></span><span class="itemName">'+ item_list.itemName +'</span></td><td>&nbsp;<span>'+ format(item_list.startTime) +'</span> <br> <span>'+ format(item_list.endTime)+ '</span></td><td>'+ item_list.entryFeeStr +'元</td><td>'+ item_list.surplusQuota+ '</td></tr>');
+								}
+								$(trFragment).append(itemTr);
+							});
+							
+							table.append($(trFragment));
+						}
+						
+						$("#item-lists").append(table);
+						
+					});
+				}else {
+					console.log('没有数据');
+					$(".none_data").show()
+				}
+			}else {
+				alert('请求失败，请稍后再试');
+			}
+		});
+		
+		myCheckBoxGroupInit("item-lists", matchItemHandle, 3);
+	}else {
+		$("#groupTitle").hide();
+	}
+};
+
+
+/* 分组列表点击回调 */
+function matchItemHandle (_this, check) {
+	var id = _this.attr("itemId");
+	
+	if(check) {
+		matchItemCheck.push(id);
+	}else {
+		var index = matchItemCheck.indexOf(id);
+		matchItemCheck.splice(index, 1);
+	}
+};
+
+
+/* 时间格式化 */
+function format(time) {
+	var nowDate = new Date(time);
+	var year = nowDate.getFullYear();
+	var mount = nowDate.getMonth() + 1;
+	var day = nowDate.getDate();
+	return [year, mount, day].join("-");
+};
+
+
+/* 提交下一步 */
+function nextStep() {
+	var matchCode = $("#matchCode").val();
+	
+	console.log(matchItemCheck, matchCode);
+	var ua = window.navigator.userAgent.toLowerCase();
+    if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+		var url = path + "/game/player?matchCode=" + matchCode + "&itemIds=" + matchItemCheck+"&siteCode="+siteCode;
+	
+		if(!matchItemCheck || matchItemCheck.length<1){
+			$(".alert").html("请选择比赛项").show();
+			setTimeout(function () {
+				$(".alert").hide();
+				}, 3000);
+			return ;
+		}
+		window.location.href = path + "/game/player?matchCode=" + matchCode + "&itemIds=" + matchItemCheck+"&siteCode="+siteCode;;
+	} else {
+        window.location.href = path + '/H5Login'
+    }
+	
+    
+};
+
+
+/*复选框*/
+
+function myCheckGroupInit(checkGroupId, permitCancel, exeFun){
+	var idStr="#"+checkGroupId;
+	var check = false;
+	$(idStr).on("click",".match_field_lie",function () {
+		matchItemCheck=[];
+		if($(this).hasClass('active')){
+			//被选中的不做任何操作
+			if(permitCancel && permitCancel==true){
+				$(".none_data").hide()
+				$("#checkMatch").children(".match_field_lie").show().removeClass('active');
+				$(this).removeClass('active');
+				if($(this).data("target")){
+	    			 $($(this).data("target")).attr("checked",false);
+	    		}
+			}
+			
+			check = false;
+		}else {
+			//没有被选中的，就选中，并且取消其他选中
+			$(idStr).find('.match_field_lie').each(function(i){
+				$(this).removeClass('active');
+				if($(this).data("target")){
+					$($(this).data("target")).attr("checked", false);
+				}
+		    });
+			$(this).addClass("active");
+			if($(this).data("target")){
+				$($(this).data("target")).attr("checked",true);
+			}
+			
+			check = true;
+		}
+		
+		if(exeFun && typeof exeFun === 'function'){
+			exeFun($(this), check);
+		}
+	});
+};
+
+/*单选框*/
+function myCheckBoxGroupInit(checkBoxGroupId, exeFun, type){
+	var idStr="#"+checkBoxGroupId;
+	var check = false;
+		if(type){
+			$(idStr).off('click','.my-radio');
+		}
+	$(idStr).on("click", ".my-radio", function () {
+		var canApply=$(this).attr('canapply');
+		var isValid=$(this).attr('isvalid');
+		if(canApply && canApply=='true' && isValid && isValid=='true') {
+			if($(this).hasClass('active')){
+				//是删除
+				$(this).removeClass('active');
+				var check = false;
+			}else{
+				$(this).addClass('active');
+				var check = true;
+			}
+			if(typeof exeFun == "function"){
+				exeFun($(this), check);
+			}
+		}else {
+			console.log('禁用，不能点击');
+			
+		}
+	});
+}
+
+
+
+
+</script>
+</html>

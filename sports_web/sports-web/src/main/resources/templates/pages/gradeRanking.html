@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>比赛成绩</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/css/mui.min.css" />
+    <link rel="stylesheet" href="${staticPath}/css/mui.picker.min.css" />
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+    <style>
+        *{
+            -webkit-touch-callout:none;
+            -webkit-user-select:none;
+            -webkit-tap-highlight-color:transparent;
+        }
+        .mescroll{
+            position: absolute;
+            top: 1.94rem;
+            bottom: 0;
+            overflow-y: scroll;
+            height:auto;
+        }
+        .grade_list_box li,.grade_list_box p,.grade_list_box span,.grade_list_box div,.grade_list_box ul{
+            -webkit-box-sizing:content-box !important;
+            box-sizing:content-box !important;
+        }
+
+        .grandeRanking_choooseTips{
+            height: 0.66rem;
+            width: 100%;
+            line-height: 0.66rem;
+            background: #FF8F00;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-direction:row;
+            flex-wrap:wrap;
+            color: white;
+            justify-content:space-between;
+            position: fixed;
+            top: 1.28rem;
+            left: 0;
+            z-index: 9;
+        }
+        .grandeRanking_choooseTips div{
+            height: 0.66rem;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .grandeRanking_choooseTips div span{
+            padding: 0 0.11rem;
+            font-size: 0.28rem;
+        }
+        .grandeRanking_choooseTips div img{
+            height: 0.25rem;
+        }
+        .grandeRanking_choooseTips .choooseTips_time_moreTime{
+            width: 0.24rem;
+            height: 0.16rem;
+        }
+        .choooseTips_prev{
+            padding-left: 0.3rem;
+            width: 1.3rem;
+        }
+        .choooseTips_next{
+            padding-right: 0.3rem;
+            width: 1.3rem;
+        }
+
+        .wrapper_content_box_list{
+            width: 92%;
+            padding: 0 4%;
+        }
+        .wrapper_content_box_list>li{
+            height: 1.45rem;
+            position: relative;
+            list-style: none;
+        }
+        .wrapper_content_box_list_tips{
+            /*width: 100%;*/
+            height: 1rem;
+            /*margin: 0 5%;*/
+            padding: 0.2rem 0;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            font-size: 0.3rem;
+            background: white;
+            border-bottom: 1px solid #e2e2e2;
+        }
+        .gradeList_my .wrapper_content_box_list_tips{
+            border: none;
+        }
+
+        .wrapper_content_box_list_tips div{
+            width: 70%;
+            height: 1rem;
+            display:flex;
+            align-items:center;
+            justify-content:flex-start;
+        }
+        .wrapper_content_box_list_tips div p{
+            max-width: 2.55rem;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+
+        .wrapper_content_box_list_tips div .avatar{
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            margin-right: 0.4rem;
+        }
+        .wrapper_content_box_list_tips .award_img{
+            width: 0.45rem;
+            height: 0.6rem;
+            margin-right: 0.4rem;
+        }
+        .wrapper_content_box_list_tips span{
+            width: 0.46rem;
+            height: 0.46rem;
+            line-height: 0.46rem;
+            text-align: center;
+            color: #999999;
+            border-radius: 50%;
+            background: #EFEFEF;
+            margin-right: 0.4rem;
+        }
+
+        .garde_checked::before{
+            content: '';
+            display: inline-block;
+            width: 0.1rem;
+            height: 1rem;
+            background: #ff8f00;
+            position: absolute;
+            left: -4.3%;
+            top: 0.2rem;
+        }
+        .garde_checked>ul{
+            display: block;
+        }
+
+        .h5_header p{
+            color: white;
+        }
+        .mui-poppicker .mui-dtpicker, .mui-poppicker .mui-poppicker,.mui-poppicker .mui-picker{
+            background: white;
+        }
+        .mui-poppicker .mui-btn{
+            background: none;
+            border: none;
+            color: #FF8F00;
+            font-size: 0.28rem !important;
+        }
+        .mui-poppicke .mui-pciker-list li{
+            color: #333;
+        }
+        .mui-poppicker-header{
+            background: white;
+        }
+        /*.wrapper_content_box_list:last-of-type{*/
+        /*padding-bottom: 1rem;*/
+        /*}*/
+        .mui-pull-top-pocket{
+            /*top: 0.6rem;*/
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="grade_list_box" style="background:#fff;height: 100%;">
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="callAndroid()">返回</div>
+        <div class="title">
+            <p class="matchName" style="font-size: 0.3rem;width: 68%;margin: 0 auto;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">----</p>
+            <p class="competitionName" style="font-size: 0.2rem;width: 68%;margin: 0 auto;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">-----</p>
+        </div>
+    </div>
+    <div class="grandeRanking_choooseTips">
+        <div class="choooseTips_prev">
+            <img src="${staticPath}/img/icon_left_a@2x.png"/>
+            <span>前一场</span>
+        </div>
+        <div class="choooseTips_time" style="display: none;">
+            <img src="${staticPath}/img/icon_rili@2x.png"/>
+            <span>-------</span>
+            <img class="choooseTips_time_moreTime" src="${staticPath}/img/icon_down_a@2x.png"/>
+        </div>
+        <div class="choooseTips_next">
+            <span>后一场</span>
+            <img src="${staticPath}/img/icon_right_a@2x.png"/>
+        </div>
+    </div>
+    <div id="mescroll" class="mescroll">
+        <!--<div class="console_log"></div>-->
+        <div>
+            <div class="gradeList_my wrapper_content_box_list" style="height: 1.4rem;display: none;">
+                <!--<div id="user_grade_tips" class="wrapper_content_box_list_tips">-->
+                <!--<div>-->
+                <!--<p style="padding-left: 0.03rem">我</p>-->
+                <!--<img  style="padding-left: 0.03rem" class="avatar" src="${staticPath}/img/img_yueye.png">-->
+                <!--<p>第<em style="color: #ff8f00;font-style: normal;">10</em>名</p>-->
+                <!--</div>-->
+                <!--<p>1829次</p>-->
+                <!--</div>-->
+
+            </div>
+            <div class="gradeList_my_color_block" style="height: 0.2rem;background: #efeff4;display: none;">
+            </div>
+            <ul class="wrapper_content_box_list" id="wrapper_content_box_list_ul">
+                <!--<li>-->
+                <!--<div class="wrapper_content_box_list_tips">-->
+                <!--<div>-->
+                <!--<img class="award_img" src="${staticPath}/img/icon_jin@2x.png">-->
+                <!--<img class="avatar" src="${staticPath}/img/img_yueye.png">-->
+                <!--<p>李嘉诚</p>-->
+                <!--</div>-->
+                <!--<p>1829次</p>-->
+                <!--</div>-->
+                <!--<ul class="list_grade_detail">-->
+                <!--<li><span>数据分析</span><span>计数</span></li>-->
+                <!--<li><span>总次数</span><span>2930次</span></li>-->
+                <!--<li><span>绊绳次数</span><span>300次</span></li>-->
+                <!--<li><span>有效次数</span><span>2600次</span></li>-->
+                <!--<li><span>跳绳频率</span><span>300次/s</span></li>-->
+                <!--</ul>-->
+
+                <!--</li>-->
+                <!--<li >-->
+                <!--<div class="wrapper_content_box_list_tips">-->
+                <!--<div>-->
+                <!--<img class="award_img" src="${staticPath}/img/icon_yin@2x.png">-->
+                <!--<img class="avatar" src="${staticPath}/img/img_yueye.png">-->
+                <!--<p>李嘉诚</p>-->
+                <!--</div>-->
+                <!--<p>1829次</p>-->
+                <!--</div>-->
+                <!--<ul class="list_grade_detail">-->
+                <!--<li><span>数据分析</span><span>计数</span></li>-->
+                <!--<li><span>总次数</span><span>2930次</span></li>-->
+                <!--<li><span>绊绳次数</span><span>300次</span></li>-->
+                <!--<li><span>有效次数</span><span>2600次</span></li>-->
+                <!--<li><span>跳绳频率</span><span>300次/s</span></li>-->
+                <!--</ul>-->
+
+                <!--</li>-->
+                <!--<li>-->
+                <!--<div class="wrapper_content_box_list_tips">-->
+                <!--<div>-->
+                <!--<img class="award_img" src="${staticPath}/img/icon_tong@2x.png">-->
+                <!--<img class="avatar" src="${staticPath}/img/img_yueye.png">-->
+                <!--<p>李嘉诚</p>-->
+                <!--</div>-->
+                <!--<p>1829次</p>-->
+                <!--</div>-->
+                <!--<ul class="list_grade_detail">-->
+                <!--<li><span>数据分析</span><span>计数</span></li>-->
+                <!--<li><span>总次数</span><span>2930次</span></li>-->
+                <!--<li><span>绊绳次数</span><span>300次</span></li>-->
+                <!--<li><span>有效次数</span><span>2600次</span></li>-->
+                <!--<li><span>跳绳频率</span><span>300次/s</span></li>-->
+                <!--</ul>-->
+
+                <!--</li>-->
+                <!--<li >-->
+                <!--<div class="wrapper_content_box_list_tips">-->
+                <!--<div>-->
+                <!--<span>4</span>-->
+                <!--<img class="avatar" src="${staticPath}/img/img_yueye.png">-->
+                <!--<p>李嘉诚</p>-->
+                <!--</div>-->
+                <!--<p>1829次</p>-->
+                <!--</div>-->
+                <!--<ul class="list_grade_detail">-->
+                <!--<li><span>数据分析</span><span>计数</span></li>-->
+                <!--<li><span>总次数</span><span>2930次</span></li>-->
+                <!--<li><span>绊绳次数</span><span>300次</span></li>-->
+                <!--<li><span>有效次数</span><span>2600次</span></li>-->
+                <!--<li><span>跳绳频率</span><span>300次/s</span></li>-->
+                <!--</ul>-->
+                <!--</li>-->
+                <!--<li >-->
+                <!--<div class="wrapper_content_box_list_tips">-->
+                <!--<div>-->
+                <!--<span>5</span>-->
+                <!--<img class="avatar" src="${staticPath}/img/img_yueye.png">-->
+                <!--<p>李嘉诚</p>-->
+                <!--</div>-->
+                <!--<p>1829次</p>-->
+                <!--</div>-->
+                <!--<ul class="list_grade_detail">-->
+                <!--<li><span>数据分析</span><span>计数</span></li>-->
+                <!--<li><span>总次数</span><span>2930次</span></li>-->
+                <!--<li><span>绊绳次数</span><span>300次</span></li>-->
+                <!--<li><span>有效次数</span><span>2600次</span></li>-->
+                <!--<li><span>跳绳频率</span><span>300次/s</span></li>-->
+                <!--</ul>-->
+                <!--</li>-->
+                <!--<li >-->
+                <!--<div class="wrapper_content_box_list_tips">-->
+                <!--<div>-->
+                <!--<span>6</span>-->
+                <!--<img class="avatar" src="${staticPath}/img/img_yueye.png">-->
+                <!--<p>李嘉诚</p>-->
+                <!--</div>-->
+                <!--<p>1829次</p>-->
+                <!--</div>-->
+                <!--<ul class="list_grade_detail">-->
+                <!--<li><span>数据分析</span><span>计数</span></li>-->
+                <!--<li><span>总次数</span><span>2930次</span></li>-->
+                <!--<li><span>绊绳次数</span><span>300次</span></li>-->
+                <!--<li><span>有效次数</span><span>2600次</span></li>-->
+                <!--<li><span>跳绳频率</span><span>300次/s</span></li>-->
+                <!--</ul>-->
+                <!--</li>-->
+                <!--<li >-->
+                <!--<div class="wrapper_content_box_list_tips">-->
+                <!--<div>-->
+                <!--<span>7</span>-->
+                <!--<img class="avatar" src="${staticPath}/img/img_yueye.png">-->
+                <!--<p>李嘉诚</p>-->
+                <!--</div>-->
+                <!--<p>1829次</p>-->
+                <!--</div>-->
+                <!--<ul class="list_grade_detail">-->
+                <!--<li><span>数据分析</span><span>计数</span></li>-->
+                <!--<li><span>总次数</span><span>2930次</span></li>-->
+                <!--<li><span>绊绳次数</span><span>300次</span></li>-->
+                <!--<li><span>有效次数</span><span>2600次</span></li>-->
+                <!--<li><span>跳绳频率</span><span>300次/s</span></li>-->
+                <!--</ul>-->
+                <!--</li>-->
+                <!--<li >-->
+                <!--<div class="wrapper_content_box_list_tips">-->
+                <!--<div>-->
+                <!--<span>8</span>-->
+                <!--<img class="avatar" src="${staticPath}/img/img_yueye.png">-->
+                <!--<p>李嘉诚</p>-->
+                <!--</div>-->
+                <!--<p>1829次</p>-->
+                <!--</div>-->
+                <!--<ul class="list_grade_detail">-->
+                <!--<li><span>数据分析</span><span>计数</span></li>-->
+                <!--<li><span>总次数</span><span>2930次</span></li>-->
+                <!--<li><span>绊绳次数</span><span>300次</span></li>-->
+                <!--<li><span>有效次数</span><span>2600次</span></li>-->
+                <!--<li><span>跳绳频率</span><span>300次/s</span></li>-->
+                <!--</ul>-->
+                <!--</li>-->
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="${staticPath}/js/mui.min.js"></script>
+<script type="text/javascript" src="${staticPath}/js/mui.picker.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+
+<script>
+    var tokens = getThePrameValue('appToken')=='null'?'':getThePrameValue('appToken'),gameDate=[],competitionList=[],currentIndex = 0;
+    var path = '${ctx}';
+    // var loadingBox = new loadingBox();
+    var emptyWorn = new emptyWorn($('#wrapper_content_box_list_ul'),'～暂无数据～','～看看别的比赛吧～');
+    var competitionCodes = getThePrameValue('competitionCode');
+    var matchCode = getThePrameValue('matchCode');
+    var mescroll = null;
+    // var matchCode = localStorage.getItem('matchCode');
+    // var competitionCodes = getThePrameValue('competitionCode');
+    var callAndroid = function(){
+        if(getThePrameValue('from')&&getThePrameValue('from') == 1 ){
+            if(getThePrameValue('platform') == 'iOS'){
+                window.webkit.messageHandlers.back.postMessage(null)
+            }else if(getThePrameValue('platform') == 'Android'){
+                android.back("back")
+            }else{
+                window.history.back()
+            }
+
+        }else{
+            // if(getThePrameValue('platform') == 'Android'){
+            //     android.back("back")
+            // }else{
+                window.location.href =path+ '/competitionResults';
+            // }
+
+        }
+
+    };
+
+    if(!getThePrameValue('platform')){
+        $('.mescroll').css(
+            'top',1.54+'rem'
+        );
+        $('.grandeRanking_choooseTips').css(
+            'top',0.88+'rem'
+        );
+    }else if(getThePrameValue('platform') == 'iOS') {
+        if (clientType('iphoneX')) {
+            //是iphoneX
+            $('.mescroll').css(
+                'top', 2.42 + 'rem'
+            );
+            $('.grandeRanking_choooseTips').css(
+                'top', 1.76 + 'rem'
+            );
+        }
+    }else{
+        $('#mescroll').css('padding-bottom','0.8rem')
+    }
+    // $('.console_log').append('<p>页面进入加载头部</p>')
+
+
+    //设置赛事名
+    var matchNames = decodeURI(getThePrameValue('matchName'));
+    // var matchNames = localStorage.getItem('matchName')?localStorage.getItem('matchName'):'----'
+    $('.matchName').html(matchNames)
+
+    getGameList()
+
+    function meScrollInit() {
+        // $('.console_log').append('<p>初始化下拉加载组件</p>')
+        mescroll = new MeScroll("mescroll", {
+            up: {
+                auto: true, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+                isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+                htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+                callback: endLoad, //上拉回调,此处可简写; 相当于 callback: function (page) { upCallback(page); }
+            }
+        });
+        // $('.console_log').append('<p>初始化之后的顺序执行</p>')
+        var checkTimer = setTimeout(function () {
+            if (!mescroll){
+                // $('.console_log').append('<p>初始化失败，正在重新初始化下拉加载组件</p>')
+                //初始化下拉组件
+                meScrollInit()
+            }else{
+                // $('.console_log').append('<p>初始化成功，清除定时器</p>')
+                clearTimeout(checkTimer)
+            }
+        },600)
+    }
+
+    function endLoad(page) {
+        console.log('加载')
+        // $('.console_log').append('<p>下拉加载组件初始化完成，进行第一次数据加载</p>')
+        // var tips = new loadingTips('加载',2500);
+        // tips.creat()
+        if(page.num == 1){
+            setTimeout(function () {
+                getRankList(page.num)
+
+            },1000)
+        }else{
+            getRankList(page.num)
+        }
+    }
+
+    //获取赛事比赛列表
+    function getGameList() {
+        // $('.console_log').append('<p>获取比赛列表</p>')
+        getResultMethods(path + '/score/competitionList', {
+            matchCode: matchCode.toString()
+        }, function(data) {
+            if(data.resultCode == 200){
+                if(data.result&&data.result.data){
+                    competitionList = data.result.data;
+                    var competitionName = '';
+                    for(var i = 0;i<competitionList.length;i++){
+                        if(competitionList[i].competitionCode==competitionCodes){
+                            competitionName = competitionList[i].competitionName;
+                            currentIndex = i;
+                            $('.competitionName').html(competitionName)
+                            if(i == 0){
+                                $('.choooseTips_prev').css('opacity',0.5)
+                            }
+                            if(i == competitionList.length-1){
+                                $('.choooseTips_next').css('opacity',0.5)
+                            }
+                        }
+                    }
+                }else{
+                    $('.choooseTips_prev').css('opacity',0.5)
+                    $('.choooseTips_next').css('opacity',0.5)
+                }
+                // $('.console_log').append('<p>获取比赛列表成功</p>')
+                //添加比赛切换事件
+                $('.choooseTips_prev').click(function () {
+                    if(currentIndex > 0 && competitionList.length>0){
+                        competitionCodes = competitionList[currentIndex-1].competitionCode;
+                        if(currentIndex == competitionList.length-1 &&competitionList.length > 1){
+                            $('.choooseTips_next').css('opacity',1)
+                        }
+                        if(currentIndex-1 == 0){
+                            $('.choooseTips_prev').css('opacity',0.5)
+                        }else{
+                            $('.choooseTips_prev').css('opacity',1)
+                        }
+                        $('.competitionName').html(competitionList[currentIndex-1].competitionName)
+                        currentIndex = currentIndex - 1;
+                        mescroll.resetUpScroll(true);
+                    }
+                })
+                $('.choooseTips_next').click(function () {
+                    if(currentIndex < competitionList.length-1 && competitionList.length>0){
+                        competitionCodes = competitionList[currentIndex+1].competitionCode;
+                        if(currentIndex == 0 &&competitionList.length > 1){
+                            $('.choooseTips_prev').css('opacity',1)
+                        }
+                        if(currentIndex+1 == competitionList.length-1){
+                            $('.choooseTips_next').css('opacity',0.5)
+                        }else{
+                            $('.choooseTips_next').css('opacity',1)
+                        }
+                        $('.competitionName').html(competitionList[currentIndex+1].competitionName)
+                        currentIndex = currentIndex + 1;
+                        mescroll.resetUpScroll(true);
+                    }
+                })
+
+            }else{
+                $('.choooseTips_prev').css('opacity',0.5)
+                $('.choooseTips_next').css('opacity',0.5)
+                // var tips = new loadingTips(data.resultMsg,2500)
+                // tips.creat()
+            }
+            //初始化下拉组件
+            // $('.console_log').append('<p>准备初始化下拉组件。。。</p>')
+            meScrollInit()
+
+        },function () {
+            $('.choooseTips_prev').css('opacity',0.5)
+            $('.choooseTips_next').css('opacity',0.5)
+            var tips = new loadingTips('网络错误，请稍后重试',2500)
+            tips.creat()
+            meScrollInit()
+        })
+
+    }
+
+
+    //获取比赛时间/score/getDate
+    function getGameTime(matchCode) {
+        getResultMethods(path + '/score/getDate', {
+            matchCode: matchCode,
+            token:tokens}, function(data) {
+            if(data.resultCode == 200){
+                gameDate = data;
+                // gameDate=[{
+                //     value: "first",
+                //     text: "第一项",
+                // }, {
+                //     value: "second",
+                //     text: "第一项"
+                // }, {
+                //     value: "third",
+                //     text: "第三项"
+                // }, {
+                //     value: "fourth",
+                //     text: "第四项"
+                // }, {
+                //     value: "fifth",
+                //     text: "第五项"
+                // }];
+            }
+        })
+    }
+    //获取我的成绩数据
+    function getMyGarde(){
+        // $('.console_log').append('<p>获取我的成绩数据</p>')
+        getResultMethods(path + '/score/myRank', {
+            competitionCode: competitionCodes.toString(),
+            token:tokens}, function(data) {
+            if(data.resultCode ==200){
+                if(data.result&&data.result.myRank){
+                    $('.gradeList_my').html('')
+                    $('.gradeList_my_color_block').show()
+                    $('.gradeList_my').show()
+                    var myData = data.result.myRank;
+                    var avatar = '';
+
+                    if(myData.playerHeaderImg != null){
+                        avatar = myData.playerHeaderImg
+                    }else{
+                        avatar = "${staticPath}/img/icon_user_1@2x.png"
+                    }
+                    var times = myData.score?myData.score:0;
+                    var myStr='<div id="user_grade_tips" class="wrapper_content_box_list_tips">\
+                                    <div>\
+                                        <p style="padding-left: 0.03rem;margin-right: 0.5rem;">我</p>\
+                                        <img  style="padding-left: 0.03rem" class="avatar" src="'+avatar+'">\
+                                        <p>第<em style="color: #ff8f00;font-style: normal;">'+myData.rank+'</em>名</p>\
+                                    </div>\
+                                    <p>'+times+'</p>\
+                                </div>';
+                    $('.gradeList_my').append(myStr)
+                }else{
+                    $('.gradeList_my').hide()
+                    $('.gradeList_my_color_block').hide()
+                }
+                // $('.console_log').append('<p>获取我的成绩数据成功</p>')
+
+            }else{
+                $('.gradeList_my').hide()
+                $('.gradeList_my_color_block').hide()
+                // $('.console_log').append('<p>获取我的成绩数据失败</p>')
+                // var tips = new loadingTips(data.resultMsg,2500)
+                // tips.creat()
+            }
+        },function (data) {
+            var tips = new loadingTips('网络错误，请稍后重试',2500)
+            tips.creat()
+            // $('.console_log').append('<p>获取我的成绩数据失败-1</p>')
+        })
+    }
+
+
+    //获取成绩列表数据
+    function getRankList(currentPage){
+        // $('.console_log').append('<p>数据加载-获取比赛列表数据</p>')
+        var pageSize = 20;
+        // if(currentPage != 1){
+        //     pageSize = 50;
+        // }
+        getResultMethods(path + '/score/rankList', {
+            competitionCode:competitionCodes.toString(),
+            currentPage:Number(currentPage),
+            pageSize:pageSize}, function(data) {
+            if(data.resultCode ==200){
+                mescroll.endSuccess();
+                // $('.console_log').append('<p>获取比赛列表数据成功</p>')
+                if(currentPage == 1){
+                    $('#wrapper_content_box_list_ul').html('')
+                    $('.gradeList_my').html('')
+                    getMyGarde()
+                    if(data.result.rankList&&data.result.rankList.length == 0){
+                        emptyWorn.show();
+                    }else{
+                        emptyWorn.hide();
+                    }
+                }
+
+                    renderRankList(data.result.rankList)
+
+
+
+                mescroll.endBySize(data.result.rankList.length, data.result.allRow, '');
+
+            }else{
+                // $('.console_log').append('<p>获取比赛列表数据失败</p>')
+                // var tips = new loadingTips(data.resultMsg,2500)
+                // tips.creat()
+                mescroll.endErr();
+            }
+
+        },function (data) {
+            var tips = new loadingTips('网络错误，请稍后重试',2500)
+            tips.creat()
+            mescroll.endErr();
+            // $('.console_log').append('<p>获取比赛列表数据失败-1</p>')
+        })
+
+    }
+    //成绩排名列表渲染
+    function renderRankList(datas){
+        // $('.console_log').append('<p>渲染比赛列表</p>')
+        if(datas.length == 0){
+            return false;
+        }
+        datas.forEach(function (item) {
+            var rankStr = '',avatar = '';
+            if(item.rank == 1){
+                rankStr = '<img class="award_img" src="${staticPath}/img/icon_jin@2x.png">';
+            }else if(item.rank == 2){
+                rankStr = '<img class="award_img" src="${staticPath}/img/icon_yin@2x.png">';
+            }else if(item.rank == 3){
+                rankStr = '<img class="award_img" src="${staticPath}/img/icon_tong@2x.png">';
+            }else{
+                rankStr = '<span>'+item.rank+'</span>';
+            }
+            if(item.playerHeaderImg != null){
+                avatar = item.playerHeaderImg
+            }else{
+                avatar = "${staticPath}/img/icon_user_1@2x.png"
+            }
+            var times = item.score?item.score:0;
+            var tips = '<li>\
+                            <div class="wrapper_content_box_list_tips">\
+                                <div>'+rankStr+'<img class="avatar" src="'+avatar+'">\
+                                    <p>'+item.playerName+'</p>\
+                                </div>\
+                                <p>'+times+'</p>\
+                            </div>\
+                        </li>';
+            $('#wrapper_content_box_list_ul').append(tips)
+        })
+    }
+
+
+    $('.choooseTips_time').click(function () {
+        console.log($('.mui-poppicker')[0])
+        var picker = new mui.PopPicker();
+        // picker.setData(gameDate)
+        picker.setData([{
+            value: "first",
+            text: "第一项",
+        }, {
+            value: "second",
+            text: "第一项"
+        }, {
+            value: "third",
+            text: "第三项"
+        }, {
+            value: "fourth",
+            text: "第四项"
+        }, {
+            value: "fifth",
+            text: "第五项"
+        }])
+        // picker.pickers[0].setSelectedIndex(4, 2000);设定预设值
+        picker.show(function(SelectedItem) {
+            console.log(SelectedItem);
+        })
+        //消隐藏时销毁
+        $('.mui-backdrop').click(function () {
+            picker.dispose()
+        })
+        $('.mui-btn').click(function () {
+            picker.dispose()
+        })
+    })
+
+
+
+
+</script>
+
+</html>

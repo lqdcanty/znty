@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <script type="text/javascript">
+        (function(){var phoneWidth=parseInt(window.screen.width),phoneScale=phoneWidth/750,ua=navigator.userAgent;if(/Android (\d+\.\d+)/.test(ua)){var version=parseFloat(RegExp.$1);if(version>2.3){document.write('<meta name="viewport" content="width=750, minimum-scale = '+phoneScale+", maximum-scale = "+phoneScale+', target-densitydpi=device-dpi">')}else{document.write('<meta name="viewport" content="width=750, target-densitydpi=device-dpi">')}}else{document.write('<meta name="viewport" content="width=750, user-scalable=no, target-densitydpi=device-dpi">')};})();
+    </script>
+	<link rel="stylesheet" type="text/css" href="${staticPath}/draw/css/index.css">
+	<title>智能体育体验馆抽奖大转盘</title>
+</head>
+<body>
+	
+	<div class="zp-box">
+        <div class="zp-bg">
+            <img src="${staticPath}/draw/img/img_c.png" >
+        </div>
+		<div class="dp-box">
+			<img src="${staticPath}/draw/img/img_b.png" class="g-lottery-img">
+            <div class="zhizhen">
+                <div id="cishu-text"><img src="${staticPath}/draw/img/img_a.png"></div>
+            </div>
+            <div class="bg-yd">
+                <img src="${staticPath}/draw/img/img_e.png">
+            </div>
+		</div>
+
+	</div>
+
+
+
+	<!--遮罩&弹框-->
+	<div class="zz"></div>
+
+	<!-- 无次数提示弹框 -->
+	<div class="wcs">
+		<img src="${staticPath}/draw/img/close.png" class="cjgz-c">
+		<img src="${staticPath}/draw/img/wcs-tk.png" class="wcs-img">
+		<img src="${staticPath}/draw/img/ok-img.png" class="ok-img">
+	</div>
+
+	<!-- 抽到奖励弹框 -->
+	<div class="jl-tk">
+	<!--	<img src="img/close.png" class="cjgz-c">-->
+		<img src="${staticPath}/draw/img/bg_beijing.png" class="zj-img">
+		<img src="${staticPath}/draw/img/btn_queding.png" class="ok-img">
+		<p class="texts"><br></p>
+	</div>
+<script type="text/javascript">
+    // 对浏览器的UserAgent进行正则匹配，不含有微信独有标识的则为其他浏览器
+    var useragent = navigator.userAgent;
+    if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
+        // 这里警告框会阻塞当前页面继续加载
+        alert('已禁止本次访问：您必须使用微信内置浏览器访问本页面！');
+        // 以下代码是用javascript强行关闭当前页面
+        var opened = window.open('about:blank', '_self');
+        opened.opener = null;
+        opened.close();
+    }
+</script>
+	<script>
+		var realPath='${ctx}';
+		var activityCode='${activityCode}';
+	</script>
+	<script type="text/javascript" src="${staticPath}/draw/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${staticPath}/draw/js/jquery.rotate.js"></script>
+	<script type="text/javascript" src="${staticPath}/draw/js/jquery.easing.min.js"></script>
+	<script type="text/javascript" src="${staticPath}/draw/js/jquery.jsonp.js"></script>
+	<script type="text/javascript" src="${staticPath}/draw/js/index.js?version=1.10.20"></script>
+</body>
+</html>

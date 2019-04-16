@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.GoodsOrderEntityMapper">
+	<resultMap id="BaseResultMap" type="com.efida.sports.entity.GoodsOrder">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		<result column="register_code" jdbcType="VARCHAR" property="registerCode" />
+		<result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+		<result column="goods_title" jdbcType="VARCHAR" property="goodsTitle" />
+		<result column="goods_pic" jdbcType="VARCHAR" property="goodsPic" />
+		<result column="goods_price" jdbcType="INTEGER" property="goodsPrice" />
+		<result column="goods_num" jdbcType="INTEGER" property="goodsNum" />
+		<result column="extra_money" jdbcType="INTEGER" property="extraMoney" />
+		<result column="order_price" jdbcType="INTEGER" property="orderPrice" />
+		<result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
+		<result column="pay_order_code" jdbcType="VARCHAR" property="payOrderCode" />
+		<result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+		<result column="pay_way_code" jdbcType="VARCHAR" property="payWayCode" />
+		<result column="pay_way_name" jdbcType="VARCHAR" property="payWayName" />
+		<result column="realname" jdbcType="VARCHAR" property="realname" />
+		<result column="mobile" jdbcType="VARCHAR" property="mobile" />
+		<result column="province" jdbcType="VARCHAR" property="province" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="area" jdbcType="VARCHAR" property="area" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="order_time" jdbcType="TIMESTAMP" property="orderTime" />
+		<result column="opt_time" jdbcType="TIMESTAMP" property="optTime" />
+		<result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+		<result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, order_code, register_code,
+		goods_code,goods_title,goods_pic, goods_price,
+		goods_num,
+		extra_money,
+		order_price,
+		order_status,pay_order_code,pay_time,
+		pay_way_code,pay_way_name,realname,
+		mobile,
+		province, city, area,
+		address, remark,
+		order_time,opt_time, gmt_create,
+		gmt_modified
+	</sql>
+
+	<update id="updateOrderPayStatus" parameterType="java.util.Map">
+		update
+		goods_order set order_status=#{orderStatus,jdbcType=VARCHAR},
+		pay_way_code=#{payWayCode,jdbcType=VARCHAR},pay_way_name=#{payWayName,jdbcType=VARCHAR},
+		pay_time=now(),gmt_modified=now()
+		where pay_order_code=#{payOrderCode}
+	</update>
+
+	<update id="updateOrderByOptTime" parameterType="java.util.Map">
+		update goods_order set order_status = #{orderStatus,jdbcType=VARCHAR},gmt_modified=now()
+		where <![CDATA[opt_time < #{optTime}]]> and order_status = #{orderStatusPre,jdbcType=VARCHAR}
+	</update>
+
+    <select id="countMedalReceive" parameterType="map" resultType="java.util.HashMap">
+  	   select DATE(os.pay_time) as payTime, COUNT(1) as count from (select * from goods_order where order_status = 'success' and pay_time is not null
+  	   <if test="startTime != null and startTime != ''">
+      	 and DATE(pay_time) &gt;= #{startTime,jdbcType=TIMESTAMP}
+       </if>
+       <if test="endTime != null and endTime != ''">
+      	 and DATE(pay_time) &lt;= #{endTime,jdbcType=TIMESTAMP}
+       </if>
+  	   <if test="isRepeat == '1'.toString()">
+	  	   group by mobile,realname
+  	   </if>
+  	   ) as os GROUP BY DATE(os.pay_time)
+    </select>
+	<select id="selectGoodsOrderList" resultType="com.efida.sports.entity.GoodsOrder">
+		select
+		o.id, o.order_code orderCode,o.order_time orderTime,o.order_status orderStatus,o.opt_time optTime,
+		o.realname realName,o.mobile,o.province,o.city,o.area,o.address,o.remark,r.account loginPhone,o.goods_num goodsNum   
+		from
+		goods_order o
+		left join register r on o.register_code = r.register_code
+		<where>
+			1=1
+			<if test="startTime != null and startTime !='' ">
+	            and <![CDATA[o.order_time >= #{startTime}]]>
+	        </if>
+	        <if test="endTime != null and endTime !='' ">
+	            and <![CDATA[o.order_time <= #{endTime}]]>
+	        </if>
+	        <if test="orderStatus != null and orderStatus !='' ">
+	            and order_status = #{orderStatus}
+	        </if>
+		</where>
+		order by o.id desc
+	</select>
+
+	<select id="selectGoodsOrderListCount" resultType="com.efida.sports.entity.GoodsOrder">
+		select
+		o.id, o.order_code orderCode,o.order_time orderTime,o.order_status orderStatus,o.opt_time optTime,
+		o.realname realName,o.mobile,o.province,o.city,o.area,o.address,o.remark,r.account loginPhone,o.goods_num goodsNum  
+		from
+		goods_order o
+		left join register r on o.register_code = r.register_code
+		<where>
+			1=1
+			<if test="startTime != null and startTime !='' ">
+	            and <![CDATA[o.order_time >= #{startTime}]]>
+	        </if>
+	        <if test="endTime != null and endTime !='' ">
+	            and <![CDATA[o.order_time <= #{endTime}]]>
+	        </if>
+	        <if test="orderStatus != null and orderStatus !='' ">
+	            and order_status = #{orderStatus}
+	        </if>
+		</where>
+	</select>
+</mapper>

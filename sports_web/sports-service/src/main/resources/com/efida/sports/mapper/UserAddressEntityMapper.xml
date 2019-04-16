@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.UserAddressEntityMapper">
+	<resultMap id="BaseResultMap" type="com.efida.sports.entity.UserAddress">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="address_code" jdbcType="VARCHAR" property="addressCode" />
+		<result column="register_code" jdbcType="VARCHAR" property="registerCode" />
+		<result column="realname" jdbcType="VARCHAR" property="realname" />
+		<result column="mobile" jdbcType="VARCHAR" property="mobile" />
+		<result column="province" jdbcType="VARCHAR" property="province" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="area" jdbcType="VARCHAR" property="area" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="isdefault" jdbcType="BIT" property="isdefault" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+		<result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, address_code, register_code, realname, mobile,
+		province, city,
+		area, address,
+		isdefault, create_time, gmt_create,
+		gmt_modified
+	</sql>
+
+	<update id="updateAllStatusByUser" parameterType="java.util.Map">
+		update user_address set isdefault=#{isDefault},gmt_modified=now() where register_code=#{registerCode}
+	</update>
+</mapper>

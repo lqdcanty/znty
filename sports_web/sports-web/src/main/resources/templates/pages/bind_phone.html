@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN" >
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>手机绑定</title>
+
+
+<link rel="stylesheet" href="${staticPath}/css/mui.min.css?v=${cssV}">
+		<!--App自定义的css-->
+<link rel="stylesheet" type="text/css" href="${staticPath}/css/app.css?v=${cssV}" />
+
+<link rel="stylesheet" type="text/css" href="${staticPath}/css/mui.picker.min.css?v=${cssV}" />
+<link rel="stylesheet" href="${staticPath}/layui/css/layui.css?v=${cssV}"  media="all">
+<link rel="stylesheet" href="${staticPath}/css/layout.css?css?v=${cssV}" />
+</head>
+<body>
+	<div id="wrapper" style="background:#fff">
+		<div class="alert">请至少选择一个比赛分组</div>
+		<div class="div_phone">
+			<form  id="binding_from"  method="post">
+				<input class="input mr0 border" id="tel" type="text" placeholder="请输入手机号码" name="phoneNum" data-validate="phoneNum" data-describedby="phone-description"  />
+
+				<div class="div_line border flex flex-pack-justify mt30">
+					<input class="input mr0" type="text" placeholder="请输入验证码" name="verifyCode" data-required="true" data-conditional="verifyCode" data-descriptions="captchacode"  />
+					|
+					<span class="orange send yzm" onclick="getCode(this)">发送验证码</span>
+				</div>
+				<button class="input btnlogin mt50" type="submit" style="background: #FF8F00!important;border:0;color:#fff;">登录</button>
+			</form>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/jquery-mvalidate.js?v=${cssV}"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mui.min.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mui.picker.min.js?v=${cssV}"></script>
+</html>
+<script type="text/javascript">
+	var path = "${ctx}", btnDisable = false;
+   var lqdentry_cardValue=1;
+
+   var  isChose=false;
+   mui.init();
+	$(function(){
+	    validateInit();
+	})
+	    
+	function validateInit() {
+    /*/^0?1[3|4|5|8][0-9]\d{8}$/*/
+	    $.mvalidateExtend({
+	    	phoneNum:{
+                required : true,   
+                pattern : /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/,
+                each:function(){                  
+                },
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入手机号码</div>',
+                    pattern : '<div class="field-invalidmsg">手机号码格式不正确</div>'
+                }
+            }
+        });
+        $("#binding_from").mvalidate({
+            type: 1,
+            onKeyup: true,
+            sendForm: true,
+            firstInvalidFocus: true,
+            valid: function(event,options){
+            	console.log("开始提交")
+                //点击提交按钮时,表单通过验证触发函数
+                event.preventDefault();
+                validSuccess();   //验证通过，提交数据到后台
+                $.ajax({
+                    url:  path + "/auth/phone/bind",
+                    data: $("#binding_from").serialize(),
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(data) { 
+                    	if(data.resultCode!=200){
+                    		var errMsg=data.resultMsg;
+                    		$(".alert").html(errMsg).show();
+                    	}else{
+                
+                           window.location.href=path+"/auth/bind/success";                    		
+                    	}
+                    }
+                }); 
+            },
+            invalid: function(event, status, options){
+                //点击提交按钮时,表单未通过验证触发函数
+            },
+            conditional: {
+            	verifyCode: function(val) {
+//                console.log('请求接口，验证验证码是否正确，返回true或者false'); 
+                    console.log('验证码===='+val);
+                    if(!val && !val.length) return false;
+                    return true;
+                }
+            },
+            descriptions:{
+                
+                captchacode:{
+                    required : '请输入验证码',
+                    conditional : '您输入的验证码不正确'
+                }
+        	},
+		});
+	}
+	//手动触发验证
+    function validErrorMessage(text) {
+    	console.log("开始调用验证失败")
+        var $container=$('<div class="field-tooltipWrap"><div class="field-tooltipInner"><div class="field-tooltip fieldTipBounceIn">'+text+'</div></div></div>');
+        $container.appendTo($("body"));
+        setTimeout(function(){
+            $container.remove();
+        },1500)
+    };
+    //手机号验证
+    function checkPhone(){
+        var phone = $('#tel').val().trim();//获取输入的手机号
+        if(!phone.length) {
+            validErrorMessage('请输入手机号码');
+            return false;
+        };
+        if(!/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/.test(phone)) {
+            validErrorMessage('手机号码格式不正确');
+            return false;
+        }
+        return true;
+    };
+    
+    
+    //倒计时
+    function resetCode(){
+        timeWait(60);
+        btnDisable = true;
+    };
+    
+    function timeWait(time) {
+    	setTimeout(function() {
+    		if(time >= 0) {
+    			$('.yzm').html(time+"秒后重发");
+    			time--;
+    			timeWait(time);
+    		}else {
+    			$('.yzm').html("发送验证码").removeClass('gray');
+    			btnDisable = false;
+    		}
+    	}, 1000)
+    };
+	//验证通过，提交数据的方法
+	function validSuccess() {
+	    var params = {};
+	    $('form input[type="text"]').each(function(e) {
+	        console.log($(this).attr('name'));
+	        params[$(this).attr('name')] = $(this).val();
+	    });
+	    console.log(params);
+	};
+	function getCode(e){
+	    var tel = $("#tel").val();
+        if(checkPhone()) {
+        	if(btnDisable) return 0;
+        	getResultMethods(path + "/verify/send/sms/code", {playerPhone: tel}, function(d) {
+        		console.log(d)
+    			if(d.resultCode ==200) {
+    				resetCode(); //倒计时
+    			}else {
+    				validErrorMessage('发送失败,请稍后重试');
+    				//resetCode();
+    			}
+    		}); 
+        }else {
+            $('#tel').focus();
+        }
+    };
+</script>

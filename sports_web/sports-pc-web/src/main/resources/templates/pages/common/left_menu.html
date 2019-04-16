@@ -1,0 +1,32 @@
+   <div class="left_menu pull-left" id="leftMenu">
+	  <div class="user_top">
+	  	   <p class="user_header">
+	  	   	  <span class="header_icon">
+	  	   	  		<#if register.headimgUrl??  && register.headimgUrl!=''>
+				 	    <img  id="imgUrl" src="${(register.headimgUrl)!''}" >
+				 	<#else>
+				 	    <img src="${stx}/img/icon_user.png">
+					</#if>
+	  	   	  </span>
+	  	   </p>
+	  	   <p class="user_name"><span> 
+	  	   <#if (register.nickName)?? && (register.nickName)!='' >
+	  	         ${(register.nickName)!''}
+	  	     <#else>
+	  	                     昵称
+	  	   </#if>
+	  	   </span><a href="${ctx}/user/head/init"><img src="${stx}/img/icon_grb.png"></a></p>
+	  </div>
+	  <ul class="menu_link">
+	  	<li><a id="order" href="${ctx}/order/query"><img src="${stx}/img/icon_dingdan.png">报名订单</a><em id="orderEm"></em></li>
+	    <li><a id="socialDomain" href="${socialDomain}/static/index"><img src="${stx}/img/icon_wenzhang.png">文章管理</a><em id="medalEm"></em></li> 
+	   	<li><a id="medal" href="${ctx}/shop/my/order"><img src="${stx}/img/icon_jzdd.png">奖章订单</a><em id="medalEm"></em></li> 
+	  	<li><a id="myScore" href="${ctx}/achievement/init/page"><img src="${stx}/img/icon_chengji.png">我的成绩</a><em id="myScoreEm"></em></li>
+	 <!--  	<li><a id="grxx" href="${ctx}/user/head/init"><img src="${stx}/img/icon_xiaoxi.png">个人信息</a><em id="grxxEm"></em></li> -->
+	      <li><a id="jz" href="${ctx}/cert/init"><img src="${stx}/img/icon_jiangzhang.png">我的奖章</a><em id="jzEm"></em></li> 
+	  	<!-- <li><a><img src="${stx}/img/icon_baomingka.png">我的报名卡</a><em></em></li>
+	  	<li><a><img src="${stx}/img/icon_xiaoxi.png">消息中心</a><em></em></li> -->
+	  	<li><a id="mykf" href="${ctx}/user/customer/service"><img src="${stx}/img/icon_kefu.png">帮助与反馈</a><em id="mykfEm"></em></li>
+	  	<li style="border: 0;"><a id="aboutUs"  href="${ctx}/user/about/us"><img src="${stx}/img/icon_guanyu.png">关于我们</a><em id="aboutUsem" ></em></li>
+	  </ul>
+</div>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>提交订单</title>
+        <link href="${stx}/css/layout.css" rel="stylesheet">
+	<link href="${stx}/css/pagination.css" rel="stylesheet">
+  	     <link href="http://www.jq22.com/jquery/bootstrap-3.3.4.css" rel="stylesheet">
+  	  	<link href="${stx}/goodsInfo/goodsInfo.css" rel="stylesheet">
+    <!--[if IE]>
+    <script src="http://libs.baidu.com/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<#include "common/nav.html">
+<div id="app" v-cloak>
+	<div class="loading" v-if="!hasData">
+	    <img src="${stx}/goodsInfo/loading.png">
+	</div>
+	
+	<div class="container" v-else>
+	 <div class="order-panel mt40">
+        <div class="panel-title">
+            确认收货信息
+        </div>
+        <!-- 展示地址 -->
+        <div class="panel-body clear"  v-show='!addressStatus'>
+            <div class="pull-left" style="width: 805px;"  v-if='addressInfo!=null'>
+                <p class="address-title">寄送至&ensp;:&ensp;</p>
+                <p class="address-title">
+                    <img src="${stx}/goodsInfo/address.png">
+                    <span>默认地址</span>
+                    <a @click='updateAddr'>修改</a>
+                </p>
+                <p class="address-info">
+                    <label>收&ensp;货&ensp;人&ensp;:&ensp;</label>
+                    <span>{{addressInfo.realname}}</span>
+                </p>
+                <p class="address-info">
+                    <label>联系方式&ensp;:&ensp;</label>
+                    <span>{{addressInfo.mobile}}</span>
+                </p>
+                <p class="address-info">
+                    <label>收货地址&ensp;:&ensp;</label>
+                    <span>{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.area}}{{addressInfo.address}}</span>
+                </p>
+            </div>
+            <div class="pull-left" style="width: 805px;"  v-if='addressInfo==null'>
+                <p class="address-info" style='margin-top:50px'>
+                    <label>你还未填写过收货地址或未选择地址，请添加收货地址</label>
+                </p>
+            </div>
+            <div class="pull-right address-right">
+                <a @click='openSel'>切换地址</a>
+                <a @click='addAddr'>新增地址</a>
+            </div>
+        </div>
+    	 <!--    填写地址 -->
+        <div class="panel-body clear" v-show='addressStatus'>
+            <div class="pull-left" style="width: 680px">
+                <form class="add-address" style="width: 617px">
+                    <div class="add-item clear">
+                        <div class="pull-left">
+                            <label class="pull-left">收货人：</label>
+                            <input type="text" v-model='addAddrInfo.realname'>
+                            <div class='color_f40' v-show='errorStatus==1'>请填写收货人</div>
+                        </div>
+                        <div class="pull-right">
+                            <label class="pull-left">手机号码：</label>
+                            <input type="text"  v-model='addAddrInfo.mobile'>
+                            <div class='color_f40' id="mobileYz" v-show='errorStatus==2'>请填写手机号码</div>
+                        </div>
+
+                    </div>
+                    <div class="clear add-item">
+                        <label class="pull-left">所在地区：</label>
+                        <div id="distpicker4" class="pull-left">
+                            <div class="form-group">
+                                <label class="sr-only" for="province9">Province</label>
+                                <select class="form-control" id="province9" v-model="addAddrInfo.province"></select>
+                                 <div class='color_f40' v-show='errorStatus==3'>请选择省份</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="city9">City</label>
+                                <select class="form-control" id="city9" v-model="addAddrInfo.city" ></select>
+                                 <div class='color_f40' v-show='errorStatus==4'>请选择城市</div>
+                            </div>
+                            <div class="form-group" style='margin-right:0'>
+                                <label class="sr-only" for="district9">District</label>
+                                <select class="form-control" id="district9" v-model="addAddrInfo.area" ></select>
+                                 <div class='color_f40' v-show='errorStatus==5'>请选择地区</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="add-item clear">
+                        <label class="pull-left">详细地址：</label>
+                        <textarea placeholder="详细地址，街道、门牌号等" v-model='addAddrInfo.address'></textarea>
+                        <div class='pull-right color_f40' v-show='errorStatus==6'>请填写详细地址</div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="add-right pull-left">
+                <p>
+                	<span @click='selDeful'>
+                		<img src="${stx}/goodsInfo/selIt.png" v-show="addAddrInfo.isdefault">
+                	</span>设为默认地址
+                </p>
+                <div>
+                    <a @click='saveAddr'>保存地址</a>
+                    <a @click='cancelAdd'>取消</a>
+                </div>
+            </div>
+        </div>
+    </div>
+	    <div class="order-panel plr20">
+	            <table>
+	                <thead>
+	                    <tr>
+	                        <td>商品信息</td>
+	                        <td>价格</td>
+	                        <td>数量</td>
+	                        <td>小计</td>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr v-if='goodsInfo'>
+	                        <td>
+	                            <div class="pull-left">
+	                                <img src="${stx}/img/goods_2.jpg">
+	                            </div>
+	                            <div class='goods-name'>
+	                                <span>{{goodsInfo.title}}</span>
+	                            </div>
+	                        </td>
+	                        <td>¥{{goodsInfo.productPrice*0.01}}</td>
+	                        <td>{{num}}</td>
+	                        <td>¥{{goodsInfo.productPrice*0.01*num}}</td>
+	                    </tr>
+	                    <tr v-else>
+	                    	<td>订单创建失败</td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	            <div class="order-detail clear">
+	                <div class="pull-left remark-wrap">
+	                    <label>备注</label>
+	                    <textarea class="remark-info" v-model='remark' placeholder="请输入你的留言信息"></textarea>
+	                </div>
+	                <div class="pull-right" style='position:relative'>
+	                	<p class='mb10'>邮费:<span class="order-price" style='margin-left: 48px;'>¥{{goodsInfo.extraMoney*0.01 | capitalize}}</span></p>
+	                    <p>应付总额:<span class="order-price">¥{{num*productPriceNum*0.01+goodsInfo.extraMoney*0.01 | capitalize}}</span></p>
+	                    <a class="pay-btn" @click='upOrder' >提交订单</a>
+	                    <p v-show="errorMsg!=''" class='color_f40 mt20' style='position: absolute;bottom: -30px;'>{{errorMsg}}</p>
+	                </div>
+	            </div>
+	    </div>
+	</div>
+		<div class='layer-module' v-show='selStatus'>
+				<div class='layer-module-content' style='height:610px'>
+					<div class='layer-module-head'>选择地址<a @click='colseSel()'  href="javascript:;">X</a></div>				
+					<div class='layer-module-body p20' style='height:500px;overflow: auto;' ref="viewBox">
+					    <div class='address-item' v-for='(item,index) in addressList' @click='selAddressIt($event,item)'>
+					    	<p>
+					    		<span>收&ensp;货&ensp;人&ensp;:&ensp;</span>
+					    		<span>{{item.realname}}</span>
+					    		<span class="defaultAdress" v-if="item.isdefault">[默认地址]</span>
+					    	</p>
+					    	<p>
+					    		<span>联系方式&ensp;:&ensp;</span>
+					    		<span>{{item.mobile}}</span>
+					    	</p>
+					    	<p>
+					    		<span>收货地址&ensp;:&ensp;</span>
+					    		<span>{{item.province}}{{item.city}}{{item.area}}{{item.address}}</span>
+					    	</p>
+					    </div>
+					</div>
+					<div class='layer-module-foot'>
+						<a @click='selAddrYes'>确定</a>
+						<a @click='colseSel'>取消</a>
+					</div>
+				</div>
+		</div>
+</div>
+ <#include "common/footer.html">
+<script src="${stx}/js/jquery-2.1.1.min.js"></script>
+<script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>
+<script src="${stx}/goodsInfo/js/distpicker.data.js"></script>
+<script src="${stx}/goodsInfo/js/distpicker.js"></script>
+<script src="${stx}/goodsInfo/js/main.js"></script>
+
+<script src="${stx}/js/vue.js"></script>
+<script>
+$(function(){
+	$('#app').css({
+		'min-height':parseInt(window.innerHeight)-92-150+'px'
+	})
+})
+var newAddressOld={};
+var vm = new Vue({
+	   el: '#app',
+	   data: {
+		   hasData:false,
+		   goodsInfo:null,
+		   addressStatus:false, //编辑地址状态
+		   addressInfo:null,
+		   addressList:[],
+		   activeItem:null,
+		   selStatus:false,
+		   errorMsg:"",
+		   productPriceNum:0,
+		   errorStatus:0, //错误提示状态
+		   num:1,
+		   remark:'',
+		   addAddrInfo:{
+			   addressCode:'',
+			   realname:'',
+			   mobile:'',
+			   province:'',
+			   city:'',
+			   area:'',
+			   address:'',
+			   isdefault:false
+		   },
+		   newAddressFlage:false,
+		   currentPage:1,
+		   flage:true,
+		   totalPage:1,
+	   },
+	   filters: {
+		   capitalize: function (value) {
+		     if (!value) return ''
+		     let realVal=Number(value).toFixed(2)
+		     return Number(realVal);
+		   }
+		 },
+	   created:function(){
+		   if(this.getCode('num')){
+			   this.num=this.getCode('num');
+		   }
+		   this.getData();
+		   this.getAddress();
+		   
+	   },
+	   mounted:function(){
+		   //var that=this;
+		   this.box = this.$refs.viewBox;
+		   this.box.addEventListener('scroll', () => {
+			       console.log(" scroll " + this.$refs.viewBox.scrollTop) 
+			   var n=this.currentPage;
+			   if((this.$refs.viewBox.scrollTop>779*n||n==this.totalPage) && this.flage){
+				   this.currentPage++;
+				   if(this.currentPage<this.totalPage||this.currentPage==this.totalPage) this.getAddrList();
+			   }
+			})  
+	   },
+	   updated:function(){
+		   var that=this;
+	   },
+	   methods:{
+			getCode:function(name){
+		        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		        var r = window.location.search.substr(1).match(reg);
+		        if(r!=null)return  unescape(r[2]); return null;
+			},
+		   openSel:function(){  //打开选择地址
+			   this.activeItem=null;
+			   this.currentPage=1;
+			   this.addressList=[];
+			   $('.address-item').each(function(p1,p2){
+				   $(p2).removeClass('active')
+			   })
+			   this.getAddrList();
+			   this.selStatus=true;
+			   
+		   },
+		   colseSel:function(){
+			   this.selStatus=false;
+		   },
+		   selAddressIt:function(event,item){ //选择地址
+			 var that=this;
+			 if(!$(event.currentTarget).hasClass('active')){
+				 $(event.currentTarget).addClass('active');
+				 that.activeItem=item
+			 }
+			 $(event.currentTarget).siblings().removeClass('active')
+		   },
+		   selAddrYes:function(){ //确认选择地址
+			   if(this.activeItem==null){
+				   console.log('请选择地址');
+				   return;
+			   }
+			   this.addressInfo=this.activeItem;
+			   this.selStatus=false;
+			   console.log( this.addressInfo)
+		   },
+		   getData:function(){ //获取商品信息
+			    this.editStatus=true;
+				var that=this;
+				  $.ajax({
+		  				url:"${ctx}/shop/goods/G20180806000001",
+		  				type:'GET',
+		  			 	dataType: 'JSON',
+		  			    contentType: 'application/json;charset=UTF-8',
+		  				success:function(res){
+		  					console.log(res)
+		  					if(res.resultCode==200){
+		  						that.hasData=true;
+		  						that.goodsInfo=res.result.goods;
+		  						that.productPriceNum=res.result.goods.productPrice
+		  						console.log(that.productPriceNum)
+		  					}else{
+		  						that.hasData=true;
+		  					}
+		  				}
+		  			});
+			},
+			getAddrList:function(){ //获取地址列表
+				var that=this;
+				
+				if(that.flage){
+					that.flage=false;
+					$.ajax({
+		  				url:"${ctx}/shop/user/address/list",
+		  				type:'GET',
+		  				data:{currentPage:that.currentPage},
+		  			 	dataType: 'JSON',
+		  			    contentType: 'application/json;charset=UTF-8',
+		  				success:function(res){
+		  					console.log(res)
+		  					if(res.resultCode==200 ){
+		  						that.flage=true;
+		  						that.addressList=that.addressList.concat(res.result.list);
+		  						that.totalPage=res.result.totalPage;
+		  					}
+		  				}
+		  			});
+				}
+			  	
+			},
+			getAddress:function(){ //获取默认地址
+				var that=this;
+			  	$.ajax({
+		  				url:"${ctx}/shop/user/address",
+		  				type:'GET',
+		  			 	dataType: 'JSON',
+		  			    contentType: 'application/json;charset=UTF-8',
+		  				success:function(res){
+		  					console.log(res)
+		  					if(res.resultCode==200 ){
+		  						if(res.result.address!=null){
+		  							that.addressInfo=res.result.address;
+			  						that.addressStatus=false;
+		  						}else{
+		  							that.addressStatus=false;
+		  						}
+		  					}
+		  				}
+		  			});
+			},
+			updateAddr:function(){ //修改地址
+				this.addressStatus=true;
+				this.errorStatus=0;
+				this.addAddrInfo=this.addressInfo;
+				$('#distpicker4').distpicker('destroy');
+				$("#distpicker4").distpicker({
+					  province: this.addAddrInfo.province,
+					  city: this.addAddrInfo.city,
+					  district: this.addAddrInfo.area
+					});
+			},
+			saveAddr:function(){ //保存地址
+				console.log(this.addAddrInfo)
+				if(this.addAddrInfo.realname==''){
+					this.errorStatus=1;
+					return
+				}
+				var re = /^1[34578]\d{9}$/;
+				 if(this.addAddrInfo.mobile==''){
+					this.errorStatus=2;
+					$("#mobileYz").text("请填写手机号码");
+					return
+				} 
+				if(!re.test(this.addAddrInfo.mobile)){
+					this.errorStatus=2;
+					$("#mobileYz").text("手机号格式错误");
+					return;
+				}
+				if(this.addAddrInfo.province==''){
+					this.errorStatus=3;
+					return
+				}
+				if(this.addAddrInfo.city==''){
+					this.errorStatus=4;
+					return
+				}
+				if(this.addAddrInfo.area==''){
+					this.errorStatus=5;
+					return
+				}
+				if(this.addAddrInfo.address==''){
+					this.errorStatus=6;
+					return
+				}
+				this.editAddr();
+				
+			},
+			editAddr:function(){ //保存地址
+				var that=this;
+			  	$.ajax({
+		  				url:"${ctx}/shop/user/address/edit",
+		  				type:'GET',
+		  				data:this.addAddrInfo,
+		  			 	dataType: 'JSON',
+		  			    contentType: 'application/json;charset=UTF-8',
+		  				success:function(res){
+		  					if(res.resultCode==200){
+		  						that.addressStatus=false;
+		  						if(that.newAddressFlage){
+		  							that.addressInfo=newAddressOld;
+		  						}else{
+		  							that.addressInfo=that.addAddrInfo;
+			  						that.addressInfo.addressCode=res.result.addressCode;
+		  						}
+		  					}
+		  				}
+		  			});
+			},
+			addAddr:function(){ //新增地址
+				this.addressStatus=true;
+				this.newAddressFlage=true;
+				this.errorStatus=0;
+				newAddressOld=this.addressInfo;
+				this.addAddrInfo={
+					   addressCode:'',
+					   realname:'',
+					   mobile:'',
+					   province:'',
+					   city:'',
+					   area:'',
+					   address:'',
+					   isdefault:false
+				   } 
+				   $('#distpicker4').distpicker({
+					    placeholder: false
+				   });
+			},
+			upOrder:function(){
+				var that=this;
+				if(this.addressInfo && this.addressInfo.addressCode && !that.addressStatus){
+					$.ajax({
+		  				url:"${ctx}/shop/user/order/create",
+		  				type:'GET',
+		  				data:{
+		  					goodsCode:'G20180806000001',
+		  					addressCode:that.addressInfo.addressCode,
+		  					remark:that.remark,
+		  					num:that.num
+		  				},
+		  			 	dataType: 'JSON',
+		  			    contentType: 'application/json;charset=UTF-8',
+		  				success:function(res){
+		  					if(res.resultCode==200){
+		  						that.addressStatus=false;
+		  					 	window.location.href='${ctx}/static/pay_goods_order?code='+res.result.orderCode
+		  					}
+		  				}
+		  			});
+				}else{
+					that.errorMsg='请填写收货地址';
+				}
+				
+			},
+			selDeful:function(){
+				this.addAddrInfo.isdefault=!this.addAddrInfo.isdefault;
+			},
+			cancelAdd:function(){
+				this.getAddress();
+				this.newAddressFlage=false;
+				//this.addressStatus=false
+			},
+			chekDeful:function(event){
+				console.log(event)
+			}
+	   }
+})
+</script>
+</body>
+</html>

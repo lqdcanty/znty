@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>填写报名表</title>
+	<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="${staticPath}/css/mui.min.css?v=${cssV}">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="${staticPath}/css/app.css?v=${cssV}" />
+	<link rel="stylesheet" type="text/css" href="${staticPath}/css/mui.picker.min.css?v=${cssV}" />
+
+	<link rel="stylesheet" href="${staticPath}/layui/css/layui.css?v=${cssV}"  media="all">
+	<style>
+		.register_card_tr{
+			display: none;
+		}
+		#nextStep input{width: 100%;
+			height: 100%;
+			background: none;
+			border: none;}
+		#wrapper .entyr_from tr td:first-child{color: #333333}
+		#wrapper .entyr_from tr td:first-child span{color: #FF001F;}
+		#wrapper .entyr_from tr:last-child td{border-bottom: 0}
+		.group-wrap{background: #FFEED9;color: #FF8F00;line-height: 0.6rem;font-size: 0.26rem;margin:0 -0.3rem;padding: 0 0.3rem;position: relative}
+		.group-wrap span{display: inline-block;width: 0.06rem;height: 0.26rem;background: #E50113;position: absolute;left: 0;top:0.15rem}
+		.add-group{float: right;color: #fff;display: inline-block;width: 0.36rem;height: 0.36rem;border-radius: 100%;background: #FF8F00;text-align: center;line-height: 0.35rem;font-size: 0.4rem;margin-top: 0.1rem;}
+		.group-itemList li{line-height: 0.66rem;font-size: 0.25rem;border-bottom: 0.01rem solid #E2E2E2;}
+		.group-itemList li span:first-child{    overflow: hidden;width: 1.44rem;display: inline-block;text-overflow: ellipsis;white-space: nowrap;float: left;}
+		.group-itemList li span:nth-child(2){color: #666666;padding: 0 15px;}
+		.group-itemList li a{float: right}
+		.group-itemList li a img{width: 0.26rem;}
+		.group-itemList li i{color: #FF8F00;}
+		#wrapper .entyr_from table{margin:0}
+		#wrapper .entyr_from{padding:0 0.3rem 1rem;}
+		.captcha{width: 2.8rem !important;margin: 0;color: #232323;border: 0;font-size: 0.28rem;}
+	</style>
+</head>
+<body>
+<div id="wrapper">
+	<div class="alert">请至少选择一个比赛分组</div>
+	<#if match??>
+	<div class="details_page flex flex-pack-justify flex-align-center">
+		<div onClick="javascript:window.location.href='${ctx}/game/detail/${(match.matchCode)!''}'">
+			<p class="details_title">${(match.matchName)!''}，查看详情</p>
+			<p class="game_time"><img src="${ctx}/img/icon_time_1.png">${(match.startTime?string("yyyy年MM月dd日"))!''}-${(match.endTime?string("yyyy年MM月dd日"))!''}</p>
+		</div>
+		<span><img src="${ctx}/img/icon_right.png"></span>
+	</div>
+</#if>
+<form class="entyr_from" id="entyr_from"  method="post">
+	<div class="register_card_tr">
+		<div class="register_card_box">
+			<img class="register_card_box_bg" src="${staticPath}/img/img_sport_m@2x.png">
+			<div>
+				<img src="${staticPath}/img/icon_name@2x.png">
+				<p class="register_card_box_name">姓名：--</p>
+			</div>
+			<div>
+				<img src="${staticPath}/img/icon_phone@2x.png">
+				<p class="register_card_box_phone">手机号码：--</p>
+			</div>
+			<img class="card_choose_btn" src="${staticPath}/img/img_kp_xuanzh@2x.png">
+		</div>
+	</div>
+	<input type="hidden" id="useCard"  value="1" name="isCard">
+	<input type="hidden"  value="${(orderCode)!''}" name="orderCode" id="orderCode">
+	<table>
+		<tr>
+			<td><span>*</span>团队名称</td>
+			<td><input id="addCountMessage_Teamname" type="text" name="teamName" placeholder="请输入团队名称" data-required="true" data-descriptions="teamName" size="18" value="${(order.leader.teamName)!''}"></td>
+		</tr>
+		<tr class="base_info_tips">
+			<td><span>*</span>领队名称</td>
+			<td><input id="addCountMessage_Leadname" type="text" name="leaderName" placeholder="请输入领队名称" data-required="true" data-descriptions="leaderName" size="18" value="${(order.leader.leaderName)!''}"></td>
+		</tr>
+		<tr class="base_info_tips">
+			<td><span>*</span>手机号码</td>
+			<td><input onblur="comparePhone()" onkeyup="changePhone()" type="text" id="tel" name="leaderPhone" placeholder="请输入手机号码"  data-validate="leaderPhone" data-describedby="phone-description" value="${(order.leader.leaderPhone)!''}"></td>
+		</tr>
+	</table>
+	<div>
+		<div  class="group-wrap">
+			<span></span>
+			团体成员(${(order.teamRemark)!''})
+			<#if order.canAddTeam=true>
+			<a class="add-group" onclick="addCountMessage('${ctx}/apply/edit/team/${(orderCode)!''}')" >+</a>
+		</#if>
+	</div>
+	<ul class="group-itemList">
+
+		<#if  order?? && order.teams?? && (order.teams?size > 0)>
+		<#list order.teams as team>
+		<#if team.playerName??>
+		<li>
+			<span onClick="addCountMessage('${ctx}/apply/team/detail/${(orderCode)!''}/${(team.playerCode)!''}')"><i> > </i> ${(team.playerName)!''}</span>
+			<span onClick="addCountMessage('${ctx}/apply/team/detail/${(orderCode)!''}/${(team.playerCode)!''}')">
+								 ${(team.playerPhone)!''}
+							    </span>
+			<a onclick="dell('${(team.playerCode)!''}','${(team.playerName)!''}')"><img src="${ctx}/img/icon_del_1@2x.png"></a>
+		</li>
+	</#if>
+</#list>
+</#if>
+
+</ul>
+</div>
+<#if detail?? >
+<div class="kong"></div>
+<div class="custom_title">
+	<p class="title"><i></i>报名信息</p>
+	<table class="entyr_from_table signTable">
+		<#if order.applys?? && (order.applys?size > 0)>
+		<#list order.applys as apply>
+		<tr>
+			<td style="vertical-align: top;line-height: 0.5rem;">报名项：</td>
+			<td style="vertical-align: top;">
+				<p><span style="color: #FF8F00">团体赛</span>
+					<#if apply.matchGroupName?? >${(apply.matchGroupName)!''}-</#if>${(apply.eventName)!''}
+				</p>
+				<p>比赛时间：${(apply.eventStartTime?string("yyyy年MM月dd日  HH:mm:ss"))!''}</p>
+				<p>报名费：¥${(apply.applyAmountStr)!''}</p>
+			</td>
+		</tr>
+	</#list>
+</#if>
+
+
+<tr>
+	<td>订单编号：</td>
+	<td>TS ${(order.orderCode)!''}</td>
+</tr>
+<tr>
+	<td>下单日期：</td>
+	<td>${(order.orderTime?string("yyyy年MM月dd日  HH:mm:ss"))!''}</td>
+</tr>
+<tr>
+	<td>订单总额：</td>
+	<td>¥${(order.orderAmountStr)!''}</td>
+</tr>
+<tr >
+	<td>备注信息：</td>
+	<td>${(order.remark)!''}</td>
+</tr>
+</table>
+</div>
+</#if>
+
+
+<div class="check_read flex flex-align-center" style="padding:0 0.3rem;">
+
+	<b class="" id="readAccept" >
+		<img class="on1" style="display: block" src="${staticPath}/img/sel_xieyi.png">
+		<img  class="on2" style="display: none" src="${staticPath}/img/sel_xieyi_n.png">
+	</b>
+
+	<span> 我已经阅读并接受<span class="f_c" onclick="readAndAccept()">《免责声明》</span></span>
+</div>
+<div class="kong_content base_info_tips" id="certifyHide" style="height:1rem;">
+	<table><tr>
+		<td><span>*</span>验证码</td>
+		<td>
+											<span>
+												<!--<input type="text" placeholder="请输入验证码">  data-required="true" data-conditional="verifyCode" data-descriptions="verifyCode"-->
+												<input class='captcha' type="text" id="verifyCode_input" name="verifyCode" placeholder="请输入验证码">
+											</span><span style='color: #CCCCCC'>|</span>
+			<a class="yzm"  onclick="getCode(this)">发送验证码</a>
+		</td>
+	</tr></table>
+</div>
+<div class="sub_area" style="position: absolute;left: 0;top: 0;z-index: -1;">
+	<button type="submit" id="nextStep" >提交信息</button>
+</div>
+<!--<div style="width:100%;height: 3rem;"></div>-->
+
+</form>
+</div>
+<!--点击外部元素触发内部点击-->
+<#if  match?? && match.canApply >
+<#if  init??>
+<p class="button" id="nextStep_2">
+	<button type="submit" >提交报名信息</button>
+</p>
+<#else>
+<p class="button flex flex-pack-justify" id="nextStep_2">
+	<a class="flex1" id="cancelRegister">取消报名</a>
+	<!-- <input type="submit" value="提交报名信息"> -->
+	<button type="submit" >提交报名信息</button>
+	<!--onclick="submitTi()"-->
+</p>
+</#if>
+<#else>
+<a class="common_btn_a"><p class="button custom_btnstate${(match.applyStatus)!}">${(match.applyStatusDesc)!''}</p></a>
+</#if>
+<div class="modle-wrap" id="staticLayer">
+	<div class="modle-container">
+		<div class="disclaimer">
+			<div class="img">
+				<img onclick="readClose()" src="${staticPath}/img/icon_guanbi.png">
+			</div>
+			<div class="disclaimerContent">
+				<h1>免责声明</h1><br/>
+				参赛者承诺	<br/><br/>
+				本人自愿报名参加本次加XX赛事（以下统称“比赛”），并作出承诺如下：<br/>
+				1.	本人承诺全面了解并同意遵守由首届全国智能体育运动会组委会及承办机构（以下统称“组织方”）制定的各项比赛规则、规程、规定、要求及采取的措施，并承担由于违反以上规定造成损失的全部责任。<br/>
+				2.	本人已为参加比赛做好充分准备，保证并确认自身身体条件和精神健康状况方面符合参加比赛的各项要求。本人认识到在参加比赛时存在对自身造成伤害的风险，包括终生残疾或死亡，本人承认并接受此风险的存在。本人不会为此追究比赛组织方、比赛赞助方、赛事裁判和工作人员的任何责任。<br/>
+				3.	本人对参赛可能发生的各种风险和意外已作了全面、审慎的评估，并愿意自行承担由此产生的一切后果。本人保证在参赛过程中为个人安全负责。<br/>
+				4.	本人同意“组织方”有权利无偿使用本人的姓名和肖像以及其它个人资料进行各项宣传活动。<br/>
+				本人或法定代理人已认真阅读并理解上述内容，现予以确认。<br/>
+				特此承诺。<br/><br/>
+				赛事参赛声明<br/><br/>
+				注：请所有参赛选手报名之前务必认真、仔细阅读本赛事所有赛事信息及参赛者承诺，在您提交报名信息后即被默认为您已阅读、理解并同意遵守本赛事规则中的一切内容并签署及提交免责声明。<br/>
+				本人声明与承诺：<br/>
+				1.	 本人自愿参加首届全国智能体育运动会及一切赛事相关活动(以下统称“比赛”)，我确认本人具有参加本赛事相应的民事行为能力和民事责任能力,并且已获得监护人的同意；<br/>
+				2.	本人确认全面理解并同意遵守首届全国智能体育运动会组委会及承办机构(以下统称“组织方”) 所制订的各项规程、规则、规定、要求及采取的措施；<br/>
+				3.	 本人确认已认真阅读组织方就选手参加本次比赛可能发生的一切风险（包括但不限于因本次运动所可能产生的人身伤亡风险）的提示，本人在此明确同意将自行承担参加“首届全国智能体育运动会各项赛事”所可能存在的风险和责任；<br/>
+				4.	本人承诺已通过正规医疗机构进行体检，并结合检查报告进行自我评估，确认自己的身体状况能够适应于比赛，已为参赛做好准备，本人认识到在参加比赛时存在对自身造成伤害的风险，包括终生残疾或死亡，本人承认并接受此风险的存在。承诺愿意承担参赛可能带来的风险（包括但不限于因本次运动所可能产生的人身伤亡风险）；<br/>
+				5.	 本人参加此次比赛以及参赛全过程所发生的人身伤害、局部或永久性伤残、死亡、医疗或住院费用、财产损坏、任何形式的盗窃或财产损失等事项，由我自己承担全部责任，免除组织方责任，组织方对此不承担任何形式的赔偿，本人不会为此追究比赛组织方、比赛赞助方、比赛裁判和工作人员的任何责任；<br/>
+				6.	本人授权比赛组织方及指定媒体无偿使用本人的肖像、姓名、声音等用于首届全国智能体育运动会的宣传与推广；<br/>
+				7.	本人将向组织方提供身份证件用于核实本人身份及参赛资格，保证提交的身份证件和文件资料真实有效，并承担因提供不实信息所产生的全部责任，组织方据此有权拒绝提供参赛资格，并不予退返前期支付的报名费用；<br/>
+				8.	本人承诺以自己的名义报名参赛，不将报名后获得的参赛资格以任何方式转让给他人，并承担因转让参赛资格所出现的全部责任与后果；<br/>
+				9.	本人同意在参赛过程中遵守裁判、医疗人员和安保人员的要求，在未完成比赛、身体不适及赛场出现突发状况时主动退出比赛，并承担因本人坚持比赛所产生的全部责任与后果；<br/>
+				10.	本人同意接受组织方在比赛期间提供的现场急救性质的医务治疗，但在医院救治等发生的相关费用由本人自理。本人了解，上述医疗方式可能引发并发症或其它不可预见的不良后果，本人同意承担此类风险；<br/>
+				11.	本人同意组织方以本人为被保险人投保人身意外险，本人确认已知悉并同意保险合同的相关内容；<br/>
+				12.	本人同意由于不可抗力等客观原因造成比赛取消或变更比赛时间、形式而引起的有关费用问题，服从组织方的决定；由于本人个人原因而不能参加比赛的，不要求组织方退还参赛过程中所交纳的各项费用。<br/>
+				13.	本人确认充分理解上述条款，并承认此声明书具有法律效力。<br/>
+				14.	本人同意，此声明最终解释权归首届全国智能体育运动会组委会。<br/>
+				15.	本人所作上述声明与承诺将约束本人、本人的监护人、管理人、法定代理人以及任何可能代表本人要求索赔或提起诉讼的人。<br/><br/>
+				组织方特别提示有以下疾病患者不宜参加比赛：<br/><br/>
+				1、先天性心脏病和风湿性心脏病患者；<br/>
+				2、高血压和脑血管疾病患者；<br/>
+				3、心肌炎和其它心脏病患者；<br/>
+				4、冠状动脉病患者和严重心率不齐者；<br/>
+				5、血糖过高或过少的糖尿病患者；<br/>
+				6、其它不适合运动的疾病患者。<br/>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/jquery-mvalidate.js?v=${cssV}"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mui.min.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mui.picker.min.js?v=${cssV}"></script>
+<script src="${staticPath}/layui/layui.js?v=${cssV}" charset="utf-8"></script>
+<script type="text/javascript" src="${staticPath}/js/shadeLayer.js"></script>
+</html>
+<script>
+    mui.init();
+    var cardToTrue = "${(account)!''}";
+    var  path="${ctx}";
+    var btnDisable = false;
+    var  isChose=true;
+    var  useCard=true;
+    var teamName = "${(order.leader.teamName)!''}";
+    var leaderName = "${(order.leader.leaderName)!''}";
+    var leaderPhone = "${(order.leader.leaderPhone)!''}";
+    if(teamName=='(null)'||teamName=='null'){
+        console.log(teamName)
+        teamName = '';
+    }
+    $('#addCountMessage_Teamname').val(teamName)
+    // 增加记录信息
+    function addCountMessage(url) {
+        $.ajax({
+            url:  path + "/apply/save/leader",
+            data: $("#entyr_from").serialize(),
+            type: 'post',
+            dataType: 'json',
+            success: function(data) {
+                if(url){
+                    window.location.href=url;
+                }
+            }
+        });
+    }
+
+
+    $(function() {
+        datePickInit();
+
+        checkGroupInit("sexCheck", true, null);
+
+        uploadInit();
+
+        validateInit();
+
+		if("${(isAccount)!''}"=="1"){
+			$("#tel").val("${(account)!''}");
+		}
+		changePhone();
+    });
+
+    $('#nextStep_2').click(function () {
+        $('#nextStep').click()
+    })
+
+    $("#male").click( function () {
+        $(this).siblings("span").addClass("active");
+        $(this).parents("div").siblings("div").children("span").removeClass("active");
+    });
+    $("#female").click( function () {
+        $(this).siblings("span").addClass("active");
+        $(this).parents("div").siblings("div").children("span").removeClass("active");
+    });
+    function clearBaseInfo(){
+        $('#addCountMessage_Leadname').val('')
+        $('#tel').val('')
+        $('#verifyCode_input').val('')
+    }
+    console.log("${(isEdit)!''}");
+    if("${(isEdit)!''}"=="1"){
+        getCardDate();
+        $('#useCard').val('1')
+    }else{
+        $('.register_card_tr').hide();
+        $('.base_info_tips').show();
+        $('#useCard').val('0');
+		useCard=false;
+    }
+    //获取报名卡
+    var nickName='',phoneNum='';
+    var userCards = "${(useCard)!''}";
+    console.log('userCards:'+userCards)
+    function getCardDate() {
+        getResultMethods(path + "/user/get/card", {token:''}, function(data) {
+            console.log(data)
+            var datas = data
+            if(datas.resultCode == 200) {
+                console.log(data)
+                if(datas.result){
+                    if(datas.result.register&&datas.result.register.isCard){
+                        $('.register_card_box_name').html('姓名：'+datas.result.register.realName)
+                        $('.register_card_box_phone').html('手机号：'+datas.result.register.phone)
+                        $('.register_card_tr').show()
+                        $('.base_info_tips').hide()
+                        nickName=datas.result.register.realName;
+                        phoneNum=datas.result.register.phone;
+                        if(userCards == 1){
+                            $('.card_choose_btn').click()
+                        }else if(!userCards){
+                            restBaseInfo()
+							$("#useCard").val('1');
+                        }
+                    }else{
+                        $('.register_card_tr').hide()
+                        $('.base_info_tips').show()
+						useCard=false;
+						$("#useCard").val('0');
+                    }
+                    changePhone();
+                }
+            }else {
+                var tips = new loadingTips(datas.resultMsg,2500)
+                tips.creat()
+            }
+        });
+    }
+    function restBaseInfo(){
+        $('#addCountMessage_Leadname').val(nickName)
+        $('#tel').val(phoneNum)
+        $('#verifyCode_input').val('')
+    }
+    $('.card_choose_btn').click(function () {
+        if($('.register_card_box').hasClass('unChoose')){
+            $('.register_card_box').removeClass('unChoose')
+            $('.card_choose_btn').attr('src','${staticPath}/img/img_kp_xuanzh@2x.png')
+            $('#useCard').val('1')
+            restBaseInfo()
+            useCard = true;
+			console.log("useCard:"+useCard);
+            removeSeesion()
+            $('.base_info_tips').hide()
+        }else{
+            $('.register_card_box').addClass('unChoose')
+            $('.card_choose_btn').attr('src','${staticPath}/img/img_kp_mor@2x.png')
+            $('#useCard').val('0')
+            if(!userCards||leaderName==nickName&&phoneNum==leaderPhone){
+                clearBaseInfo()
+            }
+			useCard = false;
+			console.log("useCard:"+useCard);
+            setSeesion()
+			$('.base_info_tips').show()
+        }
+    })
+    function setSeesion() {
+        var param={sessionName:"${order.orderCode}"+"useCard",sessionValue:'1'}
+        getResultMethods(path + "/session/save", param, function(data){
+            console.log(data);
+        })
+    }
+    function removeSeesion() {
+        var param={sessionName:"${order.orderCode}"+"useCard"}
+        getResultMethods(path + "/session/remove", param, function(data){
+            console.log(data);
+        })
+    }
+    //表单验证规则初始化
+    //表单验证规则初始化
+    function validateInit() {
+        /*/^0?1[3|4|5|8][0-9]\d{8}$/*/
+        $.mvalidateExtend({
+            leaderPhone:{
+                required : true,
+                pattern : /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/,
+                each:function(){
+                },
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入手机号码</div>',
+                    pattern : '<div class="field-invalidmsg">手机号码格式不正确</div>'
+                }
+            },
+            bodyheight: {
+                required : true,
+                pattern : /^[0-9]+.?[0-9]*$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入身高</div>',
+                    pattern : '<div class="field-invalidmsg">只能输入数字</div>'
+                }
+            },
+            playerWeight: {
+                required : true,
+                pattern : /^[0-9]+.?[0-9]*$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入体重</div>',
+                    pattern : '<div class="field-invalidmsg">只能输入数字</div>'
+                }
+            },
+            email:{
+                required : true,
+                pattern : /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入邮箱 </div>',
+                    pattern : '<div class="field-invalidmsg">邮箱格式错误 </div>',
+                    valid : '<div class="field-validmsg"></div>'
+                }
+            },
+        });
+
+        $("#entyr_from").mvalidate({
+            type: 1,
+            onKeyup: true,
+            sendForm: true,
+            firstInvalidFocus: true,
+            valid: function(event,options){
+                //点击提交按钮时,表单通过验证触发函数
+                //调用所有验证为空的方法,为true表示没有为空的数据,直接提交后台
+                event.preventDefault();
+                validSuccess();
+                if(!isChose){
+                    setTimeout(function(){
+                            $(".alert").html("请阅读并同意免责声明").show();
+                            setTimeout(function () {
+                                $(".alert").hide();
+                            }, 2000);
+                        },
+                        3000)
+                    return false;
+                }
+                sunmitForm();   //验证通过，提交数据到后台
+
+            },
+            invalid: function(event, status, options){
+                //点击提交按钮时,表单未通过验证触发函数
+            },
+            conditional: {
+                captcha: function(val) {
+                    //                console.log('请求接口，验证验证码是否正确，返回true或者false');
+                    console.log('验证码===='+val);
+                    if(!val && !val.length) return false;
+                    return true;
+                }
+            },
+            descriptions:{
+                teamName:{
+                    required : '请输入团队名称'
+                },
+                leaderName:{
+                    required : '请选择领队名称'
+                }
+                // ,verifyCode:{
+                //     required : '请输入验证码',
+                // }
+            }
+        });
+    };
+    // 提交表单
+    function submitTi(event){
+        event.preventDefault();
+        // validSuccess();
+        if(!isChose){
+            setTimeout(function(){
+                    $(".alert").html("请阅读并同意免责声明").show();
+                },
+                3000)
+            return false;
+        }
+        var phoness = $('#tel').val()
+        var yanzhengma = $('#verifyCode_input').val();
+        var cardSS = $('#useCard').val()
+        if(phoness != cardToTrue) {
+            // $('#useCard').val('0')
+            if (cardSS=='0' && yanzhengma=='') {
+                setTimeout(function () {
+                        $(".alert").html("请输入验证码").show();
+                    },
+                    3000)
+                return;
+            }
+        }else{
+			$('#useCard').val('1')
+		}
+        sunmitForm();
+    }
+
+    //验证通过，提交数据的方法
+    function validSuccess() {
+        var params = {};
+
+        $('form input[type="text"]').each(function(e) {
+            console.log($(this).attr('name'));
+            params[$(this).attr('name')] = $(this).val();
+        });
+
+        $('form input[type="radio"]:checked').each(function(e) {
+            console.log($(this).attr('name'));
+            params[$(this).attr('name')] = $(this).val();
+        });
+        /*   console.log($('input[type="radio"]:checked').val()) */
+        console.log(params);
+    };
+
+    function checkNull(){
+        $("table tr td").each(function (){
+            var checkInput=$(this).eq(1).find("input");
+            var checkVal=null;
+            if(checkInput){
+                checkVal=$(checkInput).val();
+            }else{
+                checkInput=$(this).eq(1).find("select");
+                if(checkInput){
+                    checkVal=$(checkInput).val();
+                }
+            }
+            if(checkVal==null || checkVal==""){
+                alert();
+                return false;
+            }
+        });
+    }
+
+    //上传插件初始化
+    function uploadInit() {
+        layui.use('upload', function(){
+            var $ = layui.jquery ,
+                upload = layui.upload;
+            var uploadInst = upload.render({
+                elem: '#uploadone',
+                url: '',
+                size:60,
+                before: function(obj){
+                    obj.preview(function(index, file, result){
+                        $('#demo1').attr('src', result); //图片链接（base64）
+                    });
+                },
+                done: function(res){
+                    //如果上传失败
+                    if(res.code > 0){
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                    alert()
+                },
+            });
+        });
+
+        layui.use('upload', function(){
+            var $ = layui.jquery ,
+                upload = layui.upload;
+            var uploadInst = upload.render({
+                elem: '#uploadTwo',
+                url: '',
+                size:60,
+                before: function(obj){
+
+                    obj.preview(function(index, file, result){
+                        $('#demo2').attr('src', result); //图片链接（base64）
+                    });
+                },
+                done: function(res){
+                    //如果上传失败
+                    if(res.code > 0){
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                },
+            });
+        });
+    };
+
+
+    //生日，日期选择初始化
+    function datePickInit() {
+        var btns = mui('.btn');
+
+        btns.each(function(i, btn) {
+            btn.addEventListener('tap', function() {
+                var dtPicker = new mui.DtPicker({
+                    "type": "date",
+                    "beginYear":1901,
+                    "endYear":2099,
+                });
+                dtPicker.show(function(e) {
+                    console.log(e.text)
+                    $("#dataTime").html(e.text)
+                });
+            }, false);
+        });
+    };
+
+
+    //验证通过，提交数据的方法
+    function sunmitForm() {
+        var phoness = $('#tel').val()
+        var yanzhengma = $('#verifyCode_input').val();
+        var cardSS = $('#useCard').val()
+        if(phoness != cardToTrue) {
+            // $('#useCard').val('0')
+            if (cardSS=='0' && yanzhengma=='') {
+                setTimeout(function () {
+                        $(".alert").html("请输入验证码").show();
+                        setTimeout(function () {
+                            $(".alert").hide();
+                        }, 2000);
+                    },
+                    3000)
+                return;
+            }
+        }
+        if(phoness == cardToTrue){
+            $('#useCard').val('1')
+        }
+        $.ajax({
+            url:  path + "/order/copmplete/group",
+            // url:"http://zntywx.efida.com.cn"+"/order/copmplete/group",
+            data: $("#entyr_from").serialize(),
+            type: 'post',
+            dataType: 'json',
+            success: function(data) {
+                if(data.resultCode!=200){
+                    var errMsg=data.resultMsg;
+                    if(errMsg.trim()=='用户未存在'||errMsg.trim()=='用户未登录'){
+                        window.location.href = path+'/H5Login'
+						return false;
+					}
+                    setTimeout(function(){
+                            $(".alert").html(errMsg).show();
+                            setTimeout(function () {
+                                $(".alert").hide();
+                            }, 2000);
+                        },
+                        3000)
+
+                }else{
+                    removeSeesion
+                    var url=data.result.url;
+                    var param={sessionName:"${order.orderCode}"+"isEdit"}
+                    getResultMethods(path + "/session/remove", param, function(data){
+                        console.log(data);
+                    })
+                    window.location.href=path+url;
+                }
+            }
+        });
+//	    $('form input').each(function(e) {
+//	        console.log($(this).attr('name'))
+//	    });
+    };
+
+    function dell(code,name){
+        addCountMessage('');
+
+        $notice.open({
+            content:'确定要删除'+name,
+            click:function(){
+                $.ajax({
+                    url:  path + "/apply/del/team",
+                    data: {playerCode:code},
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(d) {
+                        $notice.close()
+                        if(d.resultCode ==200) {
+                            window.location.reload()
+
+                        }else {
+                            $(".alert").html(d.resultMsg).show();
+                            setTimeout(function(){
+                                $(".alert").hide();
+                            },3000)
+                        }
+                    }
+                });
+
+            }
+        })
+    }
+    //下一步点击
+    function nextStep() {
+        console.log($('#entyr_from input').length);
+    };
+
+    //点击获取验证码
+    function getCode(e){
+        var tel = $("#tel").val();
+        if(checkPhone()) {
+            if(btnDisable) return 0;
+
+            getResultMethods(path + "/verify/send/sms/code", {playerPhone: tel}, function(d) {
+                console.log(d)
+                if(d.resultCode ==200) {
+                    resetCode(); //倒计时
+                }else {
+                    validErrorMessage('发送失败,请稍后重试');
+                    resetCode();
+                }
+            });
+        }else {
+            $('#tel').focus();
+        }
+    };
+    //验证手机号码
+    function checkPhone(){
+        var phone = $('#tel').val().trim();//获取输入的手机号
+        if(!phone.length) {
+            validErrorMessage('请输入手机号码');
+            return false;
+        };
+        if(!/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/.test(phone)) {
+            validErrorMessage('手机号码格式不正确');
+            return false;
+        }
+        return true;
+    }
+
+
+    //手动触发验证
+    function validErrorMessage(text) {
+        var $container=$('<div class="field-tooltipWrap"><div class="field-tooltipInner"><div class="field-tooltip fieldTipBounceIn">'+text+'</div></div></div>');
+        $container.appendTo($("body"));
+        setTimeout(function(){
+            $container.remove();
+        },1500)
+    };
+    //倒计时
+    function resetCode(){
+        timeWait(60);
+        btnDisable = true;
+    };
+    $("#readAccept").click(function(){
+        if(isChose){
+            $(".on1").attr("style",'display: none');
+            $(".on2").attr("style",'display: block');
+            isChose=false;
+        }else{
+            isChose=true;
+            $(".on1").attr("style",'display: block');
+            $(".on2").attr("style",'display: none');
+        }
+    })
+    function timeWait(time) {
+        setTimeout(function() {
+            if(time >= 0) {
+                $('.yzm').html(time+"秒后重发");
+                time--;
+                timeWait(time);
+            }else {
+                $('.yzm').html("发送验证码").removeClass('gray');
+                btnDisable = false;
+            }
+        }, 1000)
+    };
+
+    $("#cancelRegister").click(function(event){
+        var orderCode=$("#orderCode").val();
+        getResultMethods(path + "/order/cancel/order", {orderCode:orderCode }, function(data){
+            console.log(data);
+            if(data.resultCode==200){
+                window.location.href=path+'/auth/personal';
+            }else{
+                $(".alert").html(data.resultMsg).show();
+            }
+        })
+        event.stopPropagation();
+    })
+
+
+    function readAndAccept(){
+        $("#staticLayer").show();
+    }
+    function readClose(){
+        $("#staticLayer").hide();
+    }
+    // 该变手机号码
+    function changePhone(){
+        var telephoneOld = $('#tel').val();
+		console.log("useCard"+useCard);
+        if(telephoneOld == cardToTrue && telephoneOld.length==11){
+            $('#certifyHide').css({
+                'display':'none'
+            })
+        }else if(telephoneOld != cardToTrue && telephoneOld.length==11 && !useCard){
+            $('#certifyHide').css({
+                'display':'table-row'
+            })
+        }else{
+			if (useCard) {
+				$('#certifyHide').css({
+					'display': 'none'
+				})
+			}else {
+				$('#certifyHide').css({
+					'display': 'table-row'
+				})
+			}
+        }
+    }
+    // 比对手机号码
+    function comparePhone(){
+		console.log("useCard"+useCard);
+        var telephoneOld = $('#tel').val();
+        if(telephoneOld == cardToTrue && telephoneOld.length==11){
+            $('#certifyHide').css({
+                'display':'none'
+            })
+        }else if(telephoneOld != cardToTrue && telephoneOld.length==11 && !useCard){
+            $('#certifyHide').css({
+                'display':'table-row'
+            })
+        }else{
+			if (useCard) {
+				$('#certifyHide').css({
+					'display': 'none'
+				})
+			}else {
+				$('#certifyHide').css({
+					'display': 'table-row'
+				})
+			}
+        }
+    }
+</script>
+<style>
+	body{
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		overflow: hidden;
+	}
+	#wrapper {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0.88rem;
+		right: 0;
+		width: 100%;
+		overflow-y: scroll;
+		height: auto;
+		min-height:auto;
+	}
+	.button {
+		z-index: 99;
+		width: 100%;
+		height: 0.88rem;
+		text-align: center;
+		line-height: 0.88rem;
+		font-size: 0.28rem;
+		color: #FFFFFF;
+		background: #FF8F00;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+	}
+</style>

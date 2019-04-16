@@ -1,0 +1,215 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  
+  <parent>
+  	<groupId>com.efida.sports</groupId>
+  	<artifactId>sports-parent</artifactId>
+  	<version>1.0.0</version>
+	<relativePath>../sports-parent/pom.xml</relativePath>
+  </parent>
+
+
+  <artifactId>sports-service</artifactId>
+  <packaging>jar</packaging>
+
+  <name>sports-service</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+        <dependency>
+			<groupId>com.efida.sport.admin</groupId>
+			<artifactId>sports-admin-facade</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.efida.sport.dmp</groupId>
+				<artifactId>sports-dmp-facade</artifactId>
+			</dependency>
+	  <!-- 文件上传服务 -->
+	  <dependency>
+		  <groupId>commons-fileupload</groupId>
+		  <artifactId>commons-fileupload</artifactId>
+		  <version>1.2.2</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>com.efida</groupId>
+		  <artifactId>file-service-interface</artifactId>
+		  <version>1.1.0</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>com.efida.common.udfs</groupId>
+		  <artifactId>udfs-interface</artifactId>
+		  <version>1.0.0</version>
+	  </dependency>
+	  <dependency>
+		  <groupId>com.efida.common</groupId>
+		  <artifactId>common-vo</artifactId>
+		  <version>1.0.0</version>
+	  </dependency>
+	   <dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-engine-core</artifactId>
+			<version>2.0</version>
+		</dependency>
+	   
+		<dependency>
+			<groupId>com.efida.sports</groupId>
+			<artifactId>sports-service-facade</artifactId>
+			<version>1.0.0.20181022</version>
+		</dependency>
+		<dependency>
+			  <groupId>com.efida.easy.ucenter</groupId>
+			  <artifactId>ucenter-facade</artifactId>
+	      </dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>	
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+		  <groupId>jdom</groupId>
+		  <artifactId>jdom</artifactId>
+		  <version>1.1</version>
+		</dependency>  
+		
+		<dependency>
+		  <groupId>commons-io</groupId>
+		  <artifactId>commons-io</artifactId>
+		  <version>1.3.2</version>
+		</dependency>  
+        <dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		
+		<dependency>
+				<groupId>com.gitee.reger</groupId>
+				<artifactId>spring-boot-starter-dubbo</artifactId>
+				<version>1.0.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+		</dependency>
+		<dependency>  
+		        <groupId>org.springframework.session</groupId>  
+		        <artifactId>spring-session-data-redis</artifactId>  
+	    </dependency>  
+	    
+		
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.1.41</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.geronimo.bundles</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1_2</version>
+		</dependency>
+		
+			<dependency>
+			  <groupId>org.apache.commons</groupId>
+			  <artifactId>commons-lang3</artifactId>
+			  <version>3.1</version>
+			</dependency>
+		  <dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.6</version>
+	       </dependency>
+		
+        <!--支付宝支付-->
+        <dependency>
+		    <groupId>com.alipay.sdk</groupId>
+		    <artifactId>alipay-sdk-java</artifactId>
+		    <version>3.0.0</version>
+         </dependency>
+
+        <dependency>
+        	<groupId>com.hazelcast</groupId>
+        	<artifactId>hazelcast</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>org.scala-lang</groupId>
+        	<artifactId>scala-library</artifactId>
+        	<version>2.11.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.neo4j</groupId>
+        	<artifactId>neo4j-cypher-compiler-2.2</artifactId>
+        	<version>2.2.5</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.neo4j</groupId>
+        	<artifactId>neo4j-kernel</artifactId>
+        	<version>2.2.5</version>
+        </dependency>
+        
+        <dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>javase</artifactId>
+		    <version>3.3.3</version>
+		</dependency>
+		<dependency>
+		  <groupId>com.google.zxing</groupId>
+		  <artifactId>core</artifactId>
+		  <version>3.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
+			<version>2.1.8</version>
+		</dependency>
+	  <dependency>
+		  <groupId>org.springframework.social</groupId>
+		  <artifactId>spring-social-facebook</artifactId>
+	  </dependency>
+	  <dependency>
+		  <groupId>com.baomidou</groupId>
+		  <artifactId>mybatis-plus-boot-starter</artifactId>
+		  <version>2.2.0</version>
+	  </dependency>
+	  
+	  <dependency>
+	  	<groupId>org.springframework.boot</groupId>
+	  	<artifactId>spring-boot-starter-freemarker</artifactId>
+	  </dependency>
+  </dependencies>
+
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>  
+</project>

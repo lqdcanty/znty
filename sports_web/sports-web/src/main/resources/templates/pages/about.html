@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>关于我们</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <style>
+        .android_test_content{
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        .android_test_content img{
+            width: 2rem;
+            height: 2rem;
+        }
+        .android_test_div{
+            margin-top: 0.4rem;
+            height: 0.88rem;
+            line-height: 0.88rem;
+            background: #fff;
+            border-bottom: 0.2rem;
+            font-family: PingFangSC-Regular;
+            font-size: 0.28rem;
+            color: #333333;
+        }
+        .fuhao{
+            float: right;
+            clear: both;
+            overflow: hidden;
+            margin-right: 0.3rem;
+        }
+        .h5_header,.h5_header_space{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper" style="background:#EFEFF4;overflow-x:hidden;">
+        <div class="h5_header">
+            <img src="${staticPath}/img/icon_back.png"/>
+            <div class="back" onclick="callAndroid()">返回</div>
+            <div class="title">关于我们</div>
+        </div>
+        <div class="h5_header_space" style="height: 1.28rem"></div>
+        <div class="h5_test" style="display:none">
+            <div class="about_content">
+                <img src="${staticPath}/img/logo_qidong.png">
+            </div>
+            <div class="about_bottom">
+                <div class="copy_num">v2.2.2</div>
+                <div>Copyright@2018</div>
+                <div>华运智体 版权所有</div>
+            </div>
+        </div>
+        <div class="android_test">
+            <div class="android_test_content">
+                <img src="${staticPath}/img/logo_ztyd@2x.png">
+            </div>
+            <div style="text-align: center;margin-top: 0.24rem;font-size: 0.28rem;">
+                <span style="margin-right: 0.1rem;">智体运动</span><span class="copy_num">v2.1.3</span>
+            </div>
+            <div style="margin-top: 0.4rem;display: none;" class="android_test_div">
+                <span style="margin-left: 0.3rem;">关注智体运动微信公众号</span>
+                <span class="fuhao">></span>
+            </div>
+            <div style="margin-top: 0.4rem;display: none;" class="android_test_div">
+                <span style="margin-left: 0.3rem;">
+                    <span style="margin-right: 0.1rem;">更新版本</span>
+                    <span class="copy_num">v2.2.2</span>
+                </span>
+                <span class="fuhao" style="color: #FF8F00;" onclick="upversion()">点击更新</span>
+            </div>
+            <div class="about_bottom">
+                <div>Copyright@2018</div>
+                <div>华运智体 版权所有</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script>
+   
+    var callAndroid = function(){
+        android.back("back")
+    };
+    var upversion = function(){
+        android.upversion("upversion")
+    }
+    // if(clientType('app')){
+    //     if(clientType('ios')){
+    //         if(clientType('iphoneX')){
+    //             $('.h5_header_space').css(
+    //                 'height',1.76+'rem'
+    //             );
+    //         }
+    //     }
+    // }
+
+    if(getThePrameValue('platform') == 'iOS') {
+        if(getThePrameValue('navHeader') != 1){
+            $('.h5_header_space').css(
+                'display','block'
+            );
+            $('.h5_header').css(
+                'display','flex'
+            );
+        }
+        if (clientType('iphoneX')) {
+            $('.h5_header_space').css(
+                'height',1.76+'rem'
+            );
+        }
+        callAndroid = function (){
+            window.webkit.messageHandlers.back.postMessage(null)
+        }
+        upversion = function (){
+            window.webkit.messageHandlers.upversion.postMessage(null)
+        }
+        var version = getThePrameValue('version');
+        $('.copy_num').html(version)
+        $('#wrapper').css(
+            'background','#EFEFF4'
+        )
+        $('.android_test').css(
+            'display','block'
+        )
+        $('.h5_test').css(
+            'display','none'
+        )
+    }else if(getThePrameValue('platform') == 'Android') {
+        if(getThePrameValue('navHeader') != 1){
+            $('.h5_header_space').css(
+                'display','block'
+            );
+            $('.h5_header').css(
+                'display','flex'
+            );
+        }
+        var version = getThePrameValue('version');
+        $('.copy_num').html(version)
+        $('#wrapper').css(
+            'background','#EFEFF4'
+        )
+        $('.android_test').css(
+            'display','block'
+        )
+        $('.h5_test').css(
+            'display','none'
+        )
+    }else{
+        $('.h5_header_space').css(
+            'display','block'
+        );
+        $('.h5_header').css(
+            'display','flex'
+        );
+        callAndroid = function (){
+            window.location.href=path+ '/ucenter'
+        }
+        upversion = function(){
+            console.log('更新版本号')
+        }
+        $('#wrapper').css(
+            'background','#FFF'
+        )
+        $('.android_test').css(
+            'display','none'
+        )
+        $('.h5_test').css(
+            'display','block'
+        )
+    }
+
+    // var userAgent = navigator.userAgent.toLowerCase();
+    // var client = '';
+    //
+    // if(userAgent.match(/IOSAPP/i) == "iosapp") {
+    //     client = 'IOS:';
+    // }else if(userAgent.match(/ANDROIDAPP/i) == "androidapp"){
+    //     client = 'Android:';
+    // }
+    // $('.copy_num').html(client)
+    // function getVersion(msg){
+    //     version = msg
+    //     $('.copy_num').html(client+version)
+    // }
+
+</script>
+</html>

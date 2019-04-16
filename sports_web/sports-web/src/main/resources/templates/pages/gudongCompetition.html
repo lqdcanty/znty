@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>比赛介绍</title>
+    <link rel="stylesheet" href="${staticPath}/css/gudong.css?v=${cssV}" />
+    <style>
+        .gd_font{
+            font-family: MicrosoftYaHei;
+            font-size: 0.32rem;
+            color: #333333
+        }
+        .gd_top{
+            margin-top: 0.42rem;
+            text-align: center;
+            font-family: MicrosoftYaHei;
+            font-size: 0.26rem;
+            color: #7A7A7A;
+            letter-spacing: 0.02rem;
+        }
+        .gd_top span{
+            font-size: 0.26rem;
+            line-height: 0.26rem;
+            height: 0.26rem;
+            display: inline-block;
+        }
+        .gd_top span img{
+            width: 0.17rem;
+            height: 0.17rem;
+            margin-bottom: 0.03rem;
+        }
+        .gd_ul_match li{
+            list-style: none;
+            width: 6rem;
+            height: 1rem;
+            line-height: 1rem;
+            margin: auto;
+            background: #FFFFFF;
+            border: 0.02rem solid #E0E0E0;
+            border-radius: 1rem;
+            margin-top: 0.3rem;
+        }
+        .gd_ul_match li span{
+            font-family: MicrosoftYaHei;
+            font-size: 0.34rem;
+            color: #666666;
+            letter-spacing: 0.02rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="h5_header gd_font" style="background: #fff;box-shadow: 0 0.01rem 0 0 #ECECEC">
+        <img src="${staticPath}/img/icon_fanhui.png" onclick="callAndroid()"/>
+        <div class="back" onclick="callAndroid()"></div>
+        <div class="title">比赛介绍</div>
+    </div>
+    <!--<div class="h5_header_space" style="height: 1.28rem"></div>-->
+    <div class="gd_content">
+        <div class="gd_content_box">
+            <div class="competition_content_box">
+                <p class="gd_content_head">比赛介绍</p>
+                <div class="gd_content_inner">
+                    <img src="${staticPath}/img/banner_ph.jpg" />
+                    <p>为了丰富员工体育文化生活，增进交流，营造和谐、健康、向上的工作氛围，国网西安供电公司于2013年9月30日上午，组织开展了职工跳绳比赛。</p>
+                </div>
+            </div>
+            <div class="competition_content_box">
+                <p class="gd_content_head">赛程赛规</p>
+                <div class="gd_content_inner">
+                    <p>请各参赛原将报名表打印一份并加盖单位公章并于4月13日之前交送与体育部黄霞老师电话。电子版报名表于前发送至，逾期视为弃权。联系电话，以便联系。逾期视为弃权。报名表务必填写各队队长的联系电话，以便联系。逾期视为弃权。报名表务必填写各队队长的联系电话，以便联系。</p>
+                </div>
+            </div>
+            <div class="competition_content_box">
+                <p class="gd_content_btn">线上报名</p>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script>
+    var path = "${ctx}";
+    window.onload=function (ev) {
+
+        if (clientType('iphoneX')) {
+            $('.h5_header').css(
+                'padding-top','0.88rem'
+            );
+            $('.gd_content').css(
+                'top',1.76+'rem'
+            );
+
+        }else{
+            $('.h5_header').css(
+                'padding-top','0.4rem'
+            );
+            $('.gd_content').css(
+                'top',1.28+'rem'
+            );
+        }
+    }
+
+    $('.gd_content_btn').click(function () {
+        window.location.href=path+'/app/gudongEnter';
+    })
+    callAndroid = function () {
+        window.history.back()
+    }
+</script>
+</body>
+</html>

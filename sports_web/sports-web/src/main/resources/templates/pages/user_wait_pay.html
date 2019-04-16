@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>待支付</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="${staticPath}/css/mui.min.css?v=${cssV}">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="${staticPath}/css/app.css?v=${cssV}" />
+
+		<link rel="stylesheet" type="text/css" href="${staticPath}/css/mui.picker.min.css?v=${cssV}" />
+		
+		<link rel="stylesheet" href="${staticPath}/layui/css/layui.css?v=${cssV}"  media="all">
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<div class="alert">请至少选择一个比赛分组</div>
+			<#if order??  && order.eventType?? && order.eventType=='group'>
+				 <div class="entyr_from" style="padding:0;margin-top: 0">
+				 <div class="custom_title">
+				   <p class="title"><i></i>团队信息</p>
+			     <table>
+					<tr>
+						<td>团队名称</td>
+						<td><input type="text" name=teamName value="${(order.leader.teamName)}"></td>
+					</tr>
+					<tr>
+						<td>领队名称</td>
+						<td><input type="text" value="${(order.leader.leaderName)}"></td>
+					</tr>
+					<tr>
+						<td>手机号码</td>
+						<td><input id="tel"  value="${(order.leader.leaderPhone)}"></td>
+					</tr>
+				</table>
+				</div>
+			</div>
+			</#if>
+			
+			<#if order??  && order.teams?? && (order.teams?size > 0)>
+			   <#list order.teams as team>
+             <div class="kong"></div>
+			 <div class="entyr_from" style="padding:0;margin-top: 0">
+			 	<div class="custom_title">
+			    	<p class="title"><i></i>个人信息</p>
+					<table class="entyr_from_table">
+					   <#assign hasOtherInfo="0">
+					   <#if team?? && team.players?? && (team.players?size > 0)>
+						   <#list team.players as player>
+						    <#if ( player.attributeName =='attOne' || player.attributeName =='attTwo'  || player.attributeName =='attUrl' )>
+						        <#assign hasOtherInfo="1">
+						   </#if>
+						    
+						   <#if player.isShow && player.formatVal?? && player.formatVal!=''  && player.attributeName!='attOne' && player.attributeName!='attTwo' && player.attributeName!='attUrl' && player.attributeName!='imgUrl'  >
+							    <tr>
+									<td>${(player.cnname)!''}</td>
+									<td>${(player.formatVal)!''}</td>
+								</tr>
+							</#if>
+							   <#if !player.isShow  && player.attributeName='sex'>
+								   <tr>
+									   <td>${(player.cnname)!''}</td>
+									   <td>${(player.formatVal)!''}</td>
+								   </tr>
+							   </#if>
+						    </#list>
+					   </#if>
+					</table>
+				</div>
+				 <#if team?? && team.players??  && hasOtherInfo=='1'>
+					    <div class="kong"></div>
+					     <div class="upload_msy custom_title">
+							<p class="title"><i></i>其他信息</p>
+							<div class="upload flex flex-pack-justify">	
+							   <#list team.players as player>
+							     <#if player.attributeName =='attOne'>
+									<div class="layui-upload cardPoto1">
+										<img class="layui-upload-img" src="${(player.formatVal)!''}">
+					                </div>
+								 </#if>	
+								  <#if player.attributeName =='attTwo'>
+									<div class="layui-upload cardPoto1">
+										<img class="layui-upload-img" src="${(player.formatVal)!''}">
+					                </div>
+								 </#if>	
+								  <#if player.attributeName =='attUrl'>
+									<div class="layui-upload cardPoto1">
+										<img class="layui-upload-img" src="${(player.formatVal)!''}">
+					                </div>
+								 </#if>	
+								 </#list>
+							</div>
+						</div>
+		            </#if>
+			    </#list>
+			 </div>
+			 </#if>
+		        <div class="kong"></div>
+				<div class="entyr_from" style="padding:0;margin-top: 0">
+				<div class="custom_title">
+					<p class="title"><i></i>报名信息</p>
+					<table class="entyr_from_table signTable">
+						<#if order.applys?? && (order.applys?size > 0)>
+						 	 <#list order.applys as apply>
+						 	 <tr>
+								<td style="vertical-align: top;line-height: 0.5rem;">报名项：</td>
+								<td style="vertical-align: top;">
+									<p>
+									<span style="color: #FF8F00">${(apply.eventTypeName)}</span>
+									<#if apply.matchGroupName?? >${(apply.matchGroupName)!''}-</#if>${(apply.eventName)!''}
+									</p>
+									<p>比赛时间：${(apply.eventStartTime?string("yyyy年MM月dd日  HH:mm:ss"))!''}</p>
+									<p>报名费：¥${(apply.applyAmountStr)!''}</p>
+								</td>
+						      </tr>
+						 	 </#list>
+						</#if>
+						
+						
+						<tr>
+							<td>订单编号：</td>
+							<td>TS ${(order.orderCode)!''}</td>
+						</tr>
+						<tr>
+							<td>下单日期：</td>
+							<td>${(order.orderTime?string("yyyy年MM月dd日  HH:mm:ss"))!''}</td>
+						</tr>	
+						<tr>
+							<td>订单总额：</td>
+							<td>¥${(order.orderAmountStr)!''}</td>
+						</tr>
+						<tr >
+							<td>备注信息：</td>
+							<td>${(order.remark)!''}</td>
+						</tr>
+					</table>
+				</div>
+			<div class="kong_content" style="height:1rem;"></div>
+			
+			
+			
+			
+			
+		
+			 <#if  match?? && match.canApply >
+	      	  	<p class="button flex flex-pack-justify" id="nextStep">
+				<a class="flex1" id="cancelRegister">取消报名</a>
+				<!-- <input type="submit" value="继续支付"  onClick="javascript:window.location.href='${ctx}/order/apply/unified?orderCode=${(order.orderCode)!''}'"> -->
+				<button onClick="gotoPay()">继续支付</button>
+			 </p>
+	          <#else>
+	           <a class="common_btn_a"><p class=" button custom_btnstate${(match.applyStatus)!}">${(match.applyStatusDesc)!''}</p></a>
+	         </#if>
+			 
+			 
+			 <!-- <p class="button gray flex flex-pack-justify" id="nextStep">
+			 				<input type="submit" value="比赛已结束">
+			 </p> -->
+	</div>
+	   </div>	
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js?v=${cssV}"></script>
+	<script type="text/javascript" src="${staticPath}/js/jquery-mvalidate.js?v=${cssV}"></script>
+	<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+	<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+	<script type="text/javascript" src="${staticPath}/js/mui.min.js?v=${cssV}"></script>
+	<script type="text/javascript" src="${staticPath}/js/mui.picker.min.js?v=${cssV}"></script>
+
+    <script src="${staticPath}/layui/layui.js?v=${cssV}" charset="utf-8"></script>
+</html>
+<script>
+	/* checkGroupInit("sexCheck", true, null) */
+   var path = "${ctx}", btnDisable = false;
+   var agent = navigator.userAgent.toLowerCase();
+   var orderCode = "${order.orderCode}";
+   var lqdentry_cardValue=1;
+
+   var  isChose=true;
+   mui.init();　
+
+
+	
+	$(function() {
+	    datePickInit();
+	    
+	    checkGroupInit("sexCheck", true, null);
+		
+		uploadInit();
+		
+		validateInit();
+
+		$("#cancelRegister").click(function(){
+			getResultMethods(path + "/order/cancel/order", {orderCode:orderCode }, function(data){
+				console.log(data);
+				if(data.resultCode==200){
+					window.location.href=path+'/auth/personal';
+				}else{
+					$(".alert").html(data.resultMsg).show();
+				}
+			})
+		})
+
+	});
+	function gotoPay(){
+        if (agent.match(/MicroMessenger/i) == "micromessenger") {
+            window.location.href=path+'/order/apply/unified?orderCode='+orderCode+'&tradeType=internal';
+		}else{
+            window.location.href=path+'/order/apply/unified?orderCode='+orderCode+'&tradeType=outside';
+		}
+
+	}
+	
+	$("#male").click( function () {
+	    $(this).siblings("span").addClass("active");
+	    $(this).parents("div").siblings("div").children("span").removeClass("active");
+	});
+	$("#female").click( function () {
+	    $(this).siblings("span").addClass("active");
+	    $(this).parents("div").siblings("div").children("span").removeClass("active");
+	});
+	$("#lqdentry_card").change(function(){
+		lqdentry_cardValue=$(this).children('option:selected').val();
+		if(lqdentry_cardValue==1){
+			$(".cardPoto1").show();
+			$(".cardPoto2").show();
+			$("#word1").children("span").html("请上传身份证正面");
+			$("#word2").children("span").html("请上传身份证反面");
+			$("#demo1").attr('src',"");
+			$("#demo2").attr('src',"");
+			$(".attOne").val("");
+			$(".attTwo").val("");
+		}else{
+			$(".cardPoto1").show();
+			$(".cardPoto2").hide();
+			$("#word1").children("span").html("请上传证件照");
+			$("#demo1").attr('src',"");
+			$("#demo2").attr('src',"");
+			$(".attOne").val("");
+			$(".attTwo").val("");
+		}
+	})
+
+	
+	//表单验证规则初始化
+	function validateInit() {
+	    /*/^0?1[3|4|5|8][0-9]\d{8}$/*/
+	    $.mvalidateExtend({
+	    	playerPhone:{
+                required : true,   
+                pattern : /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/,
+                each:function(){                  
+                },
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入手机号码</div>',
+                    pattern : '<div class="field-invalidmsg">手机号码格式不正确</div>'
+                }
+            },
+            bodyheight: {
+                required : true, 
+                pattern : /^[0-9]+.?[0-9]*$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入身高</div>',
+                    pattern : '<div class="field-invalidmsg">只能输入数字</div>'
+                }
+            },
+            playerWeight: {
+                required : true, 
+                pattern : /^[0-9]+.?[0-9]*$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入体重</div>',
+                    pattern : '<div class="field-invalidmsg">只能输入数字</div>'
+                }
+            },
+            email:{
+                required : true, 
+                pattern : /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入邮箱 </div>',
+                    pattern : '<div class="field-invalidmsg">邮箱格式错误 </div>',
+                    valid : '<div class="field-validmsg"></div>'
+                }
+            },
+        });
+        
+
+
+        $("#entyr_from").mvalidate({
+            type: 1,
+            onKeyup: true,
+            sendForm: true,
+            firstInvalidFocus: true,
+            valid: function(event,options){
+                //点击提交按钮时,表单通过验证触发函数
+                event.preventDefault();
+                validSuccess();   //验证通过，提交数据到后台
+                
+                if(!isChose){
+                	setTimeout(function(){
+                		$(".alert").html("请阅读并同意参赛须知").show();
+	         			    },
+	         		3000)
+                	return ;
+                }
+                $.ajax({
+                    url:  path + "/order/add/apply",
+                    data: $("#entyr_from").serialize(),
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(data) { 
+                    	if(data.resultCode!=200){
+                    		var errMsg=data.resultMsg;
+                    		$(".alert").html(errMsg).show();
+                    	}else{
+                    	   var url=data.result.url;
+                           window.location.href=path+url;                    		
+                    	}
+                    }
+                });
+                
+                
+                
+            },
+            invalid: function(event, status, options){
+                //点击提交按钮时,表单未通过验证触发函数
+            },
+            conditional: {
+            	verifyCode: function(val) {
+//                console.log('请求接口，验证验证码是否正确，返回true或者false'); 
+                    console.log('验证码===='+val);
+                    if(!val && !val.length) return false;
+                    return true;
+                }
+            },
+            descriptions:{
+                playerName:{
+                    required : '请输入用户名'
+                },
+                sex:{
+                    required : '请选择性别'
+                },
+                captchacode:{
+                    required : '请输入验证码',
+                    conditional : '您输入的验证码不正确'
+                },
+                email:{
+                	 required : '邮箱地址',
+                },
+                playerHeight:{
+                	 required : '请输入体重'
+                },
+                playerHeight:{
+               	 required : '请输入体重',
+               	 
+               },
+				playerNationality:{
+				               	 required : '请输入国籍'
+				               },
+               playerNation:{
+	               	 required : '请输入民族'
+	               },
+				playerAddress:{
+				               	 required : '请输入联系地址'
+				               },
+			    playerCerType:{
+	               	 required : '请输入证件类型'
+	               },
+	               playerCerNo:{
+	               	 required : '请输入证件号码'
+	               },
+				playerBloodType:{
+				               	 required : '请输入血型'
+				               },
+				playerClothSize:{
+				               	 required : '请输入衣服尺寸'
+				               },
+				playerEmergencyName:{
+				               	 required : '请输入紧急联系人'
+				               },
+				playerWorkUnit:{
+			    	             required : '请输入工作单位',
+			                 } ,            
+				               
+				               
+				playerEmergencyPhone:{
+				               	 required : '请输入紧急联系电话'
+				               },
+            }
+        });
+	};
+	
+	
+	//上传插件初始化
+	function uploadInit() {
+       layui.use('upload', function(){
+          var $ = layui.jquery ,
+          upload = layui.upload;
+          var uploadInst = upload.render({
+            elem: '#uploadTwo',
+            url: '${ctx}/file/upload',
+            before: function(obj){
+              obj.preview(function(index, file, result){
+                $('#demo2').attr('src', result); //图片链接（base64）
+              });
+            },
+            done: function(res){
+              //如果上传失败
+              console.log(res,"abc");
+            	 if(res.resultCode !=200){
+                     return layer.msg('上传失败');
+                  }
+                $("#attTwo").val(res.result.url);
+                  
+                 
+            },
+            error: function(){
+                //演示失败状态，并实现重传
+                console.log("shibai")
+            	
+              }
+          });
+        }); 
+    
+        layui.use('upload', function(){
+          var $ = layui.jquery ,
+          upload = layui.upload;
+          var uploadInst2 = upload.render({
+            elem: '#uploadone',
+            url: '${ctx}/file/upload',
+            before: function(obj){
+              obj.preview(function(index, file, result){
+                $('#demo1').attr('src', result); //图片链接（base64）
+              });
+            },
+            done: function(res){
+            	console.log(res,"abc");
+              //如果上传失败
+              if(res.resultCode !=200){
+                return layer.msg('上传失败');
+              }
+             $("#attOne").val(res.result.url);
+            
+              
+              //上传成功
+            },
+            error: function(){
+                //演示失败状态，并实现重传
+                console.log("shibai")
+            	
+              }
+          });
+        }); 
+	};
+	
+	
+	//生日，日期选择初始化
+	function datePickInit() {
+	    var btns = mui('.btn');
+    　
+        btns.each(function(i, btn) {　　
+            btn.addEventListener('tap', function() {　
+            	$("input").blur();　　
+                var dtPicker = new mui.DtPicker({　　　　
+                    "type": "date"　,
+                    "beginYear":1901,
+                    "endYear":2099,　　
+                });　　
+                dtPicker.show(function(e) {
+                    console.log(e.text)
+                    $("#dataTime").html(e.text)
+                });　
+            }, false);
+        });
+	};
+	
+	
+	//验证通过，提交数据的方法
+	function validSuccess() {
+	    var params = {};
+	    
+	    $('form input[type="text"]').each(function(e) {
+	        console.log($(this).attr('name'));
+	        params[$(this).attr('name')] = $(this).val();
+	    });
+	    
+	    $('form input[type="radio"]:checked').each(function(e) {
+	        console.log($(this).attr('name'));
+	        params[$(this).attr('name')] = $(this).val();
+	    });
+	  /*   console.log($('input[type="radio"]:checked').val()) */
+
+	    console.log(params);
+	};
+	
+	
+	//下一步点击
+	function nextStep() {
+		console.log($('#entyr_from input').length);
+	};
+	
+    
+    //点击获取验证码
+    function getCode(e){
+	    var tel = $("#tel").val();
+        if(checkPhone()) {
+        	if(btnDisable) return 0;
+        	
+        	getResultMethods(path + "/verify/send/sms/code", {playerPhone: tel}, function(d) {
+        		console.log(d)
+    			if(d.resultCode ==200) {
+    				resetCode(); //倒计时
+    			}else {
+    				validErrorMessage('发送失败,请稍后重试');
+    				resetCode();
+    			}
+    		}); 
+        }else {
+            $('#tel').focus();
+        }
+    };
+
+    //验证手机号码
+    function checkPhone(){
+        var phone = $('#tel').val().trim();//获取输入的手机号
+        if(!phone.length) {
+            validErrorMessage('请输入手机号码');
+            return false;
+        };
+        if(!/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/.test(phone)) {
+            validErrorMessage('手机号码格式不正确');
+            return false;
+        }
+        return true;
+    };
+    
+    
+    //手动触发验证
+    function validErrorMessage(text) {
+        var $container=$('<div class="field-tooltipWrap"><div class="field-tooltipInner"><div class="field-tooltip fieldTipBounceIn">'+text+'</div></div></div>');
+        $container.appendTo($("body"));
+        setTimeout(function(){
+            $container.remove();
+        },1500)
+    };
+    
+    
+    //倒计时
+    function resetCode(){
+        timeWait(60);
+        btnDisable = true;
+    };
+    
+    function timeWait(time) {
+    	setTimeout(function() {
+    		if(time >= 0) {
+    			$('.yzm').html(time+"秒后重发");
+    			time--;
+    			timeWait(time);
+    		}else {
+    			$('.yzm').html("发送验证码").removeClass('gray');
+    			btnDisable = false;
+    		}
+    	}, 1000)
+    };
+    $("#readAccept").click(function(){
+    	if(isChose){
+    		 $(".on1").attr("style",'display: none');
+           $(".on2").attr("style",'display: block');
+           isChose=false;
+    	}else{
+    		isChose=true;
+           $(".on1").attr("style",'display: block');
+           $(".on2").attr("style",'display: none');
+    	}
+
+    	
+    })
+
+</script>

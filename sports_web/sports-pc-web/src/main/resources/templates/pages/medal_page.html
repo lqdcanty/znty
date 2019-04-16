@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>我的奖章</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+<meta name="description" content="http://zntyweb.efida.com.cn/match/type">
+<meta name="author" content="">
+
+<!-- Custom styles for this template -->
+<link href="${stx}/css/layout.css" rel="stylesheet">
+<!-- <link href="${stx}/css/page.css" rel="stylesheet"> -->
+<link href="${stx}/css/pagination.css" rel="stylesheet">
+<link rel="stylesheet" href="${stx}/laydate/theme/default/laydate.css">
+<link rel="stylesheet" href="${stx}/layui/css/layui.css"  media="all">
+<style>
+   body{background:url(${stx}/img/bg_baoming.jpg) repeat; width: 100%;height: 100%;}
+
+		.bdshare-button-style0-16 a{background:url(${stx}/img/shareImg.png) !important;padding-left: 0 !important;}
+		.bdshare-button-style0-16 .bds_tsina{height:30px;width:30px;background-position:0 0 !important;}
+		.bdshare-button-style0-16 .bds_tsina:hover{height:30px;width:30px;background-position:-42px 0 !important;}
+		.bdshare-button-style0-16 .bds_tqq{height:30px;width:30px;background-position:-43px -34px !important;}
+		.bdshare-button-style0-16 .bds_tqq:hover{height:30px;width:30px;background-position:0 -35px !important;}
+
+		.bdshare-button-style0-16 .bds_weixin:hover{height:30px;width:30px;background-position:-90px 0 !important;}
+		.bdshare-button-style0-16 .bds_weixin{height:30px;width:30px;background-position:-135px -1px !important;}
+		.bdshare-button-style0-16 .bds_qzone:hover{height:30px;width:30px;background-position:-91px -37px !important;}
+		.bdshare-button-style0-16 .bds_qzone{height:30px;width:30px;background-position:-138px -36px !important;}
+		.bdshare-button-style0-16 .bds_sqq{height:30px;width:30px;background-position:-174px 0 !important;}
+		.bdshare-button-style0-16 .bds_sqq:hover{height:30px;width:30px;background-position:-185px -37px !important;}
+
+  </style>
+</head>
+<body>
+        <div class="content_height">
+        <#include "common/nav.html">
+        <div id="myMedal"  v-cloak>
+		<div class="content_msy container clear registration_content">
+             <#include "common/left_menu.html">
+			 <div class="aside_content pull-right" style=" min-height: 600px;">
+			 				 	
+		             <div class="Medal clear" v-for="medal in medalDatalist">
+						 <!-- <div class="Medal_img pull-left"><img src="${stx}/img/img_zhanwei_1.png"></div> -->
+						   <div class="Medal_img pull-left"><img src="${stx}/img/img_lb_zhang.png"></div>
+						 <div class="Medal_lie pull-left">
+						 	<p class="font_14">[[medal.matchName]]</p>
+						 	<p class="f12">项目名称：[[medal.eventName]]</p>
+						 	<p class="f120">比赛时间：[[medal.partTimeStr]]</p>
+						 	<p><a class="medal_btn" href="${ctx}/static/goodsInfo" target="_Blank">领取奖章</a></p> 
+						 </div>
+						 <div class="Medal_share pull-left">
+						 	  <div class="shaer_btn">
+						 	    <span><i></i>分享</span>
+					 	    	<div class="bdsharebuttonbox share_icon share_style clear bdshare-button-style0-16"  data-tag="share_1">
+							            <p class="gb_resItms pull-left" style="margin-top:14px;">  
+							          <!--        <a title="分享到微信" data-cmd="weixin" class="bds_weixin"></a> 							             
+								             <a title="分享到QQ好友"  class="bds_sqq" data-cmd="sqq"  ></a>
+								             <a title="分享到QQ空间"  data-cmd="qzone"  class="bds_qzone" href="#"></a>  
+							                 <a title="分享到新浪微博" data-cmd="tsina" class="bds_tsina"  ></a> -->							                 
+							            <a title="分享到微信" class="bds_weixin" data-cmd="weixin"></a>
+							        	<!-- <a title="分享到QQ好友" class="bds_sqq" data-cmd="sqq"></a> -->
+										<a title="分享到QQ空间" class="bds_qzone" data-cmd="qzone"></a>
+										<a title="分享到新浪微博" class="bds_tsina" data-cmd="tsina"></a>
+							            </p>  
+							     </div>
+							     
+						 	  </div>
+						 	  <a class="show_medal" id="show_zs" @click="showZs(medal.certPicUrl,medal.scoreCertCode)"><img src="${stx}/img/icon_ckzs.png">查看证书</a>
+						 </div>
+					</div>
+					
+					<!-- 分页  -->
+	 	  	         <div v-if="totalSize > 5">
+	 	  	    	     <div id="pagination" class="m-style"></div>
+	 	  	    	</div> 
+	 	  	    	
+		 	  	    <div v-if="!medalDatalist.length" class="no_data indexNo_data">
+	 	  	    	 	<img src="${stx}/img/img_weikong.png">
+	 	  	    	    <p class="index_nodata" style="text-align: center;">～暂无奖章～<br>
+	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;快来参赛，获取您的专属奖章和证书</p>
+	 	  	    	</div>
+
+			 </div>
+		</div>	
+		
+		<div class="medal_modal">
+		     <div class="medal_img">
+		          <span><img id="zs" src="${stx}/img/icon_close.png"></span>
+		          <div class="zs"><img id="zs" alt="" :src="zsUrl"></div>
+		     </div>
+		</div>
+	       <div class="footer footer_bottom">
+	    	 <div class="container clear">
+	    	 	  <div class="pull-left">
+	    	 	  	   <p class="footer_nav">
+	    	 	  	   	  <a href="http://www.zntyydh.com/index.jsp">首页</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=114">新闻中心</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=107">赛事信息</a>   |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=109">智体百科</a>  |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=105">全球征集</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=106"> 联系我们</a>
+	    	 	  	   </p>
+	    	 	  	   <p class="simpleText">
+	    	 	  	   	浙ICP备18028500号-1<br>
+                                                版权所有：全国智能体育大赛 未经授权不得使用
+	    	 	  	   </p>
+	    	 	  </div>
+	    	 	  <div class="pull-right footer_code">
+	    	 	       <img src="${ctx}/img/img_footer.png">
+	    	 	  </div>
+	    	 </div>
+		   </div>
+		</div>
+		</div>
+
+
+<script src="${stx}/js/jquery-2.1.1.min.js"></script>
+<script src="${stx}/js/vue.js"></script>
+<script src="${stx}/js/config.js"></script>
+<script src="${stx}/js/jquery.pagination.js"></script>
+<script>
+
+var vm = null;       //全局声明vue对象
+$(".indexNo_data").attr("style","display:block");
+var vueData = {			
+	medalDatalist:[],
+	totalSize:[],
+	zsUrl:''
+};
+
+
+/**
+ * 页面加载完毕 $.ready
+ */
+	$(function(){	
+ 
+				 
+	    vueInit();
+	    pageInt();
+	    getDatalists();
+	});
+
+    
+    function pageInt(){
+    
+    	$("#jz").addClass("active");
+    	$("#jzEm").addClass("active");
+
+    	
+		$("#zs").click(function(){
+			$(".medal_modal").hide();		
+		});
+		
+    }
+    
+	 /**
+	  * vue初始化，dom操作
+	  */
+	  
+	  function vueInit () {
+		 vm = new Vue({
+			 delimiters: ['[[', ']]'],
+			 el:"#myMedal",
+			 data:vueData ,
+			 
+ 			 beforeCreate(){
+				 window._bd_share_config=''
+				 
+			    }, 
+			    
+			 methods:{
+				 getDatalists:getDatalists,
+		         showZs:showZs,
+		         
+			 },
+             
+            mounted(){
+				  let _this = this; 
+			        this.$nextTick(function () {
+	
+			        	window._bd_share_config = {
+			        			common : {
+			        				bdText : '我的奖章',	
+			        				bdDesc : '我已成功完成首届全国智能体育大赛项目，快来和我一起领取奖章吧。',	
+			        				bdUrl : 'http://zntyweb.efida.com.cn/', 	
+			        				bdPic : '${stx}/img/img_lb_zhang.png',
+			        				
+			        			},
+			        			share : [{
+			        				"bdSize" : 16
+			        			}],
+			        			/* slide : [{	   
+			        				bdImg : 0,
+			        				bdPos : "right",
+			        				bdTop : 100
+			        			}], */
+			        			image : [{
+			        				"tag" : "img_1",
+			        				viewType : 'list',
+			        				viewPos : 'top',
+			        				viewColor : 'black',
+			        				viewSize : '16',
+			        				viewList : ['weixin','qzone','tsina']
+			        			}],
+			        		}
+			        		//with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+			        	const s = document.createElement('script');
+			            s.type = 'text/javascript';
+			            s.src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5);
+			            document.body.appendChild(s);
+			        })			  						 
+			 },
+		 });
+		 
+	};
+	
+	
+	// 查看证书
+	
+	function showZs(url,scode){
+		console.log(scode)
+		vueData.zsUrl = url;
+		$(".medal_modal").show();
+		
+		 getResultMethods("${ctx}/cert/view/cert", {certCode:scode}, function(d){
+			 
+		 });
+		
+	};
+	
+	//获取我的奖章信息 
+
+	
+    function getDatalists(page) {
+		console.log(page)
+     var params = { currentPage: 1, pageSize:5};
+		
+     if(page) params.currentPage = page;
+     
+   	 var url =  "${ctx}/cert/list";
+   	 getResultMethods(url, params, function(d){
+   	        vueData.medalDatalist = d.list; 
+   	        vueData.totalSize = d.total;
+ 			 setTimeout(function(){
+	  		     $('#pagination').pagination({
+	  	    	    jump: true,
+	  	    	    totalData: d.total,
+	  	    	    current: d.current,
+	  	    	    pageCount: d.pages,
+	  	    	    coping: true,
+	  	    	    homePage: '首页',
+	  	    	    endPage: '末页',
+	  	    	    prevContent: '上页',
+	  	    	    nextContent: '下页',
+	  	    	    callback: function (api) {
+	  	    	        getDatalists(api.getCurrent());
+	  	    	    }
+	  		     });
+ 			}, 100)
+ 		     
+ 		 }); 
+    };
+    
+
+		 
+	  
+
+
+				
+	
+</script>
+</body>	
+</html>

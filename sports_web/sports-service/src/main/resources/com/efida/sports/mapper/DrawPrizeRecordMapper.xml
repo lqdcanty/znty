@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.DrawPrizeRecordMapper">
+
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.efida.sports.entity.DrawPrizeRecord">
+		<id column="id" property="id" />
+		<result column="activity_code" property="activityCode" />
+		<result column="register_code" property="registerCode" />
+		<result column="wx_open_id" property="wxOpenId" />
+		<result column="member_mobile" property="memberMobile" />
+		<result column="prize_code" property="prizeCode" />
+		<result column="prize_name" property="prizeName" />
+		<result column="status" property="status" />
+		<result column="is_draw" property="isDraw" />
+		<result column="operation_time" property="operationTime" />
+		<result column="gmt_create" property="gmtCreate" />
+		<result column="gmt_modified" property="gmtModified" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, activity_code, register_code, wx_open_id,
+		member_mobile, prize_code,
+		prize_name, status, is_draw, operation_time,
+		gmt_create, gmt_modified
+	</sql>
+
+
+	<update id="upOverDrawInfo"
+		parameterType="com.efida.sports.entity.DrawPrizeRecord">
+		update draw_prize_record set is_draw =
+		#{isDraw},prize_code=#{prizeCode},prize_name=#{prizeName},operation_time=#{operationTime},gmt_modified=now()
+		where <![CDATA[activity_code = #{activityCode}]]>
+		and register_code = #{registerCode}
+	</update>
+
+</mapper>

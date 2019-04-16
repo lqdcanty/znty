@@ -1,0 +1,59 @@
+
+.slider_div {
+	margin: 0px;
+    padding: 0px;
+    width: 370px;
+    height: 34px;
+    border-radius: 0px;
+    margin-bottom: 20px;
+    background-color: #FF8F00;
+    position: relative;
+}
+
+.slider_div_succeed {
+	background-color: #FF8F00;
+	color: #fff;
+}
+.slider_div_succeed #sliderLock_status {
+    left: 145px !important;
+    top: 9px !important;
+    position: absolute;
+    font-size: 14px;
+    color: #fff;
+    display: inline-block;
+    z-index: 1;
+}
+#sliderLock_huakuai {
+	width: 40px;
+	height: 32px;
+	border-radius: 0px;
+	background-color: #ffffff;
+	display: inline-block;
+	z-index: 2;
+	border: 1px #ececec solid;
+}
+
+#sliderLock_huakuai  div{
+	width: 12px;
+    height: 10px;
+    background-image: url(../img/icon_jtou.png);
+    background-repeat: no-repeat;
+    margin: auto;
+    margin-top: 11px;
+}
+
+#sliderLock_status {
+    position: absolute;
+    left: 70px !important;
+    top: 9px !important;
+    font-size: 14px;
+    color: #eaeaea;
+    display: inline-block;
+    z-index: 1;
+}
+.send_vercode{
+	width: 370px;
+    height: 40px;
+    border: 1px #ececec solid;
+    position: relative;
+}

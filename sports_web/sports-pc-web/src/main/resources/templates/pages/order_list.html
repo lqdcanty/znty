@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" co
+		ntent="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>订单管理</title>
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+	<link href="${stx}/css/pagination.css" rel="stylesheet">
+		<link rel="stylesheet" href="${stx}/layui/css/layui.css"  media="all">
+		<link rel="stylesheet" href="${stx}/css/order_list.css"  media="all">
+		<style type="text/css">
+			.textAlign-top{
+				vertical-align: top;
+			}
+			.width200{
+				width:300px;
+				padding:5px 10px;
+			}
+			.width200 a{
+				font-size:14px;
+			}
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+	 <#include "common/nav.html">
+		<div id="main-wrapper" v-cloak>
+			<div class="container">
+				<nav class="nav">
+					<a :class="{'active':navStatus==''}" @click="getOrder('')" href="javascript:viod(0)">所有订单</a>
+					<a :class="{'active':navStatus=='WAIT_PAY'}" @click="getOrder('WAIT_PAY')"  href="javascript:viod(0)">待支付</a>
+					<a :class="{'active':navStatus=='SUCCESS'}"  @click="getOrder('SUCCESS')" href="javascript:viod(0)">已支付</a>
+				</nav>
+				<table class="layui-table">
+					<thead>
+						<tr>
+							<th>订单编号</th>
+							<th>商品</th>
+							<th>数量</th>
+							<th>单价(元)</th>
+							<th>总价(元)</th>
+							<th>状态</th>
+							<!-- <th>操作</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="item in listArr">
+							<td>{{item.orderCode}}</td>
+							<td>
+								<div class="layui-inline textAlign-top">
+									<a href=""><img :src="item.goodsPic"></a>
+								</div> 
+								<div class="layui-inline textAlign-top width200">
+									<a href="${ctx}/static/goodsInfo">{{item.goodsTitle}}</a>
+								</div>
+							</td>
+							<td>{{item.goodsNum}}</td>
+							<td>{{item.goodsPrice*0.01}}</td>
+							<td>
+								<div>
+									{{item.orderPrice*0.01}}
+								</div>
+								<div>
+									（含运费：{{item.extraMoney*0.01}}）
+								</div>
+							</td>
+							<td v-if="item.orderStatus=='wait_pay'">待支付</td>
+							<td v-if="item.orderStatus=='success'">已支付</td>
+						<!-- 	<td>
+							<button class="layui-btn layui-btn-xs" style='background: #15BC9C;' ><i class="layui-icon layui-icon-list"></i>查看详情</button>
+							</td> -->
+						</tr>
+			
+					</tbody>
+				</table>
+				<div id="pageWrap"></div>
+			</div>
+			
+		</div>
+		<#include "common/footer.html">
+	</body> 
+	  
+	<script type="text/javascript" src="${stx}/layui/layui.js?v=${cssV}"></script>                                                 
+	<script type="text/javascript" src="${stx}/js/vue.js?v=${cssV}"></script>
+	
+	<script>	
+
+	
+	layui.use(['table','form','layer','laypage','laydate'],function(){
+		var table = layui.table,
+			laypage = layui.laypage,
+			laydate=layui.laydate,
+			form = layui.form,
+			layer =layui.layer,
+			$ = layui.jquery;
+		$(function(){
+			$('#main-wrapper').css({
+				'min-height':parseInt(window.innerHeight)-92-150+'px'
+			})
+		})
+		var vm = new Vue({
+			   el: '#main-wrapper',
+			   data: {
+				   currentPage:1,
+				   total:1,
+				   pageSize:10,
+				   navStatus:'',
+				   listArr:[]
+			   },
+			   created:function(){
+				   this.getData("");
+			   },
+			   mounted:function(){
+				   
+			   },
+			   updated:function(){
+				   var that=this;
+				   laypage.render({
+					   elem: 'pageWrap'
+					   ,count: this.totalRow //数据总数，从服务端得到
+					   ,curr:this.currentPage
+					   ,limit:this.pageSize
+					   ,jump: function(obj, first){
+					     //首次不执行
+					     if(!first){
+						     that.currentPage=obj.curr
+						     that.getData()		     
+					     }
+					   }
+					 });
+				   form.render()
+			   },
+			   methods:{
+				   	getOrder:function(str){
+				   		this.navStatus=str;
+				   		this.getData(str)
+				   	},
+					getData:function(str){
+						var that=this;
+						var index = layer.load(2, {shade: 0.1}); //0代表加载的风格，支持0-2
+						  $.ajax({
+				  				url:"${ctx}/shop/user/order/list?pageSize="+that.pageSize+"&currentPage="+that.currentPage+"&orderStatus="+str,
+				  				type:'GET',
+				  				success:function(res){
+				  					layer.close(index);
+				  					if(res.resultCode==200){
+				  						//console.log(res)
+				  						that.listArr=res.result.list;
+				  						console.log(that.listArr);
+				  						that.total=res.result.totalRow;
+				  					}else{
+				  						layer.msg(res.resultMsg)
+				  					}
+				  				}
+				  			});
+					},
+			   }
+			 })
+	})
+	</script>
+</html>

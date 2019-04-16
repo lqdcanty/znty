@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>我的客服</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <style>
+        .h5_header,.h5_header_space{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="h5_header">
+            <img src="${staticPath}/img/icon_back.png"/>
+            <div class="back" onclick="callAndroid()" >返回</div>
+            <div class="title">帮助与反馈</div>
+        </div>
+        <div class="h5_header_space" style="height: 1.28rem"></div>
+        <div class="service_title">
+            常见问题
+        </div>
+        <div class="service_content">
+            <div class="div_title">1.报名后，查看报名信息。</div>
+            <div class="div_text">
+                <div>登录个人中心，可以查看到报名信息；如果未查到报名信息，请拨打客服电话0571-88781970。</div>
+            </div>
+        </div>
+        <div class="service_content">
+            <div class="div_title">2.更改报名场次。</div>
+            <div class="div_text">
+                <p>如果所报赛事不收费，重新报名即可。</p>
+                <div>如果所报赛事收费，请拨打客服电话0571-88781970，留下您的账号信息（姓名、手机号及报名时间）及所要更改的内容。</div>
+                <p>我们会在更改完成后联系您！</p>
+            </div>
+        </div>
+        <div class="service_content">
+            <div class="div_title">3.取消报名收费赛事后如何退费？</div>
+            <div class="div_text">
+                <div>请拨打客服电话0571-88781970，告知您的姓名、手机号、报名时间及退款账户（微信、支付宝、银行账号均可），我们会尽快退款，并在退款完成后联系您。</div>
+            </div>
+        </div>
+        <div class="service_content">
+            <div class="div_title">4.报名地点选择错误如何更改？</div>
+            <div class="div_text">
+                <p>如果所报赛事不收费，重新报名即可。</p>
+                <div>如果所报赛事收费，请拨打客服电话0571-88781970，留下您的账号信息（姓名、手机号及报名时间）及所要更改的内容。</div>
+                <p>我们会在更改完成后联系您！</p>
+            </div>
+        </div>
+        <div class="service_bottom" id="commonShow">
+            <img src="${staticPath}/img/icon_kefu_a2x.png"><span>客服电话：<a style="color: #FF8F00;" href="tel:0571-88781970" onclick="upTelephone()">0571-88781970</a></span>
+        </div>
+        <div class="service_bottom" id="androidNone" style="display:none;">
+            <img src="${staticPath}/img/icon_kefu_a2x.png"><span>客服电话：<span style="color: #FF8F00;" onclick="upTelephone()">0571-88781970</span></span>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script>
+    var path = "${ctx}";
+    var callAndroid = function(){
+        if(getThePrameValue('platform') == 'Android'){
+            android.back("back")
+        }
+    };
+    var upTelephone = function(){
+        android.upTelephone("057188781970")
+    }
+    if(getThePrameValue('platform') == 'Android'){
+        if(getThePrameValue('navHeader') != 1){
+            $('.h5_header_space').css(
+                'display','block'
+            );
+            $('.h5_header').css(
+                'display','flex'
+            );
+        }
+        $('#androidNone').css({'display':'flex'})
+        $('#commonShow').css({'display':'none'})
+    }
+    if(getThePrameValue('platform') == 'iOS'){
+        if(getThePrameValue('navHeader') != 1){
+            $('.h5_header_space').css(
+                'display','block'
+            );
+            $('.h5_header').css(
+                'display','flex'
+            );
+        }
+        $('#androidNone').css({'display':'none'})
+        $('#commonShow').css({'display':'flex'})
+        if (clientType('iphoneX')) {
+            //是iphoneX
+            $('.h5_header_space').css(
+                'height',1.76+'rem'
+            );
+
+        }
+        callAndroid = function(){
+            window.webkit.messageHandlers.back.postMessage(null)
+        }
+        upTelephone = function (){
+            window.webkit.messageHandlers.upTelephone.postMessage('0571-88781970')
+        }
+    }
+    if(!getThePrameValue('platform')){
+        $('.h5_header_space').css(
+            'display','block'
+        );
+        $('.h5_header').css(
+            'display','flex'
+        );
+        $('#androidNone').css({'display':'none'})
+        $('#commonShow').css({'display':'flex'})
+        callAndroid = function (){
+            window.location.href=path+ '/ucenter'
+        }
+        $('.h5_header_space').css(
+            'height',0.88+'rem'
+        )
+        upTelephone = function (){
+            console.log('直接调用')
+        }
+    }
+
+
+</script>
+</html>

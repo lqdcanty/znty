@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>勋章</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+</head>
+<body>
+<div id="wrapper" style="background:#fff;overflow-x:hidden;">
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="back()">返回</div>
+        <div class="title">勋章</div>
+    </div>
+    <div class="h5_header_space" style="height: 1.28rem"></div>
+    <div style="display:flex;justify-content: center;align-items: center">
+        <img src="${staticPath}/img/methods.jpg">
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script>
+    var res = null;
+    var back = null;
+    $(window).load(function () {
+        // res = prompt('获取token','')
+        // console.log(res)
+        var paddngNum= 0;
+        var u = navigator.userAgent;
+        var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        if (isIOS) {
+            if (screen.height == 812 && screen.width == 375){
+                //是iphoneX
+                $('.h5_header_space').css(
+                    'height',1.76+'rem'
+                );
+            }
+            back = function(){
+                window.webkit.messageHandlers.back.postMessage(null)
+            }
+        }else{
+            back = function(){
+                window.WebViewJavascriptBridge.callHandler('back',{param:'back'})
+            }
+        }
+    })
+
+</script>
+</html>

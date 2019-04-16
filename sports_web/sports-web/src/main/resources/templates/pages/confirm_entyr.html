@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>确认支付</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="pay_entyr common_layout custom_title" style="margin: 0;">
+				<p class="title"><i></i>订单信息</p>
+                <ul class="pay_lie">
+                    <#list order.applys as apply>
+                     <li class="flex flex-align-center flex-pack-justify">
+                		<span>${(apply.matchGroupName)!''}  |  <span>${(apply.eventName)!''} </span></span>
+                		<span class="money">¥${(apply.applyAmountStr)!''}</span>
+                	</li>
+		   			</#list>
+                	
+                	<li class="flex flex-align-center flex-pack-justify">
+                		<span>订单总金额</span>
+                		<span class="money">¥${(order.orderAmountStr)!''}</span>
+                	</li>
+                </ul>
+		    </div>
+		    
+		    <div class="pay_entyr common_layout custom_title">
+				<p class="title"><i></i>支付方式</p>
+                <ul class="pay_lie">
+                	<li class="flex flex-align-center">
+                		<span><img src="${staticPath}/img/icon_weixin.png"></span>
+                		<span class="money">微信支付</span>
+                	</li>
+                </ul>
+		    </div>
+		    
+		    <div class="pay_entyr common_layout custom_title">
+                <ul class="pay_lie">
+                	<li class="flex flex-align-center">
+                		<span>订单编号：</span>
+                		<span class="number">TS ${order.orderCode}</span>
+                	</li>
+                	<li class="flex flex-align-center">
+                		<span>下单时间：</span>
+                		<span class="number">${(order.orderTime?string("yyyy年MM月dd日  HH:mm:ss"))!''}</span>
+                	</li>
+                	<li class="flex flex-align-center">
+                		<span>订单金额：</span>
+                		<span class="number">¥${(order.orderAmountStr)!''}</span>
+                	</li>
+                	<li class="flex flex-align-center">
+                		<span>备注信息：</span>
+                		<span class="number">${(order.remark)!''}</span>
+                	</li>
+                </ul>
+		    </div>
+		    <div class="kong_margin"></div>
+		    <p class="button">立即支付</p>
+		</div>
+		
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+	<script type="text/javascript" src="${staticPath}/js/vue.js?v=${cssV}"></script>
+	<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+	<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	
+	
+	<script>
+        var agent = navigator.userAgent.toLowerCase();
+        var appId = "${appId}";
+        var nonceStr = "${nonceStr}";
+        var prepayId = "${prepayId}";
+        var paySign = "${paySign}";
+        var timeStamp = "${timeStamp}";
+        var orderSeq="${orderCode}";
+		var mwebUrl = "${mwebUrl}";
+        if (agent.match(/MicroMessenger/i) == "micromessenger") {
+            function onBridgeReady(){
+                WeixinJSBridge.invoke(
+                    'getBrandWCPayRequest', {
+                        "appId":appId,     //公众号名称，由商户传入
+                        "timeStamp":timeStamp,         //时间戳，自1970年以来的秒数
+                        "nonceStr":nonceStr, //随机串
+                        "package":prepayId,
+                        "signType":"MD5",         //微信签名方式：
+                        "paySign":paySign //微信签名
+                    },
+                    function(res){
+                        // 使用以下方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+                        if(res.err_msg == "get_brand_wcpay_request:ok") {
+                            window.location.href = "${ctx}/order/detail/"+orderSeq;
+                        }else if(res.err_msg == "get_brand_wcpay_request:fail"){
+                            alert('支付失败');
+                        }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
+                            alert('支付取消');
+                        }
+                    }
+                );
+            }
+
+            $('.button').click(function () {
+                if (typeof WeixinJSBridge == "undefined"){
+                    if( document.addEventListener ){
+                        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                    }else if (document.attachEvent){
+                        document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                    }
+                }else{
+                    onBridgeReady();
+                }
+            })
+        } else {
+            $('.button').click(function () {
+                var redirectUrl = "${ctx}/order/detail/"+orderSeq;
+                window.location.href=mwebUrl+'&redirect_url='+encodeURI(redirectUrl);
+            })
+        }
+
+
+
+
+
+
+
+
+
+	</script>
+	
+	
+	
+	
+	
+	
+</html>

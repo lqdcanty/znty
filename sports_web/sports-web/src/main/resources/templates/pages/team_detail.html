@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>团队成员详情</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+		<style>
+		.button{background:none}
+		.button .flex1{width:50% !important}
+		.button button{width:50% !important}
+		</style>
+	</head>
+	<body style="background-color: #fff;">
+		<div id="wrapper">
+			 <div class="entyr_from" style="padding:0;margin-top: 0">
+			 	<div class="custom_title">
+					<table class="entyr_from_table">
+					   <#assign hasOtherInfo="0">
+					   <#if players?? &&  (players?size > 0)>
+						   <#list players as player>
+						    <#if ( player.attributeName =='attOne' || player.attributeName =='attTwo'  || player.attributeName =='attUrl' )>
+						        <#assign hasOtherInfo="1">
+						   </#if>
+						    
+						   <#if player.isShow && player.formatVal?? && player.formatVal!=''  && player.attributeName!='attOne' && player.attributeName!='attTwo'  && player.attributeName!='attUrl' && player.attributeName!='imgUrl'  >
+							    <tr>
+									<td>${(player.cnname)!''}</td>
+									<td>${(player.formatVal)!''}</td>
+								</tr>
+						   </#if>
+						   <#if !player.isShow  && player.attributeName='sex'>
+							   <tr>
+								   <td>${(player.cnname)!''}</td>
+								   <td>${(player.formatVal)!''}</td>
+							   </tr>
+						   </#if>
+						   </#list>
+					   </#if>
+					</table>
+				</div>
+				 <#if  hasOtherInfo=='1'>
+					    <div class="kong"></div>
+					     <div class="upload_msy custom_title">
+							<p class="title"><i></i>其他信息</p>
+							<div class="upload flex flex-pack-justify">	
+							   <#list players as player>
+							     <#if player.attributeName =='attOne'>
+									<div class="layui-upload cardPoto1">
+										<img class="layui-upload-img" src="${(player.formatVal)!''}">
+					                </div>
+								 </#if>	
+								  <#if player.attributeName =='attTwo'>
+									<div class="layui-upload cardPoto1">
+										<img class="layui-upload-img" src="${(player.formatVal)!''}">
+					                </div>
+								 </#if>	
+								  <#if player.attributeName =='attUrl'>
+									<div class="layui-upload cardPoto1">
+										<img class="layui-upload-img" src="${(player.formatVal)!''}">
+					                </div>
+								 </#if>	
+								 </#list>
+							</div>
+						</div>
+		            </#if>
+			 </div>
+			  
+		    <p class="button flex flex-pack-justify" id="nextStep" style="margin-top: 2rem;">
+				<a class="flex1" onClick="javascript:window.location.href='${ctx}/order/detail/${(orderCode)!}'">返回</a>
+				<button type="submit" onClick="javascript:window.location.href='${ctx}/apply/edit/team/${(orderCode)!}?playerCode=${(playerCode)!''}'"  >修改</button>
+			 </p>
+		</div>
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+	<script type="text/javascript" src="${staticPath}/js/html2canvas.min.js"></script>
+	<script type="text/javascript" src="${staticPath}/js/vue.js?v=${cssV}"></script>
+	<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+	<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+	<script type="text/javascript">
+		window.onload=function(){
+			
+		    
+		}
+	
+	
+	</script>
+	
+</html>

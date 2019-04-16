@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>首届全国智能体育大赛</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+		<link rel="stylesheet" href="${staticPath}/js/swiper/swiper.min.css" />
+		<link href="${staticPath}/css/animate.css" rel="stylesheet">
+		<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+		<script type="text/javascript" src="${staticPath}/js/swiper/swiper.min.js"></script>
+		<style>
+			.leadShare{
+				width: 100%;
+				height: 100%;
+				position: fixed;
+				top: 0;
+				left: 0;
+				background: rgba(255,255,255,0.6);
+				z-index: 9999;
+				display: none;
+			}
+			.leadShare img{
+				position: fixed;
+				right: 0.2rem;
+				top: 0.6rem;
+				width: 2rem;
+			}
+			.leadShare p{
+				font-size: 0.3rem;
+				color: #1f1e1e;
+				position: fixed;
+				top: 3rem;
+				right: 0;
+				text-align: right;
+				margin-right: 1rem;
+			}
+			.medalSchoolColor{
+				position: absolute;
+				top: 1.87rem;
+				font-family: PingFangSC-Semibold;
+				font-size: 0.5rem;
+				color: #FFFFFF;
+				width: 100%;
+				text-align: center;
+			}
+			.medalSchoolNewPhoto{
+				width: 4rem;
+				height: 5.4rem;
+				position: absolute;
+				top: 3.3rem;
+				left: 0;
+				right: 0;
+				margin: 0 auto;
+				z-index: 25;
+			}
+			.backgroundPhoto{
+				position: absolute;
+				height: 8rem;
+				top: 1.3rem;
+				margin: auto;
+				width: 7.5rem;
+				border-radius: 80%;
+				/*transform: rotate(0deg);*/
+				/*animation: zhuandong 1.5s linear 1;*/
+			}
+			/*@keyframes zhuandong{*/
+				/*from{*/
+					/*transform: rotate(0deg);*/
+				/*}*/
+				/*to{*/
+					/*transform: rotate(90deg);*/
+				/*}*/
+			/*}*/
+		</style>
+	</head>
+	<body style="background-color: #fff;">
+		<div id="wrapper">
+			<div class="nav flex flex-pack-justify flex-align-center">
+	 	  	   <span class="logo_icon"><img src="${staticPath}/img/logo_hangzhou.png"></span>
+	 	  	   <span id="photoMysearch" class="user_icon"><img style="width: 0.6rem;height: 0.6rem;border-radius: 5rem;-moz-border-radius: 5rem;border-radius: 5rem;" src="${staticPath}/img/icon_user@2x.png" onClick="javascript:window.location.href='${ctx}/ucenter'"></span>
+	 	    </div>
+			<div class="match_banner">
+				 <!-- <div class="text">全国智能体育运动会</div> -->
+				 <div class="swiper-container">
+				 	<div class="swiper-wrapper">
+				 		<div class="swiper-slide" onclick="JumpLink()">
+                            <!--<img style="width: 100%;height: 100%;" src="${staticPath}/img/banner_ph.jpg" />-->
+                        </div>
+                        <!--<div class="swiper-slide">-->
+                            <!--<img style="width: 100%;height: 100%;" src="${staticPath}/img/logo_hangzhou.png" />-->
+                        <!--</div>-->
+				 		<!-- <div class="swiper-slide"></div>
+				 		<div class="swiper-slide"></div> -->
+				 	</div>
+				 	<div class="swiper-pagination"></div>
+				 </div>
+			</div>
+			<div class="kong"></div>
+		   <div class="match_Entrance match_introduce custom_title">
+		   		<p class="title flex flex-align-center"><img src="${staticPath}/img/icon_yundong.png" />大赛报名</p>
+		   		<ul class="entrance_img  flex-align-center flex-pack-justify">
+		   		    
+		   		    <#list games as game>
+		   			<li class="fl ml10"><a href="${ctx}/game/match/${(game.gameCode)!''}">
+		   				<p class="big_box"><img style="height:100%" src="${(game.gameImg)!''}" /></p>
+		   				<span class="gameName">${(game.gameName)!''}</span>
+		   				</a>
+		   			</li>
+		   			</#list>
+		   			<div style="clear:both"></div>
+		   		</ul>
+		   </div>
+			<div class="match_Entrance match_introduce custom_title">
+				<p class="title flex flex-align-center"><img src="${staticPath}/img/icon_hezuo@2x.png" />合作伙伴</p>
+				<ul class="entrance_img  flex-align-center flex-pack-justify">
+					<#list logos as logo>
+						<li class="fl ml10" style="margin-right: 0.15rem;">
+							<a href="${(logo.url)!''}">
+								<p class="small_box"><img src="${(logo.logo)!''}" /></p>
+								<!--<span class="gameName">${(logo.name)!''}</span>-->
+							</a>
+						</li>
+					</#list>
+				<div style="clear:both"></div>
+				</ul>
+
+			</div>
+			<div style="height: 3rem;width: 100%;"></div>
+			<section class="medalSchool" style="background:url(${staticPath}/img/bg_tch@2x.png)">
+				<div class="medalSchoolColor">恭喜您获得了新奖章</div>
+				<img class="medalSchoolNewPhoto" src="${staticPath}/img/img_dl_lzs@2x.png">
+				<img class="backgroundPhoto animated rotateIn" src="${staticPath}/img/img_dl_lzs_bg@2x.png">
+				<!--<img class="medalSchool_a" src="${staticPath}/img/img_star_a@2x.png">-->
+				<!--<img class="medalSchool_b" src="${staticPath}/img/img_dx_jiangzh@2x.png">-->
+				<!--<img class="medalSchool_c" id="medalSchool_c" src="${staticPath}/img/img_zhanwei_b@2x.png">-->
+				<!--<img class="medalSchool_d" src="${staticPath}/img/img_dl_dingbu@2x.png">-->
+				<!--<img class="medalSchool_e" src="${staticPath}/img/img_dl_dibu@2x.png">-->
+				<img class="medalSchool_f" src="${staticPath}/img/icon_dl_share@2x.png">
+				<img onclick="closeCertificate()" class="medalSchool_g" src="${staticPath}/img/icon_dl_close@2x.png">
+				<div style="
+                    position: absolute;
+					top: 9.1rem;
+					right: 0;
+					left: 0;
+					margin: 0 auto;
+					width: 3.6rem;
+					height: 0.88rem;
+					text-align: center;
+					line-height: 0.88rem;
+					border-radius: 5rem;
+            	">
+					<button onclick="goBuyThing()" style="
+						width: 3.6rem;
+						height: 0.88rem;
+						line-height: 0.88rem;
+						border: none;
+						color: #fff;
+						background: linear-gradient(#F9C052,#FF8F00);
+						background-image: linear-gradient(0deg, #00CF9E 0%, #40FF4B 100%);
+						box-shadow: 0 10px 30px 0 rgba(255,255,255,0.50);
+						border-radius: 100px;
+						font-family: PingFangSC-Medium;
+						font-size: 0.3rem;
+						color: #FFFFFF;
+						text-align: center;
+                ">领取奖章</button>
+				</div>
+			</section>
+			<div id="nativeShare">
+				<p>分享至</p>
+				<p class="nativeShareCancel">取消</p>
+			</div>
+			<div class="share_mask_box"></div>
+
+		</div>
+		<div class="leadShare">
+			<img src="${ctx}/img/leadShare.png">
+			<p>点击右上角选择你想要分享的地方</p>
+		</div>
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/vue.js?v=${cssV}"></script>
+	<script>
+	var path = "${ctx}";
+	var socialDomain="${socialDomain}"
+    </script>
+	<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script type="text/javascript" src="${staticPath}/js/soshm.min.js"></script>
+	<script type="text/javascript" src="${staticPath}/js/mobileShare.js"></script>
+	<script>
+
+	 // $(function(){
+		//  var link=window.location.href;
+		//  var imgUrl='${staticPath}/img/icon_yundong.png';
+		//  share.init('${ctx}','智能体育首页',link,imgUrl,'智能体育项目分类信息');
+	 // });
+
+    </script>
+    <script type="text/javascript">
+        var path = '${ctx}';
+        var imgUrl = '';
+        var site = null;
+        var shareData = {
+            title:'',
+            desc:'',
+            link:'',
+            imgUrl:''
+        }
+    	 $(function(){
+			 var swiper = new Swiper('.swiper-container',{
+//				  direction: 'horizontal',
+//				  disableOnInteraction: false,
+//				  spaceBetween: 30,
+//                  centeredSlides: true,
+//				  speed:100,
+//				  observer:true,
+//				  observeParents:true,
+				  pagination: {
+					el: '.swiper-pagination',
+					clickable: true,
+				  },
+//                 loop:true,
+//                 autoplay:true
+			 });
+    	 })
+         if(!getThePrameValue('platform')){
+             var footerAll = new footerAll(1)
+             footerAll.showFooter()
+         }
+		var tokens = ''
+        // 获取头像的接口
+        function myPhoto(tokens){
+            var t = (new Date()).valueOf(); //获取头像传参
+            getResultMethods(path + "/user/register/check",{token:tokens,t:t},function(data){
+                console.log(data)
+                if(data.resultCode == 200){
+                    if(data.result.headimgUrl!='' && data.result.headimgUrl!=null && data.result.headimgUrl.length>0){
+                        $('#photoMysearch img').attr('src',data.result.headimgUrl)
+                    }else{
+                        $('#photoMysearch img').attr('src','${staticPath}/img/icon_user_1@2x.png')
+                    }
+                }else{
+                    $('#photoMysearch img').attr('src','${staticPath}/img/icon_user@2x.png')
+                }
+
+            })
+        }
+        myPhoto(tokens)
+        // 关闭奖章
+        function closeCertificate(){
+            $('.medalSchool').hide()
+        }
+        function JumpLink() {
+			window.location.href= path+'/static/regulationsH5';
+        }
+
+        getMedal()
+
+        function getMedal() {
+            // $('.medalSchool').
+            getResultMethods(path + '/score/cert/getScoreCert', {},function (data) {
+				if(data.resultCode == 200){
+					if(data.result.scoreCert){
+                        $('#medalSchool_c').attr('src',data.result.scoreCert.certPicUrl)
+                        $('.medalSchool').show()
+                        shareData = {
+                            title:data.result.share.title,
+                            desc:data.result.share.content,
+                            link:data.result.share.shareUrl,
+                            // link:'http://zntywx.efida.com.cn/game/type',
+                            imgUrl:data.result.share.picUrl
+                        }
+                        mobileShare(path.replace(':80',''),shareData)
+					}
+				}else{
+                    // var tips = new loadingTips(data.resultMsg,2500);
+                    // tips.creat();
+				}
+            })
+        }
+        // shareData = {
+        //     title:'分享测试',
+        //     desc:'分享测试描述',
+        //     link:window.location.href,
+        //     imgUrl:'http://zntyweb.efida.com.cn/img/bg_denglu_b.jpg'
+        // }
+        // mobileShare(path,shareData)
+		if(!clientType('weixin')){
+//            $('.title').eq(0).click(function () {
+//                $('#nativeShare').css('display','flex')
+//                $('.share_mask_box').show()
+//
+//            })
+            $('.medalSchool_f').click(function () {
+                $('#nativeShare').css('display','flex')
+                $('.share_mask_box').show()
+
+            })
+
+		}else{
+            $('.medalSchool_f').click(function () {
+                $('.leadShare').show()
+
+            })
+		}
+        $('.leadShare').click(function () {
+            $('.leadShare').hide()
+        })
+
+        function goBuyThing(){
+            var indexLead = 'indexLead'
+            window.location.href = path + '/medalPage'+'?indexLead='+indexLead;
+        }
+
+
+
+    </script>
+<style>
+
+</style>
+</html>

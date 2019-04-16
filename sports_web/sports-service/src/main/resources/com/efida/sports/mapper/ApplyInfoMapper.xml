@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.ApplyInfoMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.efida.sports.entity.ApplyInfo">
+        <id column="id" property="id" />
+        <result column="apply_code" property="applyCode" />
+        <result column="pay_order_code" property="payOrderCode" />
+        <result column="register_code" property="registerCode" />
+        <result column="apply_amount" property="applyAmount" />
+        <result column="apply_time" property="applyTime" />
+        <result column="apply_status" property="applyStatus" />
+        <result column="unit_code" property="unitCode" />
+        <result column="game_code" property="gameCode" />
+        <result column="game_name" property="gameName" />
+        <result column="match_code" property="matchCode" />
+        <result column="match_name" property="matchName" />
+        <result column="site_code" property="siteCode" />
+        <result column="site_name" property="siteName" />
+        <result column="match_group_name" property="matchGroupName" />
+        <result column="match_group_code" property="matchGroupCode" />
+        <result column="event_code" property="eventCode" />
+        <result column="group_event_code" property="groupEventCode" />
+        <result column="event_name" property="eventName" />
+        <result column="event_type" property="eventType" />
+        <result column="registration_num" property="registrationNum" />
+        <result column="next_send_time" property="nextSendTime" />
+        <result column="idempotent_id" property="idempotentId" />
+        <result column="sent_total" property="sentTotal" />
+        <result column="event_start_time" property="eventStartTime" />
+        <result column="is_delet" property="isDelet" />
+        <result column="expire_time" property="expireTime" />
+        <result column="event_end_time" property="eventEndTime" />
+        <result column="channel_code" property="channelCode" />
+        <result column="sync" property="sync" />
+        <result column="send_status" property="sendStatus" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+        <result column="is_read" property="isRead" />
+        <result column="sync_unit" property="syncUnit" />
+        <result column="sync_unit_next_time" property="syncUnitNextTime" />
+        <result column="sync_unit_total" property="syncUnitTotal" />
+        <result column="sync_unit_status" property="syncUnitStatus" />
+        <result column="external_data" property="externalData" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, apply_code, pay_order_code,register_code, apply_amount, apply_time, apply_status, unit_code, game_code, game_name, match_code, match_name,site_code,site_name, match_group_name,
+         match_group_code, event_code,group_event_code, event_name,event_type,registration_num,next_send_time,idempotent_id,sent_total,
+         event_start_time, is_delet, expire_time, event_end_time, channel_code,sync, send_status, gmt_create, gmt_modified, is_read, sync_unit, sync_unit_next_time, sync_unit_total, sync_unit_status, external_data
+    </sql>
+    <update id="applySuccess"  parameterType="String">
+		 update apply_info SET apply_status='success', is_read='1', apply_time=now(), gmt_modified=now()
+		 where pay_order_code=#{orderCode} and apply_status != 'success'
+    </update> 
+    
+    <update id="updateApplySuccess"  parameterType="com.efida.sports.entity.ApplyInfo">
+		 update apply_info SET apply_status='success', is_read='1', apply_time=now(), gmt_modified=now()
+		 where pay_order_code=#{payOrderCode} and apply_status !='success'
+    </update> 
+    
+    
+  <select id="getApplyCountByEventCode"  resultType="java.lang.Long"  parameterType="String" >  
+      SELECT  COUNT(1) FROM apply_info WHERE group_event_code=#{eventCode} AND (apply_status='success' 
+        <![CDATA[
+           OR expire_time >NOW()
+        ]]>
+      )
+  </select>
+   
+   <update id="updateSendStatus"  parameterType="com.efida.sports.entity.ApplyInfo">
+		 update apply_info SET send_status=#{sendStatus,jdbcType=VARCHAR},gmt_modified=now()
+		 where apply_code=#{applyCode,jdbcType=VARCHAR}
+    </update> 
+   	
+    <select id="selectUnSycInfos"  parameterType="map" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		 from apply_info where apply_status = 'success' and (sync is null or sync=0) order by id asc     limit #{start} , #{limit}  
+	</select> 
+	
+	 <select id="getApplyInfosByAassetoidAndMatchCode"  parameterType="map" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		from 
+		(select  ap.*
+		 FROM
+		  apply_info ap 
+		  INNER JOIN player pl 
+		    ON pl.`player_code` = ap.`player_code` 
+		   WHERE pl.assetto_id = #{aassettoId}
+		   AND ap.match_code = #{matchCode} 
+		  AND (
+		    ap.apply_status = 'success' 
+		    OR (
+		      ap.apply_status = 'wait_pay' 
+		      AND ap.expire_time > NOW()
+		    )
+		  )
+		 )as a
+	</select> 
+	
+	
+	
+	<select id="queryBeforeDayData" parameterType="map" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		from apply_info where apply_status = 'success' and send_status != 'success' and event_start_time between DATE_SUB(curdate(), INTERVAL 1 DAY) and current_date();
+	</select>
+	
+	<select id="queryBeforeDayFailData" parameterType="map" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		from apply_info where apply_status = 'success' and event_start_time between DATE_SUB(curdate(), INTERVAL 1 DAY) and current_date() and send_status='fail';
+	</select>
+	
+    <select id="selectApplyInfo"  parameterType="map" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List" />
+        FROM (
+            SELECT ai.* FROM apply_info ai,pay_order po
+            <where>
+                ai.pay_order_code=po.order_code
+                <if test="registerCode!=null and registerCode!=''">
+                    AND po.register_code = #{registerCode}
+                </if>
+                <if test="applyStatus!=null and applyStatus!=''">
+                    AND ai.apply_status = #{applyStatus}
+                </if>
+                <if test="isRead != null and isRead!=''">
+                    AND ai.is_read = #{isRead}
+                </if>
+            </where>
+            ORDER BY ai.apply_time DESC
+            limit #{start} , #{limit}
+        )A
+    </select>
+
+    <select id="selectIsReadNum"  parameterType="map" resultType="java.lang.Integer">
+        SELECT count(1) FROM apply_info 
+        <where>
+         <if test="registerCode!=null and registerCode!=''">
+                AND register_code = #{registerCode}
+         </if>
+           <if test="isRead != null and isRead!=''">
+                and is_read = #{isRead}
+            </if>
+            <if test="applyStatus!=null and applyStatus!=''">
+                 and apply_status = #{applyStatus}
+            </if>
+         </where>
+    </select>
+
+
+    <update id="updateIsRead"  parameterType="map" >
+        UPDATE apply_info SET is_read = #{newIsRead}
+        <where>
+            <if test="registerCode!=null and registerCode!=''">
+                AND register_code = #{registerCode}
+            </if>
+            <if test="applyStatus!=null and applyStatus!=''">
+                AND apply_status = #{applyStatus}
+            </if>
+            <if test="oldIsRead != null and oldIsRead!=''">
+                AND is_read = #{oldIsRead}
+            </if>
+        </where>
+    </update>
+    
+   <select id="queryGameingData" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from apply_info where 
+		 <![CDATA[
+           apply_time > event_start_time and apply_time <= event_end_time and apply_status = 'success' and send_status != 'success';
+        ]]>
+	</select>
+    
+     <select id="querySuccessApplyInfoByPhoneAndMachInfo" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from apply_info where match_code = #{matchCode} and site_code = #{siteCode} and apply_status='success'
+		and apply_code in (
+						select apply_code from apply_player where player_code in ( 
+						     select player_code from player where player_phone in 
+						     <foreach collection="phones" item="phone" index="index"
+             					open="(" close=")" separator=",">
+					     	 	#{phone}
+					   		 </foreach>
+						   )
+					)
+		limit 0, 200
+	</select>
+	
+	 <select id="getApplyInfosByOrderCodes"  parameterType="java.util.List" resultMap="BaseResultMap">
+		select
+			<include refid="Base_Column_List" />
+		from apply_info where 
+ 			pay_order_code in 
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+    </select> 
+    
+    <select id="selectRepetitionIdempotentId"  parameterType="int" resultType="String">
+		SELECT idempotent_id FROM (SELECT  idempotent_id,COUNT(1) AS total FROM  
+		apply_info GROUP BY idempotent_id ORDER BY total DESC) AS a WHERE total >1 AND 
+		idempotent_id IS NOT NULL LIMIT 0,#{limit}
+    </select>
+
+    <select id="selectSynchronousData"  parameterType="map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />  from apply_info
+        where (channel_code is null or channel_code &lt;&gt; 'dmp' ) 
+        and apply_status='success' and unit_code='gudong' 
+        and (sync_unit is null or sync_unit = 0) 
+        and (sync_unit_next_time is null or sync_unit_next_time &lt; now() ) 
+        limit 0, #{limit}
+    </select>
+
+    <update id="updateSynchronousData"  parameterType="com.efida.sports.entity.ApplyInfo">
+        update apply_info SET sync_unit = #{syncUnit},sync_unit_total=#{syncUnitTotal},sync_unit_next_time=#{syncUnitNextTime, jdbcType=TIMESTAMP},sync_unit_status=#{syncUnitStatus,jdbcType=VARCHAR}
+        where apply_code=#{applyCode,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getApplyCountByEventCodeAndPhone"  resultType="java.lang.Long"  parameterType="map" >
+        SELECT  count(1) FROM apply_info  ai
+        INNER JOIN apply_player ap on ai.apply_code=ap.apply_code
+        INNER JOIN player p on ap.player_code=p.player_code
+        WHERE ai.group_event_code=#{eventCode}
+        AND p.player_phone=#{phone}
+        AND ai.apply_status='success'
+        AND ai.unit_code='gudong'
+    </select>
+
+</mapper>

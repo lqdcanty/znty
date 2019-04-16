@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>消息中心</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+</head>
+<body>
+    <div style="height: 100%;overflow-y: scroll; ">
+        <div class="h5_header">
+            <img src="${staticPath}/img/icon_back.png"/>
+            <div class="back" onclick="back()">返回</div>
+            <div class="title">
+                消息中心
+            </div>
+
+        </div>
+        <div class="massage_content">
+            <div id="mescroll">
+                <ul>
+                    <!--<li>-->
+                        <!--<div class="massage_time_box"><span class="massage_tips_time">7月14日 08:12</span></div>-->
+                        <!--<div class="massage_content_tips">-->
+                            <!--<p class="massage_title">报名成功提醒</p>-->
+                            <!--<div class="massage_content_box" >-->
+                                <!--<img class="massage_pic" src="${staticPath}/img/banner_ph.jpg" />-->
+                                <!--<div>-->
+                                    <!--<img class="massage_use_icon" src="${staticPath}/img/icon_name_1.png">-->
+                                    <!--<p class="massage_game_tilte">智慧中国趣味定向大赛</p>-->
+                                <!--</div>-->
+                                <!--<img style="width: 0.17rem;height: 0.25rem;" src="${staticPath}/img/icon_right.png">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</li>-->
+
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+<script>
+    var path = "${ctx}";
+    var emptyWorn = new emptyWorn($('#mescroll'),'暂无数据',' ')
+    function getData(page) {
+        getResultMethods(path + '/user/getApplyInfo', {
+            currentPage:page,
+            pageSize:10
+        },function (data) {
+            if(data.resultCode == 200){
+                if(page == 1){
+                    $('#mescroll ul').html('')
+                }
+                renderList(data.result.applyInfo)
+                mescroll.endBySize(data.result.applyInfo.length, data.result.total, '');
+            }else{
+                var tips = new loadingTips(data.resultMsg,2500);
+                tips.creat();
+                mescroll.endErr();
+            }
+        },function (data) {
+            var tips = new loadingTips('网络错误，请稍后重试',2500);
+            tips.creat();
+            mescroll.endErr();
+        })
+    }
+
+    function renderList(data) {
+        if(data.length == 0){
+            emptyWorn.show()
+            return false
+        }else{
+            emptyWorn.hide()
+        }
+        data.forEach(function (v) {
+            var str = '<li data-code="'+v.payOrderCode+'">\
+                            <div class="massage_time_box"><span class="massage_tips_time">'+dateChange(v.applyTime)+'</span></div>\
+                            <div class="massage_content_tips">\
+                                <p class="massage_title">报名成功提醒</p>\
+                                <div class="massage_content_box" >\
+                                <img class="massage_pic" src="'+v.poster+'" />\
+                                <div>\
+                                <img class="massage_use_icon" src="${staticPath}/img/icon_name_1.png">\
+                                <p class="massage_game_tilte">'+v.matchName+'</p>\
+                                </div>\
+                                <img style="width: 0.17rem;height: 0.25rem;" src="${staticPath}/img/icon_right.png">\
+                            </div>\
+                            </div>\
+                        </li>';
+            $('#mescroll ul').append(str)
+        })
+        // detail
+        $('#mescroll ul li').click(function () {
+            var codes = $(this).attr('data-code');
+            window.location.href = path + '/order/detail/' + codes;
+        })
+    }
+    
+    //初始化下拉加载组件
+    var mescroll = new MeScroll("mescroll", {
+        up: {
+            auto: true, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+            isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+            htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+            callback: endLoad //上拉回调,此处可简写;
+        }
+    });
+
+
+    function endLoad(page) {
+        console.log('加载')
+        emptyWorn.hide()
+        if(page.num == 1){
+            setTimeout(function () {
+                $('.render_address').html('')
+                getData(page.num)
+
+            },1500)
+        }else{
+            getData(page.num)
+        }
+    }
+    //时间转换
+    function dateChange(date,type){
+        if (!date) return ''
+        var dates = new Date(date)
+        var year = dates.getFullYear()
+        var month = dates.getMonth() + 1
+       // month=checkAddZone(month)
+        var date = dates.getDate()
+        // date = checkAddZone (date)
+        if(type == 1 ){
+            return year + '-' + month + '-' + date
+        }else{
+            return year + '年' + month + '月' + date + '日'
+        }
+
+    }
+    //加零
+    function checkAddZone (num) {
+        return num<10 ? '0' + num.toString() : num
+    }
+
+    function back() {
+        window.location.href = path + '/ucenter'
+    }
+
+</script>
+<style>
+    .massage_content{
+        width: 100%;
+        height: auto;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0.88rem;
+        bottom: 0;
+        overflow-y: scroll;
+
+    }
+    .massage_content div ul{
+        /*padding-bottom: 1.3rem;*/
+    }
+
+    .massage_content div ul li{
+        text-align: center;
+    }
+    .massage_content .massage_title{
+        margin-top: 0.3rem;
+        margin-bottom: 0.2rem;
+    }
+    .massage_content_tips{
+        width: 6.9rem;
+        height: 2.45rem;
+        background: white;
+        margin: 0 auto;
+        border-radius: 0.2rem;
+    }
+    .massage_time_box{
+        margin: 0.3rem 0 0.2rem 0;
+    }
+    .massage_tips_time{
+        background: #D0D0D0;
+        border-radius:0.08rem;
+        display: inline-block;
+        /*width: 1.66rem;*/
+        padding: 0 0.2rem;
+        height: 0.4rem;
+        line-height: 0.4rem;
+        text-align: center;
+        font-size: 0.22rem;
+        color: #FFFFFF;
+
+    }
+    .massage_title{
+        height: 0.88rem;
+        line-height: 0.88rem;
+        text-align: left;
+        font-size: 0.24rem;
+        color: #333333;
+
+        margin-left: 0.3rem;
+    }
+    .massage_content_box{
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        border-top: 1px solid #E2E2E2;
+    }
+    .massage_content_box .massage_pic{
+        width: 1.5rem;
+        height: 1rem;
+        display: inline-block;
+        margin:0.3rem 0.2rem 0.3rem 0.3rem;
+    }
+    .massage_content_box div{
+        width: 4.40rem;
+        text-align: left;
+        height: 0.26rem;
+        display: flex;
+        align-items: center;
+    }
+    .massage_use_icon{
+        width: 0.28rem;
+        height: 0.28rem;
+        margin-right: 0.11rem;
+
+    }
+    .massage_game_tilte{
+        font-size: 0.26rem;
+        color: #666666 ;
+        display: inline-block;
+    }
+
+</style>
+</html>

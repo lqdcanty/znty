@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+    <meta name="description" content="http://zntyweb.efida.com.cn/match/type">
+    <meta name="author" content="">  
+    <title>首届全国智能体育大赛</title>
+
+    <!-- Custom styles for this template -->
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+    <link href="${stx}/css/animate.css" rel="stylesheet">
+  </head>
+	<body class="index_backimg">
+	 <#include "common/alert.html">
+
+		<div class="main_content content_height" >
+				<div class="header nav_top">
+				    <div class="container clear">
+						   	  	<a  href="${ctx}/match/type"  class="pull-left back_index"></a>
+						  	   <div class="code_aside pull-right">
+					 	  	   	<p class="pull-left hidden-xs clear">
+					 	  	   	    <a class="qr_code hover_q" href="${ctx}/match/type">
+					 	  	   	    	参赛报名
+					 	  	   	    </a> 
+					 	  	   	    <a class="qr_code" id="Resultinquiry" href="javascript:window.location.href='${ctx}/achievement/match/init'">
+					 	  	   	    	成绩查询
+					 	  	   	    </a>
+					 	  	   	    
+					 	  	   	    <a class="qr_code" href="javascript:window.location.href='${ctx}/order/query'">
+					 	  	   	    	报名查询
+					 	  	   	    </a>
+
+					 	  	   	     <a class="app_link" href="javascript:window.location.href='${ctx}/user/upload/page'">
+					 	  	   	    	
+					 	  	   	    </a>
+					 	  	   	</p>
+					 	  	   	
+					 	  	 	<p class="login_btn pull-left hidden-xs clear">
+					 	  	   		<#if register??>
+					 	  	   			<span class="user_head">
+					 	  	   			<#if register.headimgUrl?default("")?trim?length gt 1>
+					 	  	   				<img style="cursor:pointer" onClick="javascript:window.location.href='${ctx}/order/query'" src="${register.headimgUrl}">
+					 	  	   			<#else>
+						 	  	   			<img  onClick="javascript:window.location.href='${ctx}/order/query'" src="${stx}/img/icon_user.png">				 	  	   			
+						 	  	   		</#if>
+					 	  	   		        <span class="hover">
+					 	  	   		              <a class="first" href="javascript:window.location.href='${ctx}/order/query'">个人中心</a>
+					 	  	   		              <a href="${ctx}/user/quit/login">退出登录</a>
+					 	  	   		        </span> 	  	   		   
+					 	  	   		   </span>
+					 	  	   		<#else>
+						 	  	   		 <a class="enroll_btn" href="${ctx}/user/login/index">登 录</a>
+					 	  	   		</#if>
+					 	  	   	</p>
+						  	   </div>
+						  </div>
+				</div>
+            <div id="order_content" v-cloak>
+            
+           		  <div class="medal_index_modal">
+				      <div class="medal_index_box">
+				          <span @click="closeBtn" class="z_index7"><img src="${stx}/img/icon_close.png"></span>
+				          <div class="z_index1 animated rotateIn"><img src="${stx}/img/img_dl_lzs_bg.png"></div> 
+				          <div class="z_index3 wordCss">恭喜您获得了新奖章</div>
+				          <div class="z_index2"><img src="${stx}/img/img_dl_dibu.png"></div>
+				          <!-- <div class="z_index4 animated fadeInUp"><img :src="picUrl"></div>	 -->         
+				          <div class="z_index5"><img src="${stx}/img/img_dl_jiangzhang.png"></div>
+				          <div class="z_index_btn"><a class="btn" id="btnHref" target="_Blank" @click="goodsInfo">领取奖章</a></div>
+				      </div>
+				 </div>
+	 
+	            <div class="drop_menu drop_menu_top">
+	            	 <div class="container menu_list">
+	            	 	  <a v-for="(tab , index) in Matchtab" :class="{active: indexs == index}"  @click="navTap(index, tab.gameCode)" >
+	            	 	  <i v-if="indexs == index"><img src="${stx}/img/icon_hongq.png"></i>[[tab.gameName]]</a>
+	            	 </div>
+	            </div>
+        
+		     
+		   		<div class="match_content clear" id="listContent">
+		    	 <div class="container clear">
+		    	 	  <div class="card_match" v-for="(ListData,index) in MatchListData">
+		    	 	      <div class="match_h card_box_hover">
+	 	  			      <!--报名结束-->
+	 	  	   	    	  <div class="stop_sign" @click="goDetail(ListData.matchCode)" v-if="ListData.regStatus == 'enroll_end'  ">
+	 	  	   	    	  	   <img src="${stx}/img/bq_bmjieshu.png" />
+	 	  	   	    	  </div>
+	 	  	   	    	  
+	 	  	   	    	   <!--zhanting-->
+	 	  	   	    	  <div class="stop_sign" @click="goDetail(ListData.matchCode)" v-if="ListData.regStatus == 'pause'  ">
+	 	  	   	    	  	   <img src="${stx}/img/bq_zanting.png" />
+	 	  	   	    	  </div>
+	 	  	   	    	  
+	 	  	   	    	   <!--比赛结束-->
+	 	  	   	    	  <div class="stop_sign" @click="goDetail(ListData.matchCode)" v-if="ListData.regStatus == 'end'  ">
+	 	  	   	    	  	   <img src="${stx}/img/bq_bsjieshu.png" />
+	 	  	   	    	  </div>
+
+		    	 	  	   <div class="card_box">
+		    	 	  	   	    <div class="card_top" @click="goDetail(ListData.matchCode)">
+		    	 	  	   	    	  <img :src="ListData.poster" />
+		    	 	  	   	    </div>
+		    	 	  	   	    <div class="card_bottom">
+		    	 	  	   	    	<p class="p1"><span class="icon_b1"></span>[[ListData.matchName]]</p>
+		    	 	  	   	    	<p class="p2"><span class="icon_b2"></span>比赛时间：[[ListData.startTimeStr]]至[[ListData.endTimeStr]]</p>
+		    	 	  	   	    	<p class="match_btn"><a class="first" @click="goDetail(ListData.matchCode)">赛事介绍</a>
+		    	 	  	   	    	<a v-if="ListData.regStatus == 'normal'  " :href="'${ctx}/match/item/'+ListData.matchCode" target='_blank'>开始报名</a>
+		    	 	  	   	    	<a v-if="ListData.regStatus != 'normal'  "  class="stop_click">开始报名</a>
+		    	 	  	   	    	</p>
+		    	 	  	   	    </div>
+		    	 	  	   </div>
+		    	 	  	</div>	
+		    	 	  </div>	    	 	  			    	 	  	
+		    	 </div>
+		    	 
+    	 		<div v-if="noData&&!MatchListData.length" class="no_data indexNo_data">
+ 	  	    	 	<img src="${stx}/img/img_dsj_weikong.png">
+ 	  	    	    <p class="index_nodata">尊敬的用户：<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;该项目下暂无相关赛事，我们将陆续开放相关赛事，敬请期待。</p>
+ 	  	    	</div>	
+		    </div>
+	
+	         <p v-if="MatchListData.length" class="end_text"><img src="${stx}/img/img_jxw.png">已经到底啦~</p>
+		   </div>	
+          
+          <div class="footer footer_bottom">
+	    	 <div class="container clear">
+	    	 	  <div class="pull-left">
+	    	 	  	   <p class="footer_nav">
+	    	 	  	   	  <a href="http://www.zntyydh.com/index.jsp">首页</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=114">新闻中心</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=107">赛事信息</a>   |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=109">智体百科</a>  |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=105">全球征集</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=106"> 联系我们</a>
+	    	 	  	   </p>
+	    	 	  	   <p class="simpleText">
+	    	 	  	   	浙ICP备18028500号-1<br>
+                                                版权所有：全国智能体育大赛 未经授权不得使用
+	    	 	  	   </p>
+	    	 	  </div>
+	    	 	  <div class="pull-right footer_code">
+	    	 	       <img src="${ctx}/img/img_footer.png">
+	    	 	  </div>
+	    	 </div>
+		   </div>
+		</div>
+	</body>
+	<script src="${stx}/js/jquery-2.1.1.min.js"></script>
+	<script src="${stx}/js/vue.js"></script>
+	<script src="${stx}/js/config.js"></script>
+	
+	<script>
+	$(".indexNo_data").attr("style","display:block");	
+var vm = null;       //全局声明vue对象
+	
+	var vueData = {			
+		Matchtab:[],
+		MatchListData:[],
+		activeTab: '',
+		picUrl:'',
+		certCode:'',
+		indexs:0,
+		more:[],
+		pageNum: 1,
+		pageSize: 12,
+		noData:false,
+	};
+	
+	/**
+	 * 页面加载完毕 $.ready
+	 */
+	$(function(){
+	
+	    vueInit();
+	    medalmodal();
+	    GetMatchData();
+        animate();
+        
+	});
+	
+
+
+	 /**
+	  * vue初始化，dom操作
+	  */
+	  
+	//Vue.config.delimiters = ['${', '}$'];
+	  function vueInit () {
+		 vm = new Vue({
+			 delimiters: ['[[', ']]'],
+			 el:"#order_content",
+			 data:vueData ,
+			 methods:{
+				 navTap: navTap,
+				 goDetail:goDetail,
+			 	 medalmodal:medalmodal,
+			 	 closeBtn:closeBtn,
+			 	goodsInfo:goodsInfo,
+			 },
+			 created(){
+				$(window).scroll(function() {
+					var scrollTop = $(this).scrollTop();
+				    var scrollHeight = $(document).height();
+				    var windowHeight = $(this).height();
+				    if (scrollTop + windowHeight === scrollHeight) {
+				    	vueData.pageNum++;
+				        getDatalists(true); // 执行增加页面数据操作
+				    };
+				    
+				});
+			 },
+			 		 			 			 
+		 });
+	};
+    
+    
+    function createTimestamp() {
+   	  return parseInt(new Date().getTime() / 1000) + '';
+  	}; 
+  	
+  	function animate(){
+  	  /*  setTimeout(function () {
+  	        $(".z_index4").hide();
+  	    },  2000);*/
+  	   
+  	 setTimeout(function () {
+	        $(".z_index5").addClass('animated fadeInDown').show();
+	    }, 0);
+  	  
+  	 setTimeout(function () {
+	        $(".z_index_btn").addClass('animated fadeInUp').show();
+	    }, 1000);
+
+  	};
+  	
+  	var isLogin="${isLogin?c}"
+  	function medalmodal(){
+  		if(isLogin=="true"){
+  			var url = "${ctx}/cert/new/cert";
+  		    $.ajax({
+  		        url:  url,
+  		        data: {},
+  		        type: 'get',
+  		        dataType: 'json',
+  		        success: function(d) {
+  		        	if(d.resultCode == 200 && d.result.cert) {
+  		        		$(".medal_index_modal").show();
+  	  					 vueData.certCode=d.result.cert.scoreCertCode;
+  	  					 //vueData.picUrl=d.result.cert.certPicUrl;
+  	  					
+  		        	}
+  		        }
+  		    });
+  		}
+  	};
+  	
+  	function closeBtn(){
+  		 $(".medal_index_modal").hide();
+  		     var url = "${ctx}/cert/view/cert";
+			 getResultMethods(url, {certCode:vueData.certCode}, function(d){
+
+  			 });
+  	}
+  	
+  	function goodsInfo(){
+  		var url = "${ctx}/cert/view/cert";
+  		window.open("${ctx}/static/goodsInfo");
+		 getResultMethods(url, {certCode:vueData.certCode}, function(d){ 
+		});
+  	}
+  
+	 // 获取左边菜单数据 
+	 
+	 function GetMatchData(){
+		 console.log('${ctx}/match/type/list');
+		 
+		 var url = "${ctx}/match/type/list?" + createTimestamp();
+		 getResultMethods(url, {}, function(d){
+			vueData.Matchtab = d.types;
+		 });
+		 vueData.activeTab = 'all';
+		 getDatalists();
+	 };
+	 
+	 // 获取右边 菜单数据 	 
+		function navTap(str,id){
+		 	 vueData.indexs=str
+			 vueData.activeTab = id;
+			 vueData.pageNum = 1;
+			 getDatalists(); 
+		 };
+		 
+	  	 function getDatalists(isAppend){
+			 //code/page/pagesize
+			// var params = 
+			 // 	console.log(params)
+			  	if(!isAppend) {
+			  		vueData.MatchListData.splice(0, vueData.MatchListData.length);
+			  	}
+			 var url = "${ctx}/match/list/"+vueData.activeTab+"/"+vueData.pageNum+"/"+ vueData.pageSize + "?" + createTimestamp();
+			 $.ajax({
+	  	        url:  url,
+	  	        data: {code: vueData.activeTab},
+	  	        type: 'get',
+	  	        dataType: 'json',
+	  	        success: function(d) {
+	  	        	if(d.resultCode == 200) {
+  						if(d.result.matchs.length) {
+  							vueData.noData=false;
+  				    		d.result.matchs.forEach(function(v){
+  					    		vueData.MatchListData.push(v);
+  					    	});
+  						}else if(d.result.matchs.length==0){
+  							vueData.noData=true;
+  						}else if(isAppend){
+  							$(".end_text").show();	
+  						}
+	  	        	}else {
+	  	        		vueData.noData=true;
+	  	        		$("#animationTipBox").show();
+	  	        		$("#animationTipBox .dec_txt").text(d.resultMsg)
+	  	        		 setTimeout(function(){
+	  	        			$("#animationTipBox").css("display","none");
+	  	        			},
+	  	        			3000)
+	  	        	}
+	  	        }
+	  	
+	  	    });
+			  	
+			  	
+				
+		 }
+	  	 		
+	  // 赛事介绍页面 	 
+		 function goDetail(matchCode) {
+			 window.open("${ctx}/match/detail/"+matchCode + "?" + createTimestamp()) 
+		 };
+		 
+		 
+		
+		 
+	</script>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>微信支付</title>
+
+    <!-- Custom styles for this template -->
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="${stx}/laydate/theme/default/laydate.css">
+    <link rel="stylesheet" href="${stx}/css/layui.css"  media="all">
+  </head>
+	<body class="sign_backimg">
+		 <#include "common/alert.html">
+		<div class="modal_agreement">
+			 <div class="agreement_content">
+			 	  <p class="close"><img src="${stx}/img/icon_djishi.png"></p>
+			 	  <p class="title">全国智能体育大赛智能跳绳分赛服务协议</p>
+			 	  <div class="content">
+			 	  	
+			 	  </div>
+			 	  <p class="txt">
+			 	  	我已经阅读并同意以上协议
+			 	  </p>
+			 	  <p class="pay"><a>继续支付</a></p>
+			 </div>
+		</div>
+		<#include "common/nav.html">
+		<div class="signUp_from">
+			<div class="container">
+				<div class="state_title ">
+				  	  <span class="n">订单信息：</span>
+				  	  <#if payOrder.applyInfos?? && (payOrder.applyInfos?size > 0) >
+				  	     <#assign i = 0>
+				      	 <#list payOrder.applyInfos as applyInfo>
+				      	 	  <#assign length = payOrder.applyInfos?size>
+				      	 	  <#assign i = i + 1>
+				      	 	  <span>
+				      	 	  		<#if applyInfo.matchGroupName??>
+				      	 	  			${(applyInfo.matchGroupName)!''} |
+				      	 	  		</#if>
+						  	   	     ${(applyInfo.eventName)!''} <span class="red">【
+						  	   	     <#if (applyInfo.applyAmount)??>
+						  	   	     	${applyInfo.applyAmount / 100}
+						  	   	     <#else>
+						  	   	     	0
+						  	   	     </#if>
+						  	   	            元】</span>
+						  	   	    <#if length gt i>
+							  	   	    &nbsp;&nbsp;| &nbsp;&nbsp;       
+						  	   	    </#if>
+						  	  </span>
+						  	  
+				      	 </#list>
+				      </#if>
+					 <!--  <span>
+				  	   	     个人项目-定数计时赛 | 30秒单摇 <span class="red">【10元】</span>&nbsp;&nbsp;| &nbsp;&nbsp;  
+				  	  </span>
+				  	   <span>
+				  	   	    <span class="n">订单编号：</span>
+				  	   	     个人项目-定数计时赛 | 30秒单摇 <span class="red">【10元】</span>
+				  	  </span> -->
+				  	   <span class="pay pull-right" style="font-weight: bold;">支付总金额：<span class="red">
+				  	   <#if payOrder.orderAmountStr??>
+				  	   		${(payOrder.orderAmountStr)!''}
+				  	   <#else>
+				  	   		0
+				  	   </#if>
+				  	   	元</span></span>
+			    </div> 
+			</div>
+ 	     
+ 	  	     <div class="container from_table pay_code">
+ 	  	     	  <div class="code_lie">
+ 	  	     	  	   <p class="t1">订单编号：${(payOrder.orderCode)!''}</p>
+ 	  	     	  	   <div id="orderContent">
+ 	  	     	  	   		<#if payOrder.overplusTime = 0>
+ 	  	     	  	   			<div class="no_pay" id="no_pay" style="display:block !important;">
+		                       	   <img src="${stx}/img/img_dsj_weikong.png" />
+		                       	   <p>订单已失效！<a class="" href="${ctx}/match/type">报名其他项目</a></p>
+		                       </div>
+ 	  	     	  	   		<#else>
+ 	  	     	  	   			<p class="t2"> 订单提交成功，距离订单关闭还有<span class="red" id="overplusTime">${(payOrder.overplusTime)!''}</span></p> 
+ 	  	     	  	   		</#if>
+ 	  	     	  	   		<#if payOrder.overplusTime gt 0>
+		                       <div class="pay_mode clear">
+		                       	   <span style="border: 1px #E2E2E2 solid;" class="code_img pull-left code_right"><img src="${ctx}/order/wechatPayCode/${(payOrder.orderCode)!''}" /></span>
+		                       	   <span class="phone pull-left"><img src="${stx}/img/img_swx.png"></span>
+		                       </div>  
+		                       <div class="pay_mode_bottom clear">
+		                       	   <span class="code_img pull-left code_right"><img src="${stx}/img/img_wxin.png" style="border:1px #E2E2E2 solid;"></span>
+		   
+		                       </div>
+	                       </#if>
+ 	  	     	  	   </div>
+ 	  	     	  	   
+ 	  	     	  	   <div class="no_pay" id="no_pay" style="display:none !important;">
+                       	   <img src="${stx}/img/img_dsj_weikong.png" />
+                       	   <p>订单已失效！<a class="" href="${ctx}/match/type">报名其他项目</a></p>
+                       </div>
+ 	  	     	  </div>				     			              
+ 	  	     </div>
+		</div>
+		<#include "common/footer.html">
+	</body>
+	<script type="text/javascript" src="${stx}/js/jquery-2.1.1.min.js"></script>
+	<script src="${stx}/laydate/laydate.js"></script>
+	<script src="${stx}/layui/layui.js" charset="utf-8"></script>
+	<script>
+	var orderCode="${(payOrder.orderCode)!''}";
+		$(function(){
+			
+	        function createTimestamp () {
+	         	return parseInt(new Date().getTime() / 1000) + '';
+	        }; 
+			
+			var text = parseInt($("#overplusTime").html());
+			//text = Number(text.replace(',',''))
+			var mytimer = setInterval(function(){	
+				text--;
+				if(text < 0) {
+					clearInterval(mytimer);
+					notPay();
+					$("#no_pay").show();
+				}else {
+					$("#overplusTime").text(SecondToDate(text));
+				}
+			}, 1000);
+			
+			setInterval(function(){ 
+			      $.ajax({
+		                 url:  "${ctx}/order/wechat/check/"+orderCode + "?" + createTimestamp(),
+		                 type: 'post',
+		                 dataType: 'json',
+		                 success: function(data) {
+		                 	if(data.resultCode==200 && data.result.orderStatus=='success'){
+		                 		window.location.href = "${ctx}/order/success/"+orderCode + "?" + createTimestamp();
+		                 	}
+		                 }
+		             });
+			}, 5000);
+			
+		});
+		
+		function notPay() {
+			$('#orderContent').hide();
+		};
+		
+		 $("#Resultinquiry").click(function(){
+	      		$("#animationTipBox").show();
+  		$("#animationTipBox .dec_txt").text('成绩查询暂未开放，敬请期待 ')
+  		 setTimeout(function(){
+  			$("#animationTipBox").css("display","none");
+  			},
+  			3000)
+		 })
+		
+		//秒转分秒
+		 function SecondToDate(t) { 
+			 return Math.floor(t/60)+"分"+(t%60/100).toFixed(2).slice(-2)+"秒";
+		};
+		
+			
+	</script>
+</html>

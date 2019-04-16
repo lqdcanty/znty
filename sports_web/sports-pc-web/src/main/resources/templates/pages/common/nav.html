@@ -1,0 +1,41 @@
+				<div class="header">
+				    <div class="container clear">
+						   	  	<a  href="${ctx}/match/type"  class="pull-left back_index"></a>
+						  	   <div class="code_aside pull-right">
+					 	  	   	<p class="pull-left hidden-xs clear">
+					 	  	   	     <a class="qr_code" href="${ctx}/match/type">
+					 	  	   	    	参赛报名
+					 	  	   	    </a> 
+					 	  	   	    <a class="qr_code" id="Resultinquiry" href="javascript:window.location.href='${ctx}/achievement/match/init'">
+					 	  	   	    	成绩查询
+					 	  	   	    </a>
+					 	  	   	    
+					 	  	   	    <a class="qr_code" href="javascript:window.location.href='${ctx}/order/query'">
+					 	  	   	    	报名查询
+					 	  	   	    </a>
+
+					 	  	   	     <a class="app_link" href="javascript:window.location.href='${ctx}/user/upload/page'">
+					 	  	   	    	
+					 	  	   	    </a>
+					 	  	   	</p>
+					 	  	   	
+					 	  	 	<p class="login_btn pull-left hidden-xs clear">
+					 	  	   		<#if register??>
+					 	  	   			<span class="user_head">
+					 	  	   			<#if register.headimgUrl?default("")?trim?length gt 1>
+					 	  	   				<img style="cursor:pointer" onClick="javascript:window.location.href='${ctx}/order/query'" src="${register.headimgUrl}">
+					 	  	   			<#else>
+						 	  	   			<img  onClick="javascript:window.location.href='${ctx}/order/query'" src="${stx}/img/icon_user.png">				 	  	   			
+						 	  	   		</#if>
+					 	  	   		        <span class="hover">
+					 	  	   		              <a class="first" href="javascript:window.location.href='${ctx}/order/query'">个人中心</a>
+					 	  	   		              <a href="${ctx}/user/quit/login">退出登录</a>
+					 	  	   		        </span> 	  	   		   
+					 	  	   		   </span>
+					 	  	   		<#else>
+						 	  	   		 <a class="enroll_btn" href="${ctx}/user/login/index">登 录</a>
+					 	  	   		</#if>
+					 	  	   	</p>
+						  	   </div>
+						  </div>
+				</div>

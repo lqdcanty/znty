@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>个人信息</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>个人信息</title>
+
+<!-- Custom styles for this template -->
+<link href="${stx}/css/layout.css" rel="stylesheet">
+<!-- <link href="${stx}/css/page.css" rel="stylesheet"> -->
+<link href="${stx}/css/pagination.css" rel="stylesheet">
+<link rel="stylesheet" href="${stx}/laydate/theme/default/laydate.css">
+<link rel="stylesheet" href="${stx}/layui/css/layui.css"  media="all">
+<style>
+   body{background:url(${stx}/img/bg_baoming.jpg) repeat; width: 100%;height: 100%;}
+  </style>
+</head>
+<body>
+        <#include "common/alert.html">
+        <div class="content_height">
+        <#include "common/nav.html">
+		<div class="content_msy container clear registration_content">
+         <#include "common/left_menu.html"> 
+			 <div class="aside_content pull-right" style="height:600px;">
+			 	<p class="top_title"><img src="${stx}/img/tit_right.png">个人信息</p>
+			 	<div class="modify_user_title" id="upload_img">
+			 		 <#if register??>
+				 	     <p class="header_icon" style="overflow:hidden;">
+				 	        <#if register.headimgUrl??  && register.headimgUrl!=''>
+				 	            <img  id="headImgUrl" src="${(register.headimgUrl)!''}" >
+				 	           <#else>
+				 	            <img  id="headImgUrl" src="${stx}/img/icon_user.png" >
+				 	        </#if>
+				 	     	<input id="headimgUrl" name="headimgUrl" type="hidden" value="${(register.headimgUrl)!''}"/>
+				 	     <p>
+				 	     <p class="font_t" id="upload"><a>修改头像</a><p>
+			 		 </#if>
+			 	</div>
+			 	<div class="modify_user_title">
+				 	 <p class="name clear"><span class="pull-left">昵称</span><input type="text" id="nickName" name="nickName"  maxlength="24" value="${(register.nickName)!''}"></p>
+			 	     <p class="save_p"><a id="saveBtn" class="save_btn">保 存</a></p>
+			 	</div>
+			 </div>			 			
+		</div>
+		  <div class="footer footer_bottom">
+	    	 <div class="container clear">
+	    	 	  <div class="pull-left">
+	    	 	  	   <p class="footer_nav">
+	    	 	  	   	  <a href="http://www.zntyydh.com/index.jsp">首页</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=114">新闻中心</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=107">赛事信息</a>   |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=109">智体百科</a>  |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=105">全球征集</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=106"> 联系我们</a>
+	    	 	  	   </p>
+	    	 	  	   <p class="simpleText">
+	    	 	  	   	浙ICP备18028500号-1<br>
+                                                版权所有：全国智能体育大赛 未经授权不得使用
+	    	 	  	   </p>
+	    	 	  </div>
+	    	 	  <div class="pull-right footer_code">
+	    	 	       <img src="${ctx}/img/img_footer.png">
+	    	 	  </div>
+	    	 </div>
+		   </div>
+		   </div>
+</body>
+<script src="${stx}/js/jquery-2.1.1.min.js"></script>
+<script src="${stx}/js/vue.js"></script>
+<script src="${stx}/js/config.js"></script>
+<script src="${stx}/layui/layui.all.js" charset="utf-8"></script>
+
+<script>
+$(function(){
+
+	uploadInit();	
+	
+	function uploadInit() {
+	       layui.use('upload', function(){
+	          var $ = layui.jquery ,
+	          upload = layui.upload;
+	          var uploadInst = upload.render({
+	            elem: '#upload_img',
+	            url: '${ctx}/file/pc/upload',
+	            before: function(obj){
+	              obj.preview(function(index, file, result){
+	                $('#upload_img').attr('src', result); //图片链接（base64）
+	              });
+	            },
+	            done: function(res){
+	              //如果上传失败
+	              console.log(res);
+	              if(res.resultCode == 200){
+	            	  var url = res.result.url;
+	            	  $("#headImgUrl").attr('src',url);
+	            	  $("#imgUrl").attr('src',url);
+					  $("#headimgUrl").val(url);	            	  
+	              } else {
+	                   
+	              		$("#animationTipBox").show();
+	             		$("#animationTipBox .dec_txt").text('上传失败 ')
+	             		 setTimeout(function(){
+	             			$("#animationTipBox").css("display","none");
+	             			},
+	             			3000)
+	              }
+	            },
+	            error: function(){
+	                //演示失败状态，并实现重传
+	            	
+	              }
+	          });
+	     });
+	} 
+	
+
+	
+	  $('.save_p').on('click',function () {
+		  var headimgUrl = $("#headimgUrl").val().trim();
+			var nickName = $("#nickName").val().trim();
+		     if(nickName == ''){
+	         		$("#animationTipBox").show();
+             		$("#animationTipBox .dec_txt").text('昵称不能为空 ')
+             		 setTimeout(function(){
+             			$("#animationTipBox").css("display","none");
+             			},
+             			3000)
+		    	 return;
+		     }
+			 $.ajax({
+	             type: "post",
+	             url: "${ctx}/user/update/head",
+	             data: {headimgUrl:headimgUrl, nickName:nickName},
+	             dataType: "json",
+
+	             success: function(data){
+	            	 console.log(data);
+	            	 if(data.resultCode = '200'){	            		
+	               		$("#animationTipBox").show();
+	             		$("#animationTipBox .dec_txt").text('修改成功 ')
+	             		 setTimeout(function(){
+	             			$("#animationTipBox").css("display","none");
+	             			},
+	             			3000)
+                           	             		
+	            		 $(".user_name span").text(nickName)
+
+	            	 } else {
+	               		$("#animationTipBox").show();
+	             		$("#animationTipBox .dec_txt").text('修改失败 ')
+	             		 setTimeout(function(){
+	             			$("#animationTipBox").css("display","none");
+	             			},
+	             			3000)
+
+	            	 }
+	             }           
+	         });
+      });
+	  	    
+	   	$("#grxx").addClass("active");
+	   	$("#grxxEm").addClass("active");
+	   	
+});
+
+
+</script>
+</html>

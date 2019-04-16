@@ -1,0 +1,142 @@
+html{margin:0;padding:0;width: 100%;min-height:100%;position:relative;font-family: "微软雅黑";}
+body,p,ul{margin:0;padding:0;}
+ul li {list-style: none;}
+.font_16 {font-size: 16px;color: #333333;font-weight: bold;}
+.pull-left {float: left;}
+.pull-right {float: right;}
+.container {width: 1200px;margin: 0 auto;}
+.mt20{margin-top: 20px}
+.mb10{margin-bottom:10px}
+.mt40{margin-top: 40px}
+.p20{padding:20px}
+.clear:after{content:'';display:block;clear:both;height:0;overflow:hidden;visibility:hidden;}
+.clear{zoom:1;}
+.red {color: #FF001F;}
+.color_f40{color: #f40;}
+input,button,select,textarea{outline:none}
+@media (max-width: 992px) {
+    .container {
+        width: auto;
+        margin: 0 auto;
+    }
+}
+[v-cloak] {
+	display: none;
+}
+a:hover{    text-decoration: none;}
+.loading{position: fixed;width: 100%;height: 100%;background: #FFFFFF;z-index: 999;top:0}
+.loading img{animation: spin 800ms infinite linear;position: absolute;left: 50%;top:50%;margin-left: -16px;margin-top: -16px}
+@keyframes spin {
+    0%   { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.goods-swiper{width: 428px;height: 428px;}
+.goods-swiper img{width: 100%;height: 100%}
+.goods-title{font-size: 20px;font-weight: 700;line-height: 20px;margin-bottom: 20px}
+.goods-price{padding: 20px;background-color: #f5f3ef;border-top: 1px dotted #dedede;border-bottom: 1px dotted #dedede;
+    line-height: 24px;font-size: 13px;position: relative;}
+.goods-price span:nth-child(3){font-size: 28px;line-height: 30px;margin-left: 2px;color: #d7282d;}
+.goods-price span:nth-child(2){line-height: 30px;color: #d7282d;font-size: 18px;margin-left: 30px;}
+.buy-btn{    color: #FFF;
+    border: 1px solid #ff8f00;
+    background-color: #ff8f00;width: 168px;
+    height: 50px;line-height: 50px;font-size: 18px;display: inline-block;text-align: center;cursor: pointer;position: absolute;bottom: 0;left: 62px}
+.left-wrap{padding-left: 62px;width: 566px;position: relative;height: 428px;}
+
+.goods-num{margin-top: 20px;padding-left: 20px;font-size: 13px;line-height: 30px}
+.goods-num-info{border: 1px solid #ddd;overflow: hidden;margin-left: 30px}
+.goods-num-info span{position: relative;float: left;width: 36px;height: 30px;text-align: center;cursor: pointer;line-height: 28px;background: #fff;}
+.goods-num-info .num-less{border-right: 1px solid #ddd;}
+.goods-num-info .num-more{border-left: 1px solid #ddd;}
+.goods-num-info input{box-sizing: border-box;border-radius: 0;border: 0;height: 30px;line-height: 28px;background: #fff;
+    float: left;width: 60px;margin: 0;font-size: 12px;text-align: center;color: #333;}
+.order-panel{border: 1px solid #e8e8e8;margin-bottom: 36px}
+.panel-title{padding-left: 21px;background-color: #ff8f00;height: 42px;line-height: 41px;color: #ffffff;font-size: 14px;}
+.panel-body{padding: 30px 0 30px 30px;}
+.panel-body .address-info label{color: #999;width: 70px;font-size: 14px;text-align: center;display: inline;font-weight: normal}
+.panel-body .address-info span{font-size: 14px}
+.panel-body .address-info{line-height: 25px;margin-top: 10px}
+.address-title{margin-bottom: 10px;font-size: 14px;color: #f40}
+.address-title img{float: left}
+.address-title span{letter-spacing: 5px;display: inline-block;height: 32px;line-height: 34px;color: #000000;padding-left: 10px;font-size: 14px}
+.address-title a{-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;display: inline-block;cursor: pointer;width: 60px;height: 28px;
+    padding: 0;letter-spacing: normal;line-height: 26px;font-size: 12px;text-align: center;color: #FF8F00;border: 1px solid #FF8F00;background-color: #fff;}
+.address-title a:hover{background-color: #FF8F00;color: #FFFFFF}
+table tr td:first-child{padding-left: 20px}
+table{border-collapse: collapse;width: 100%;border-spacing: 0;font-size: 14px;table-layout: fixed;}
+table thead{    line-height: 41px;width: 100%;background-color: #ff8f00;height: 42px;color: #FFFFFF;}
+table thead td:first-child{width: 360px}
+table img{width: 100px;height: 100px;margin-right: 10px}
+table tbody td{padding: 20px 0}
+.order-detail{background: #f5f5f5;padding: 40px}
+.pay-btn{width: 168px;height: 50px;display: inline-block;color: #FFFFFF;background: #FF8F00;
+    text-align: center;cursor: pointer;margin-top: 20px;line-height: 50px;font-size: 18px;}
+.order-price{font-size: 20px;color: #f40;margin-left: 20px}
+.remark-info{    vertical-align: top;resize: none;text-indent: 4px;border: 1px solid #ccc;outline: 0;overflow: auto;width: 415px;max-witdh:700px;
+max-height:136px;height: 136px;}
+.remark-wrap label{font-size: 14px;margin-right: 10px;color: #999999}
+.address-right{float: right;width: 253px;height: 58px;border-left: 1px solid #e8e8e8;text-align: center;margin-top: 44px;
+}
+.address-right a{display: block ;border-radius: 2px;cursor: pointer;margin: 0 auto;width: 96px;height: 28px;padding: 0;
+    letter-spacing: normal;line-height: 26px;font-size: 12px;text-align: center;color: #333;border: 1px solid #ccc;background-color: #f5f5f5;}
+.address-right a:first-child{margin-bottom: 5px}
+.address-right a:last-child{margin-top: 5px}
+
+.add-address .add-item{line-height: 25px;margin-top: 10px}
+.add-address .add-item label{
+    color: #333;width: 70px;font-size: 14px;text-align: center;font-weight: normal;line-height: 30px;
+}
+.add-address input{line-height: 28px;border: 1px solid #ddd;border-radius: 4px;text-indent: 10px;width: 179px;text-align:left}
+#distpicker4 .form-group{width: 179px;float: left;margin-right: 5px;}
+.add-address textarea{height: 70px;background-color: #fff; padding: 9px;border-radius: 4px;width: 547px;    max-width: 547px;font-size: 14px;line-height: 14px;border: 1px solid #ddd;}
+.add-right{margin-top: 20px;margin-left: 40px;width: 360px;padding: 20px 0 20px 79px; border-left: 1px dashed #dedede;position:relative}
+.add-right span{width: 18px;height: 18px;float: left;    border: 1px solid #ddd;dispaly:inline-block;cursor: pointer;margin-right:10px}
+.add-right span img{
+	width: 14px;
+    position: relative;
+    top: -3px;
+    left: 1px;
+}
+.add-right a{border-radius: 2px;width: 144px;height: 42px;padding: 0;letter-spacing: normal;line-height: 42px;display: block;cursor: pointer;margin-top: 15px;
+    font-size: 12px;text-align: center;color: #333;border: 1px solid #ccc;background-color: #f5f5f5;}
+.add-right a:hover{text-decoration: none}
+.add-right a:first-child{background: #FF8F00;color: #FFFFFF;border: 1px solid #FF8F00}
+.add-right a:last-child{background: #FFFFFF;color: #FF8F00;border: 1px solid #FF8F00}
+.goods-name{    float: left;= line-height: 24px;= max-width: 210px;}
+
+
+.layer-module{width:100%;height:100%;position:fixed;top: 0;left: 0;background-color: rgba(0, 0, 0,0.4);z-index:1999}
+.layer-module-content{ width: 600px;height: 600px;position: absolute;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000
+    margin: 0;padding: 0;background-color: #fff;-webkit-background-clip: content;border-radius: 2px;box-shadow: 1px 1px 50px rgba(0,0,0,.3);}
+.layer-module-head{padding: 0 80px 0 20px;height: 42px;line-height: 42px;border-bottom: 1px solid #eee;font-size: 14px;color: #333;overflow: hidden; background-color: #F8F8F8;border-radius: 2px 2px 0 0;}
+.layer-module-head a{position: absolute;right: 15px; top: 0;font-weight: bold;}
+.address-item{border: 1px solid #e8e8e8;margin-bottom: 10px;padding: 20px 25px;cursor: pointer;position: relative;}
+.address-item.active{    border: 2px solid #ff8f00;}
+.address-item span{    line-height: 24px;font-size:14px}
+.address-item p span:first-child{color:#999}
+.layer-module-foot{text-align:center;margin-top: 10px;}
+.layer-module-foot a{display:inline-block;width: 144px;
+    height: 42px;text-align:center;cursor:pointer;
+     line-height: 40px;
+    font-size: 16px;}
+ .layer-module-foot a:first-child{background: #FF8F00;color: #FFFFFF;border: 1px solid #FF8F00}
+ .layer-module-foot a:last-child{background: #FFFFFF;color: #FF8F00;border: 1px solid #FF8F00}
+  .pay-type{margin-bottom:30px}
+ .pay-type span{width: 18px;height: 18px;float: left;border: 1px solid #ddd;dispaly:inline-block;cursor: pointer;margin-right:10px;    position: relative;
+    top: 10px;
+    margin-right: 20px;}
+.pay-type span img{
+	width: 14px;
+    position: relative;
+    top: -2px;
+    left: 1px;
+}
+.orderInfo_title p{
+	padding-top:10px;
+	line-height:24PX;
+}
+.orderInfo_title {padding: 20px;
+    background-color: rgba(255,143,0,.1);
+    font-size: 14px;
+    color: #2A2A2A;}

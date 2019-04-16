@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<head style="position: fixed;top: 0;">
+    <title>比赛成绩</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/js/swiper/swiper.min.css" />
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="${staticPath}/css/mui.min.css?v=${cssV}">
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+        }
+        .changeSpan{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 6.5rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body id="bodyMatch" style="background-color: #fff;overflow-x:hidden;font-size:0.26rem;">
+<section style="overflow:hidden;line-height: 0.88rem;width:100%;padding-top:0.4rem;display: flex;align-items: center;" id="search_wechat">
+    <div class="search_input">
+        <img src="${staticPath}/img/icon_Search.png" onclick="search_fen()">
+        <form action='' onsubmit="return false;" style="overflow:hidden;">
+            <input style="text-align:left;-webkit-tap-highlight-color: rgba(0,0,0,0);" id="search_keyword_id" type="search" placeholder="输入关键字搜索比赛" />
+        </form>
+        <img class="clear_search_input" src="${staticPath}/img/round_close_fill.png">
+    </div>
+
+    <div style="margin-left:0.2rem;display:inline-block">
+        <img id="photoMysearch" class="avatar" onclick="callAndroid()" style="width:0.5rem;height:0.5rem;vertical-align: middle;border-radius:5rem" src="${staticPath}/img/icon_user@2x.png">
+    </div>
+</section>
+<section style="height:0.88rem;line-height: 0.88rem;width:100%;position: relative;">
+    <div class="allSelect" >全部</div>
+    <div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted" style="margin-left: 0.8rem;font-size: 0.3rem;overflow-y: hidden;overflow-x: scroll;display: inline-block;
+                position: relative;left: 0.4rem;width: 5.2rem;height: 0.88rem;">
+        <ul id="commonUi" class="commonUl mui-scroll" style="height: 0.88rem;line-height:0.88rem;font-size: 0.3rem;">
+
+        </ul>
+    </div>
+    <img class="sport_left_to" style="width: 0.4rem;" src="${staticPath}/img/team_menu.png" />
+</section>
+<section id="pullrefreshs" class="mui-content">
+    <div id="mescroll" class="mescroll mui-content" style="padding-bottom: 0.5rem;">
+        <div>
+            <!--数据列表-->
+            <section id="firstData" class="mui-table-view mui-table-view-chevron">
+            </section>
+        </div>
+    </div>
+    <div id="defaultPhoto" style="display:none;">
+        <img src="${staticPath}/img/img_no@2x.png" />
+    </div>
+</section>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mui.min.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+<script type="text/javascript">
+
+
+    var avatar = null
+    var path = "${ctx}";
+    var tokens = getThePrameValue('appToken')=='null'?'':getThePrameValue('appToken');
+    var callAndroid = function(){
+        if(getThePrameValue('appToken')=='null'||getThePrameValue('appToken')==''){
+            android.avatar('avatar')
+        }else{
+            android.avatar('Loginavatar')
+        }
+    }
+
+    // 获取头像的接口
+    function myPhoto(tokens){
+        var t = (new Date()).valueOf(); //获取头像传参
+        getResultMethods(path + "/user/register/check",{token:tokens,t:t},function(data){
+            console.log(data)
+            if(data.resultCode == 200){
+                if(data.result.headimgUrl!='' && data.result.headimgUrl!=null && data.result.headimgUrl.length>0){
+                    $('#photoMysearch').attr('src',data.result.headimgUrl)
+                }else{
+                    $('#photoMysearch').attr('src','${staticPath}/img/icon_user_1@2x.png')
+                }
+            }else{
+                $('#photoMysearch').attr('src','${staticPath}/img/icon_user@2x.png')
+            }
+
+        })
+    }
+    //下拉加载
+    var dropDownLoading = ""; //下拉加载
+    if(getThePrameValue('gameCode')){
+        var _getcodes =getThePrameValue('gameCode');
+        dropDownLoading=getByProjectCode;
+    }else{
+        dropDownLoading=allDate;
+    }
+    // var footerAll = new footerAll(2);
+    // footerAll.showFooter();
+    if(!getThePrameValue('platform')){
+        $('#search_wechat').css(
+            'padding-top',0+'rem'
+        );
+        $('#pullrefreshs').css(
+            'top',1.76+'rem'
+        );
+        $('#mescroll').css(
+            'padding-bottom',1+'rem'
+        );
+        callAndroid = function(){
+            window.location.href=path+"/ucenter"
+        }
+        var footerAll = new footerAll(2)
+        footerAll.showFooter()
+    }else if(getThePrameValue('platform')) {
+        if(getThePrameValue('platform') == 'iOS'){
+            if (clientType('iphoneX')) {
+                //是iphoneX
+                $('#search_wechat').css(
+                    'padding-top',0.88+'rem'
+                );
+                $('#pullrefreshs').css(
+                    {
+                        'top':2.685+'rem',
+                        'bottom':'1rem'
+                    }
+                );
+
+            }
+            callAndroid = function(){
+                window.webkit.messageHandlers.avatar.postMessage(null)
+            }
+            myPhoto(tokens);
+        }else if(getThePrameValue('platform') == 'Android'){
+            $('#search_wechat').css({
+                'padding-top':0.4+'rem'}
+            );
+            $('#pullrefreshs').css({
+                'top':2.168+'rem'}
+            );
+            myPhoto(tokens);
+        }
+    }
+
+    myPhoto(tokens);
+
+    // 点击跳转到更多项目
+    $('.sport_left_to').click(function () {
+        window.location.href = path+'/project/more'
+    })
+
+    // 点击分类
+    /*$('#commonUi li').click(function () {
+        var _this = this
+        detailLi(_this)
+    })*/
+    mui("#commonUi").on("tap","li",function(e){
+        detailLi(e.target)
+    });
+    //点击选择全部
+    $('.allSelect').click(function () {
+        $('#firstData').empty()
+        dropDownLoading = allDate;
+        mescroll.resetUpScroll()
+        $('.allSelect').css({
+            'color':'#FF8F00',
+            'border-color':'#FF8F00',
+            'height': '0.88rem',
+            'line-height': '0.88rem'
+        })
+        $('#commonUi li').removeClass('mui-active')
+    })
+
+    // 增加背景图
+    var emptyWorn = new emptyWorn($('#firstData'),'～暂无数据～','～查看一下其他的搜索吧～')
+    // 全部加载时候调用的接口
+    function allDate(pageNumber){
+        var code = 'all';
+        var currentPage = pageNumber;
+        var pageSize = '10';
+        // $('#firstData').empty()
+        getResultMethods(path + "/project/matchs", {code: code,token:tokens,currentPage:currentPage,pageSize:pageSize}, function(data) {
+            if(data.resultCode ==200) {
+                if(currentPage == 1){
+                    $('#firstData').empty()
+                }
+                if(data.result.matchs.length){
+                    $('#defaultPhoto').css({
+                        'display':'none'
+                    })
+                    data.result.matchs.forEach(function(item) {
+                        var yearstart = new Date(item.startTime).getFullYear()
+                        var monthstart = (new Date(item.startTime).getMonth() + 1 < 10 ? '0' + (new Date(item.startTime).getMonth() + 1) : new Date(item.startTime).getMonth() + 1)
+                        var datestart = (new Date(item.startTime).getDate() < 10 ? '0' + new Date(item.startTime).getDate() : new Date(item.startTime).getDate())
+                        var yearend = new Date(item.endTime).getFullYear()
+                        var monthend = (new Date(item.endTime).getMonth() + 1 < 10 ? '0' + (new Date(item.endTime).getMonth() + 1) : new Date(item.endTime).getMonth() + 1)
+                        var dateend = (new Date(item.endTime).getDate() < 10 ? '0' + new Date(item.endTime).getDate() : new Date(item.endTime).getDate())
+                        var divContentMatch = $('<section class="mui-table-view-cell" style="padding:0;background:none">' +
+                            '<section class="while_onclick" data-matchName="'+item.matchName+'" data-test="'+item.matchCode+'" onclick="getFun(this)" style="height:1.6rem;display:flex;justify-content: start;align-items: center;border-top:0.2rem solid #EFEFF4;">\n' +
+                            '            <div style="width: 1.5rem;height: 1rem;display: inline-block;margin-left: 0.3rem;margin-right: 0.2rem;">\n' +
+                            '                <img style="width: 100%;height: 100%;" src="'+item.matchImg+'" />\n' +
+                            '            </div>\n' +
+                            '            <ul style="color:#666;display:flex;flex-direction: column;justify-content: space-between;height: 1rem;line-height: 0rem;">\n' +
+                            '                <li style="width: 5rem;\n' +
+                            '                  white-space: nowrap;\n' +
+                            '    overflow: hidden;\n' +
+                            '    text-overflow: ellipsis">\n' +
+                            '                    <img style="width: 0.3rem;height: 0.3rem;vertical-align: middle" src="${staticPath}/img/icon_name.png" />\n' +
+                            '                    <span style="line-height:0.3rem">'+item.matchName+'</span>\n' +
+                            '                </li>\n' +
+                            '                <li style="width: 5.0rem;text-align: right">\n' +
+                            '                    <span class="sanShape sanShapeClick"></span>\n' +
+                            '                </li>\n' +
+                            '                <li>\n' +
+                            '                    <img style="width: 0.3rem;height: 0.3rem;vertical-align: middle" src="${staticPath}/img/icon_time.png">\n' +
+                            '                    <span>'+yearstart + '-' + monthstart + '-' + datestart+'</span>至<span>'+yearend + '-' + monthend + '-' + dateend+'</span>\n'+
+                            '                </li>\n' +
+                            '            </ul>\n' +
+                            '        </section>\n' +
+                            '        <section class="dispalyShow">\n' +
+                            '            <section style="height: 0.5rem;background:rgba(255,143,0,.15);line-height: 0.5rem;">\n' +
+                            '                <span style="margin-left: 0.5rem;color:#FF8F00;opacity: 1">选择比赛</span>\n' +
+                            '            </section>\n' +
+                            '        </section>\n' +
+                            '</section>')
+                        $('#firstData').append(divContentMatch)
+                    })
+                    mescroll.endByPage(data.result.matchs.length, data.result.totalPage);
+                    emptyWorn.hide()
+                }else{
+                    mescroll.endByPage(data.result.matchs.length, data.result.totalPage);
+                    emptyWorn.show()
+                    return false
+                }
+            }else{
+                mescroll.endErr();
+                mescroll.endUpScroll(false)
+                $('#defaultPhoto').css({
+                    'display':'block'
+                })
+            }
+        })
+    }
+
+    // 获取导航栏
+    function getGameType() {
+        var str = []
+        getResultMethods(path + "/project/types", {token:tokens}, function(data) {
+            if(data.resultCode ==200) {
+                if(data.result.types.length){
+                    data.result.types.forEach(function(item) {
+                        str.push(item.gameName)
+                        var commonLi = $('<li class="mui-control-item" data-detailLi="'+item.gameCode+'">'+item.gameName+'</li>')
+                        $('#commonUi').append(commonLi)
+                    })
+                    console.log(str.join(''))
+                    console.log(str.join('').length * 12)
+                    console.log(data.result.types.length * 0.44)
+                    console.log(str.join('').length * 0.12 + data.result.types.length * 0.44)
+                    var strs = (str.join('').length * 0.18 + data.result.types.length * 0.44)*1.5+0.44
+                    $('#commonUi').css({
+                        width:strs + 'rem'
+                    })
+                    $('#commonUi li').css({
+                        "list-style": "none",
+                        "margin-right": "0.4rem",
+                        "height": "0.88rem",
+                        "float": "left",
+                        "font-size":"0.3rem",
+                        "line-height": "0.88rem",
+                        "padding": "0rem"
+                    })
+                }
+                if(getThePrameValue('gameCode')){
+                    var codes = getThePrameValue('gameCode')
+
+                    var listData = data.result.types;
+                    for(var i=0;i<listData.length;i++){
+                        if(listData[i].gameCode == codes){
+                            var lis = document.getElementById('commonUi').getElementsByTagName('li');
+                            $('#commonUi li').removeClass('mui-active')
+                            $(lis[i]).addClass('mui-active');
+                            $('.allSelect').css({
+                                'color':'black',
+                                'border-color':'white',
+                                'height': '0.88rem',
+                                'line-height': '0.88rem'
+                            })
+                            totalSecond = lis[i]
+                            // $('#commonUi').css({
+                            //
+                            //     'transform': 'translate3d(strNews,0rem,0rem) translateZ(0rem)',
+                            //     'webkitTransform':'translate3d(strNews,0rem,0rem) translateZ(0rem)',
+                            //     'height':'0.98rem'
+                            // })
+                        }
+
+                    }
+
+                    getByProjectCode(1)
+                    //transform: translate3d(-107px, 0px, 0px) translateZ(0px);
+                }else{
+                    dropDownLoading = allDate;
+                }
+
+            }
+        })
+    }
+    // 获取类型
+    getGameType()
+    // 获取赛区赛场赛组的接口数据【无问题】
+    function getFun(obj){
+        if($(obj).children().children().find('.sanShapeClick').hasClass('sanShapeFirst')){
+            $(obj).children().children().find('.sanShapeClick').removeClass('sanShapeFirst')
+            $(obj).children().children().find('.sanShapeClick').addClass('sanShape')
+            $(obj).removeClass('green');
+            $(obj).next().css({
+                display:'none'
+            })
+        }else{
+            console.log($(obj).attr("data-test"))
+            var projectMatches = $(obj).attr("data-test")
+            var matchName=$(obj).attr("data-matchName")
+            // var projectMatches = 'match201806062159414262'
+            getResultMethods(path + "/project/match/sites/all", {token:tokens,matchCode: projectMatches}, function(data) {
+                if(data.resultCode ==200) {
+                    $(obj).next().find('div').empty()
+                    if(data.result.resultList && data.result.resultList.length>0){
+                        data.result.resultList.forEach(function(resultListLength) {
+                            if(resultListLength && resultListLength.length>0){
+                                resultListLength.forEach(function(item){
+                                    var area_name = (item.area && item.area.length>0)?item.area:"";
+                                    var group_name = (item.group && item.group.length>0)?item.group:"";
+                                    var event_name = (item.event && item.event.length>0)?item.event:"";
+                                    var namesShow = area_name+group_name+event_name;
+                                    console.log(area_name,group_name,event_name)
+                                    // console.log(item.area.length)
+                                    // console.log(item.group.length)
+                                    // competitionDate="'+item.competitionDate+'"
+                                    console.log("11111111111111111111111111111111111111111111",projectMatches)
+                                    var secondContent = '            <div matchName="'+matchName+'"  items="'+item.competitionCode+'" testaaa = "'+projectMatches+'" onclick="goTOGradeRanking(this)">\n' +
+                                        '                <p style="margin:0rem 0.3rem;position: relative;height: 0.66rem;background: #FFF;line-height: 0.66rem;border-bottom: 1px solid #e2e2e2">\n' +
+                                        '                    <span style="position: absolute;top: -0.04rem;" class="sanShapeLeft"></span>\n' +
+                                        '                    <span class="changeSpan" style="margin-left: 0.2rem;font-size: 0.22rem;color: #666666;">'+namesShow+'</span>\n' +
+                                        '                </p>\n' +
+                                        '            </div>'
+                                    $(obj).next().append(secondContent)
+                                })
+                            }
+
+                        })
+                    }
+                }else{
+
+                }
+            })
+            console.log('false')
+            $(obj).children().children().find('.sanShapeClick').addClass('sanShapeFirst')
+            $(obj).children().children().find('.sanShapeClick').removeClass('sanShape')
+            $(obj).addClass('green');
+            $(obj).next().css({
+                display:'block'
+            })
+        }
+    }
+    // 跳转到下一页时候传递数据的方法【无问题】
+    function goTOGradeRanking(objs) {
+        var competitionCode = $(objs).attr("items")
+        var matchCode = $(objs).attr("testaaa")
+        // var competitionDate = $(objs).attr("competitionDate")
+        var matchName = $(objs).attr("matchName")
+        $(objs).hover(function(){
+            $(objs).css("background-color","#eee");
+        },function(){
+            $(objs).css("background-color","#fff");
+        });
+        // window.location.href = path + '/gradeRanking?competitionCode='+competitionCode+'&matchCode='+matchCode+'&competitionDate='+competitionDate+'&matchName='+matchName;
+        window.location.href = path + '/gradeRanking?competitionCode='+competitionCode+'&matchCode='+matchCode+'&matchName='+matchName;
+
+    }
+
+    // 点击ul获取每一项下面得的详情的代码
+    var totalSecond = null
+    function detailLi(objs) {
+        $('#firstData').empty()
+        totalSecond = objs
+        // window.location.href= path + '/competitionResults?gameCode='+code;
+        // getByProjectCode(code)
+        dropDownLoading = getByProjectCode
+        mescroll.resetUpScroll()
+    }
+    function getByProjectCode(page) {
+        var code = $(totalSecond).attr("data-detailLi")
+        // var code = getThePrameValue('gameCode');
+        document.getElementById('search_keyword_id').value = ''
+        var currentPage = page
+        var pageSize = '10'
+        $('.allSelect').css({
+            'color':'black',
+            'border-color':'white',
+            'height': '0.88rem',
+            'line-height': '0.88rem'
+        })
+        getResultMethods(path + "/project/matchs", {code: code,token:tokens,currentPage:currentPage,pageSize:pageSize}, function(data) {
+            if(data.resultCode ==200) {
+                if(currentPage == 1){
+                    $('#firstData').empty()
+                }
+                if(data.result.matchs.length){
+                    $('#defaultPhoto').css({
+                        'display':'none'
+                    })
+                    data.result.matchs.forEach(function(item) {
+                        var yearstart = new Date(item.startTime).getFullYear()
+                        var monthstart = (new Date(item.startTime).getMonth() + 1 < 10 ? '0' + (new Date(item.startTime).getMonth() + 1) : new Date(item.startTime).getMonth() + 1)
+                        var datestart = (new Date(item.startTime).getDate() < 10 ? '0' + new Date(item.startTime).getDate() : new Date(item.startTime).getDate())
+                        var yearend = new Date(item.endTime).getFullYear()
+                        var monthend = (new Date(item.endTime).getMonth() + 1 < 10 ? '0' + (new Date(item.endTime).getMonth() + 1) : new Date(item.endTime).getMonth() + 1)
+                        var dateend = (new Date(item.endTime).getDate() < 10 ? '0' + new Date(item.endTime).getDate() : new Date(item.endTime).getDate())
+                        var divContentMatch = $('<section class="mui-table-view-cell" style="padding:0;background:none">' +
+                            '<section class="while_onclick" data-matchName="'+item.matchName+'" data-test="'+item.matchCode+'" onclick="getFun(this)" style="height:1.6rem;display:flex;justify-content: start;align-items: center;border-top:0.2rem solid #EFEFF4">\n' +
+                            '            <div style="width: 1.5rem;height: 1rem;display: inline-block;margin-left: 0.3rem;margin-right: 0.2rem;">\n' +
+                            '                <img style="width: 100%;height: 100%;" src="'+item.matchImg+'" />\n' +
+                            '            </div>\n' +
+                            '            <ul style="color:#666;display:flex;flex-direction: column;justify-content: space-between;height: 1rem;line-height: 0rem;">\n' +
+                            '                <li style="width: 5rem;\n' +
+                            '    white-space: nowrap;\n' +
+                            '    overflow: hidden;\n' +
+                            '    text-overflow: ellipsis">\n' +
+                            '                    <img style="width: 0.3rem;height: 0.3rem;vertical-align: middle" src="${staticPath}/img/icon_name.png" />\n' +
+                            '                    <span style="line-height:0.3rem">'+item.matchName+'</span>\n' +
+                            '                </li>\n' +
+                            '                <li style="width: 5.0rem;text-align: right">\n' +
+                            '                    <span class="sanShape sanShapeClick"></span>\n' +
+                            '                </li>\n' +
+                            '                <li>\n' +
+                            '                    <img style="width: 0.3rem;height: 0.3rem;vertical-align: middle" src="${staticPath}/img/icon_time.png">\n' +
+                            '                    <span>'+yearstart + '-' + monthstart + '-' + datestart+'</span>至<span>'+yearend + '-' + monthend + '-' + dateend+'</span>\n'+
+                            '                </li>\n' +
+                            '            </ul>\n' +
+                            '        </section>\n' +
+                            '        <section class="dispalyShow">\n' +
+                            '            <section style="height: 0.5rem;background:rgba(255,143,0,.15);line-height: 0.5rem;">\n' +
+                            '                <span style="margin-left: 0.5rem;color:#FF8F00;opacity: 1">选择比赛</span>\n' +
+                            '            </section>\n' +
+                            '        </section>\n' +
+                            '</section>')
+                        $('#firstData').append(divContentMatch)
+                    })
+                    emptyWorn.hide()
+                    mescroll.endBySize(data.result.matchs.length, data.result.totalRow);
+                }else{
+                    emptyWorn.show()
+                    mescroll.endBySize(data.result.matchs.length, data.result.totalRow);
+                    return false
+                }
+                // mescroll.endBySize(data.result.matchs.length, data.result.totalRow);
+                // mescroll.endByPage(data.result.matchs.length, data.result.totalPage);
+            }else{
+                mescroll.endErr();
+                $('#defaultPhoto').css({
+                    'display':'block'
+                })
+            }
+        })
+    }
+
+    // 搜索调用的接口
+    $('#search_keyword_id').bind({
+        search:function() {
+            search_fen()
+        },
+        keypress:function(e){
+            var keycode = e.keyCode;
+            if(keycode=='13') {
+                search_fen()
+                $("#search_keyword_id").blur()
+            }
+        },
+        input:function () {
+            var vals = $('#search_keyword_id').val();
+            if(vals.length == 0){
+                $('.clear_search_input').hide()
+            }else{
+                $('.clear_search_input').show()
+            }
+
+        }
+    });
+
+    $('.clear_search_input').click(function () {
+        $('#search_keyword_id').val('')
+        $('.clear_search_input').hide()
+    })
+    function search_fen() {
+        $('#commonUi li').removeClass('mui-active')
+        $('#firstData').empty()
+        dropDownLoading = searchFun
+        mescroll.resetUpScroll()
+    }
+
+    function searchFun(page) {
+        var search_keyword_id = document.getElementById('search_keyword_id').value
+        var currentPage = page
+        var pageSize = '10'
+        sessionStorage.setItem('search_keywords',search_keyword_id)
+        console.log(search_keyword_id)
+        getResultMethods(path + "/project/search/matchs", {keyword: search_keyword_id,token:tokens,currentPage:currentPage,pageSize:pageSize}, function(data) {
+            console.log(data)
+            var sdata = data.result;
+            if(data.resultCode == 200) {
+                if(currentPage == 1){
+                    $('#firstData').empty()
+                }
+                if(sdata.list.length && sdata.list.length>0) {
+                    $('#defaultPhoto').css({
+                        'display':'none'
+                    })
+                    sdata.list.forEach(function(item) {
+                        var yearstart = new Date(item.startTime).getFullYear()
+                        var monthstart = (new Date(item.startTime).getMonth() + 1 < 10 ? '0' + (new Date(item.startTime).getMonth() + 1) : new Date(item.startTime).getMonth() + 1)
+                        var datestart = (new Date(item.startTime).getDate() < 10 ? '0' + new Date(item.startTime).getDate() : new Date(item.startTime).getDate())
+                        var yearend = new Date(item.endTime).getFullYear()
+                        var monthend = (new Date(item.endTime).getMonth() + 1 < 10 ? '0' + (new Date(item.endTime).getMonth() + 1) : new Date(item.endTime).getMonth() + 1)
+                        var dateend = (new Date(item.endTime).getDate() < 10 ? '0' + new Date(item.endTime).getDate() : new Date(item.endTime).getDate())
+                        var divContent = $('<section class="mui-table-view-cell" style="padding: 0;background:none">' +
+                            '<section class="while_onclick" data-matchName="'+item.matchName+'" data-test="'+item.matchCode+'" onclick="getFun(this)" style="height: 1.6rem;display:flex;justify-content: start;align-items: center;border-top:0.2rem solid #EFEFF4">\n' +
+                            '            <div style="width: 1.5rem;height: 1rem;display: inline-block;margin-left: 0.3rem;margin-right: 0.2rem;">\n' +
+                            '                <img style="width: 100%;height: 100%;" src="'+item.matchImg+'" />\n' +
+                            '            </div>\n' +
+                            '            <ul style="color:#666;display:flex;flex-direction: column;justify-content: space-between;height: 1rem;line-height: 0rem;">\n' +
+                            '                <li style="width: 5rem;\n' +
+                            '    white-space: nowrap;\n' +
+                            '    overflow: hidden;\n' +
+                            '    text-overflow: ellipsis">\n' +
+                            '                    <img style="width: 0.3rem;height: 0.3rem;vertical-align: middle" src="${staticPath}/img/icon_name.png" />\n' +
+                            '                    <span  style="line-height:0.3rem">'+item.matchName+'</span>\n' +
+                            '                </li>\n' +
+                            '                <li style="width: 5.0rem;text-align: right">\n' +
+                            '                    <span class="sanShape sanShapeClick"></span>\n' +
+                            '                </li>\n' +
+                            '                <li>\n' +
+                            '                    <img style="width: 0.3rem;height: 0.3rem;vertical-align: middle" src="${staticPath}/img/icon_time.png">\n' +
+                            '                    <span>'+yearstart + '-' + monthstart + '-' + datestart+'</span>至<span>'+yearend + '-' + monthend + '-' + dateend+'</span>\n' +
+                            '                </li>\n' +
+                            '            </ul>\n' +
+                            '        </section>\n' +
+                            '        <section class="dispalyShow">\n' +
+                            '            <section style="height: 0.5rem;background:rgba(255,143,0,.15);line-height: 0.5rem;">\n' +
+                            '                <span style="margin-left: 0.5rem;color:#FF8F00;opacity: 1">选择比赛</span>\n' +
+                            '            </section>\n' +
+                            '        </section>\n' +
+                            '</section>')
+                        $('#firstData').append(divContent)
+                    })
+                    mescroll.endBySize(data.result.list.length, data.result.totalRow);
+                    emptyWorn.hide()
+                }else{
+                    mescroll.endBySize(data.result.list.length, data.result.totalRow);
+                    emptyWorn.show()
+                    return false
+                }
+                // mescroll.endBySize(data.result.list.length, data.result.totalRow);
+            }else {
+                $('#defaultPhoto').css({
+                    'display':'block'
+                })
+                var tips = new loadingTips('搜索失败，请重试',2500)
+                tips.creat()
+                mescroll.endErr();
+            }
+        });
+    }
+    //  上拉加载
+    var count = 2;
+    var countTotal;
+    var mescroll = new MeScroll("mescroll", {
+        up: {
+            noMoreSize: 5,
+            page:{
+                num:0,
+                size:10
+            },
+            htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+            auto: true, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+            isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+            callback: function (page) {
+                console.log(page.num)
+                if(page.num ==1){
+                    setTimeout(function () {
+                        dropDownLoading(page.num)
+                    },1500)
+                }else{
+                    dropDownLoading(page.num)
+                }
+
+            }, //上拉回调,此处可简写; 相当于 callback: function (page) { upCallback(page); }
+            // toTop:{ //配置回到顶部按钮
+            //     src : "../res/img/mescroll-totop.png", //默认滚动到1000px显示,可配置offset修改
+            //     //offset : 1000
+            // }
+        }
+    });
+    // demo示范例子
+    function pullRefresh() {
+        console.log('刷新')
+        setTimeout(function () {
+            mescroll.endSuccess(); //无参
+        },1500)
+
+    }
+    function endLoad() {
+        console.log('加载')
+        setTimeout(function () {
+            mescroll.endSuccess(); //无参
+        },1500)
+    }
+</script>
+<style>
+    *{ touch-action: pan-y; }
+    .allSelect{
+        color:#FF8F00;
+        border-bottom: 2px solid #FF8F00;
+        display: inline-block;
+        position: absolute;
+        left: 0.3rem;font-size:0.3rem;
+        height: 0.88rem;
+        line-height: 0.88rem
+    }
+    #commonUi .mui-active{
+        color: #FF8F00 !important;
+        border-color: #FF8F00 !important;
+    }
+    .clear_search_input{
+        display: none;
+        width: 0.26rem;
+        height: 0.26rem;
+        margin-left: 0.15rem;
+        vertical-align: middle;
+        margin-bottom: 0.05rem;
+    }
+    .search_input img:first-of-type{
+
+    }
+</style>
+
+</html>

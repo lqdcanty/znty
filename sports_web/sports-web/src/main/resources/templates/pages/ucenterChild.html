@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>个人信息</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <style>
+        .ucenter_child{
+            height: 0.96rem;
+            border-top: 0.2rem solid #EFEFF4;
+            border-bottom: 0.01rem solid #E2E2E2;
+            margin-top: 1.28rem;
+            line-height: 0.96rem;
+        }
+        .ucenter_child .ucenterRed{
+            height: 0.26rem;
+            width:  0.06rem;
+            background: #E50113;
+            display: inline-block;
+        }
+        .ucenter_message{
+            display: inline-block;
+            margin-left: 0.2rem;
+            font-family: PingFangSC-Regular;
+            font-size: 0.28rem;
+            color: #333333;
+            text-align: left;
+            line-height: 0.36rem;
+        }
+        .photoSkyName{
+            width: 6.9rem;
+            height: 1rem;
+            border-bottom: 0.01rem solid #E2E2E2;
+            margin: 0 auto;
+            line-height: 1rem;
+            font-family: PingFangSC-Regular;
+            font-size: 0.28rem;
+            color: #333333;
+        }
+        .photoSkyName::after{
+            content: '>';
+            width: 0.14rem;
+            height: 0.24rem;
+            position: absolute;
+            right: 0;
+            font-size: 0.24rem;
+        }
+        .photoSky{
+            width: 6.9rem;
+            height: 1.9rem;
+            border-bottom: 0.01rem solid #E2E2E2;
+            margin: 0 auto;
+            line-height: 1.9rem;
+            font-family: PingFangSC-Regular;
+            font-size: 0.28rem;
+            color: #333333;
+        }
+        .photoSky::after{
+            content: '>';
+            width: 0.14rem;
+            height: 0.24rem;
+            position: absolute;
+            right: 0;
+            font-size: 0.24rem;
+        }
+        #showInput{
+            width: 3.5rem;
+            height: 2rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 2px solid #E2E2E2;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper" style="background:#fff;overflow-x:hidden;">
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="callAndroid()">返回</div>
+        <div class="title">个人信息</div>
+        <div style="font-size: 0.32rem;padding-right: 0.3rem;" onclick="storeData()">保存</div>
+    </div>
+    <div class="ucenter_child">
+        <span class="ucenterRed"></span>
+        <span class="ucenter_message">报名信息</span>
+    </div>
+    <div class="photoSky" style="position: relative;">
+        <span>头像</span>
+        <span>
+            <input type="file" style="opacity:0;filter:alpha(opacity=0);height: 1.3rem;width: 1.3rem;position: absolute;top: 0.3rem;z-index: 9;right: 0.44rem;" onchange="handleFiles(this,'icon')">
+            <img id="photoMysearch" style="border-radius: 50%;height: 1.3rem;width: 1.3rem;position: absolute;top: 0.3rem;right: 0.44rem;" src="http://192.168.10.17:9999/img/icon_user@2x.png">
+        </span>
+    </div>
+    <div class="photoSkyName" style="position: relative;">
+        <span>昵称</span>
+        <span style="position:absolute;right: 0.44rem;text-align: center;">
+            <span><input id="nuckNames" type="text" value= "请更改昵称" style="border: none;outline: none;background: none;text-align: right;"/></span>
+        </span>
+    </div>
+    <div id="showInput" style="display: none;">
+        <div style="height: 0.5rem;font-size: 0.28rem;">请修改昵称</div>
+        <input id="showText" type="text" style="height: 0.5rem;outline: none;" />
+        <div style="margin-top: 0.2rem;display: flex;justify-content:  center;">
+            <button>确定</button>
+            <button style="margin-left: 0.3rem;">取消</button>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script>
+    var path = "${ctx}";
+    var callAndroid = function(){
+        android.back("back")
+    };
+
+    if(getThePrameValue('platform') == 'iOS') {
+        if (clientType('iphoneX')) {
+            $('.h5_header_space').css(
+                'height',1.76+'rem'
+            );
+        }
+        callAndroid = function (){
+            window.webkit.messageHandlers.back.postMessage(null)
+        }
+        var version = getThePrameValue('version');
+        $('.copy_num').html(version)
+    }else if(getThePrameValue('platform') == 'Android') {
+        var version = getThePrameValue('version');
+        $('.copy_num').html(version)
+    }else{
+        callAndroid = function (){
+            window.location.href=path+ '/ucenter'
+        }
+    }
+    var urlPhoto = ''
+    function handleFiles(obj,id) {
+        var file = document.getElementById("photoMysearch");
+        var files = obj.files;
+        img = new Image();
+        if(window.URL){
+            //File API
+            img.src = window.URL.createObjectURL(files[0]); //创建一个object URL，并不是你的本地路径
+            img.onload = function(e) {
+                window.URL.revokeObjectURL(this.src); //图片加载后，释放object URL
+            }
+        }
+        file.src=img.src;
+        //上传文件
+        var fd = new FormData();//实例化一个表单
+        fd.append('file', files[0]);//追加图片元素
+        console.log(fd)
+        console.log(files)
+        console.log(files[0])
+        $.ajax({
+            url:path+'/file/upload',
+            // url:'https://zntywx.efida.com.cn/file/upload',
+            data:fd,
+            type: "post",
+            dataType : "json",
+            processData: false,
+            contentType: false,
+            mimeType:"multipart/form-data",
+            // dataType: "json",
+            // cache: false,//上传文件无需缓存
+            // processData: false,//用于对data参数进行序列化处理 这里必须false
+            // contentType: false, //必须
+        }).success(function (data) {
+            console.log(data)
+            if(data.resultCode == 200){
+                urlPhoto = data.result.url
+            }
+        }).fail(function(data){
+            var tips = new loadingTips('头像修改失败，请重试',2500)
+            tips.creat()
+        })
+    }
+
+    // 保存头像和昵称
+    function storeData(){
+        var numName = document.getElementById('nuckNames').value;
+        // var test = 'http://zntyfdfs.efida.com.cn/group1/M00/00/08/rBADF1tyetOATnyDAABN-HdmivM279.png'
+        if(numName=='' || numName.length==0){
+            var tips = new loadingTips('请输入昵称',2500)
+            tips.creat()
+            return false;
+        }else if(!/^[a-zA-Z0-9\u4E00-\u9FA5]+$/.test(numName)){
+            var tips = new loadingTips('昵称包含非法字符',2500)
+            tips.creat()
+            return false
+        }else{
+
+        }
+        var datas = {}
+        datas.headimgUrl = urlPhoto
+        datas.nickName = numName
+        $.ajax({
+            url:path+'/user/wx/update',
+            // url:'https://zntywx.efida.com.cn/file/upload',
+            data:datas,
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                var tips = new loadingTips('保存成功',2500);
+                tips.creat();
+            },
+        })
+    }
+
+    // 获取用户头像和昵称
+    function goPhotoName(){
+        getResultMethods(path + "/user/get/card",{token:''},function(data){
+            if(data.resultCode == 200){
+                if(data.result.register.headimgUrl!='' && data.result.register.headimgUrl!=null && data.result.register.headimgUrl.length>0){
+                    $('#photoMysearch').attr('src',data.result.register.headimgUrl)
+                    urlPhoto = data.result.register.headimgUrl
+                }else{
+                    $('#photoMysearch').attr('src','${staticPath}/img/icon_user_1@2x.png')
+                    urlPhoto = ''
+                }
+                document.getElementById('nuckNames').value = (data.result.register.nickName==''||data.result.register.nickName==null)?data.result.register.account:data.result.register.nickName
+            }else{
+                $('#photoMysearch').attr('src','${staticPath}/img/icon_user_1@2x.png')
+                urlPhoto = ''
+            }
+        })
+    }
+    goPhotoName();
+</script>
+</html>

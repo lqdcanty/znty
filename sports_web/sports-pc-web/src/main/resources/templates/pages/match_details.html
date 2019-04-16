@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>${(match.matchName)!''}</title>
+
+    <!-- Custom styles for this template -->
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+    <link href="${stx}/css/swiper-4.3.3.min.css" rel="stylesheet">
+	<style>
+		.bdshare-button-style0-24 a{background:url(${stx}/img/shareImg.png) !important;padding-left: 0 !important;}
+		.bdshare-button-style0-24 .bds_tsina{height:30px;width:30px;background-position:0 0 !important;}
+		.bdshare-button-style0-24 .bds_tsina:hover{height:30px;width:30px;background-position:-42px 0 !important;}
+		.bdshare-button-style0-24 .bds_tqq{height:30px;width:30px;background-position:-43px -34px !important;}
+		.bdshare-button-style0-24 .bds_tqq:hover{height:30px;width:30px;background-position:0 -35px !important;}
+
+		.bdshare-button-style0-24 .bds_weixin:hover{height:30px;width:30px;background-position:-90px 0 !important;}
+		.bdshare-button-style0-24 .bds_weixin{height:30px;width:30px;background-position:-135px -1px !important;}
+		.bdshare-button-style0-24 .bds_qzone:hover{height:30px;width:30px;background-position:-91px -37px !important;}
+		.bdshare-button-style0-24 .bds_qzone{height:30px;width:30px;background-position:-138px -36px !important;}
+		.bdshare-button-style0-24 .bds_sqq{height:30px;width:30px;background-position:-174px 0 !important;}
+		.bdshare-button-style0-24 .bds_sqq:hover{height:30px;width:30px;background-position:-185px -37px !important;}
+	</style>
+  </head>
+	<body>
+	 <#include "common/alert.html">
+<!-- 		<div class="fixed_btn_wrap">
+			<div>
+				<#if match?? && match.regStatus == 'normal'>
+					<a class="fixed_btn_top" href="${ctx}/match/item/${(match.matchCode)!''}" target='_blank'></a>
+				</#if>
+				<#if match?? && match.regStatus == 'pause'>
+				   <a class="stop_match"></a>  
+				</#if>
+				<#if match?? && match.regStatus == 'end'>
+				   <a class="stop_end"></a>
+				</#if>
+				<#if match?? && match.regStatus == 'enroll_end'>
+				   <a class="stop_enroll_end"></a>  
+				</#if>
+			</div>
+			<div>
+				<a class="fixed_btn_buttom" href="${ctx}/match/type" target='_blank'></a>
+			</div>
+		</div> -->
+		<div class="main_content">
+
+		     				<div class="header nav_top">
+				    <div class="container clear">
+						   	  	<a  href="${ctx}/match/type"  class="pull-left back_index"></a>
+						  	   <div class="code_aside pull-right">
+					 	  	   	<p class="pull-left hidden-xs clear">
+					 	  	   	    <a class="qr_code hover_q" href="${ctx}/match/type">
+					 	  	   	    	参赛报名
+					 	  	   	    </a> 
+					 	  	   	    <a class="qr_code" id="Resultinquiry" href="javascript:window.location.href='${ctx}/achievement/match/init'">
+					 	  	   	    	成绩查询
+					 	  	   	    </a>
+					 	  	   	    
+					 	  	   	    <a class="qr_code" href="javascript:window.location.href='${ctx}/order/query'">
+					 	  	   	    	报名查询
+					 	  	   	    </a>
+
+					 	  	   	     <a class="app_link" href="javascript:window.location.href='${ctx}/user/upload/page'">
+					 	  	   	    	
+					 	  	   	    </a>
+					 	  	   	</p>
+					 	  	   	
+					 	  	 	<p class="login_btn pull-left hidden-xs clear">
+					 	  	   		<#if register??>
+					 	  	   			<span class="user_head">
+					 	  	   			<#if register.headimgUrl?default("")?trim?length gt 1>
+					 	  	   				<img style="cursor:pointer" onClick="javascript:window.location.href='${ctx}/order/query'" src="${register.headimgUrl}">
+					 	  	   			<#else>
+						 	  	   			<img  onClick="javascript:window.location.href='${ctx}/order/query'" src="${stx}/img/icon_user.png">				 	  	   			
+						 	  	   		</#if>
+					 	  	   		        <span class="hover">
+					 	  	   		              <a class="first" href="javascript:window.location.href='${ctx}/order/query'">个人中心</a>
+					 	  	   		              <a href="${ctx}/user/quit/login">退出登录</a>
+					 	  	   		        </span> 	  	   		   
+					 	  	   		   </span>
+					 	  	   		<#else>
+						 	  	   		 <a class="enroll_btn" href="${ctx}/user/login/index">登 录</a>
+					 	  	   		</#if>
+					 	  	   	</p>
+						  	   </div>
+						  </div>
+				</div>
+				
+		     <div class="banner details_banner" style="padding-top: 92px;">
+		     	<#if match?? && match.pcPanner?default("")?trim?length gt 1>
+		     		<img src="${(match.pcPanner)!''}">
+		     	<#else>
+		     		<img src="${stx}/img/banner_moren.jpg">
+		     	</#if>
+		     </div>
+		     
+		     <div class="match_column_content container clear">
+		         <div id="left_column_content" class="pull-left">		             
+		     	  <#if collections?? && (collections?size > 0)>
+	     	  	   <div class="swiper-father s_container">
+		     	  	   <div class="swiper-container swiper-container-m">
+							    <div class="swiper-wrapper">
+										<#list collections as collection>
+										<div class="swiper-slide prize_slide match_img">
+											<a href="${ctx}/match/detail/${(collection.matchCode)!''}"><img border=0 src="${(collection.poster)!''}"></a>
+										 </div>
+										</#list>
+								         <!-- <a><img border=0 src="http://zntyfdfs.efida.com.cn/group1/M00/00/01/rBADF1s021SAdeAsAAJAXx5Ypls62.jpeg"></a> -->
+							    </div>
+  	   
+	                    </div>
+	                    	<div class="swiper-button-prev swiper-button-prev1 swiper-button-black"></div>
+                             <div class="swiper-button-next swiper-button-next1 swiper-button-black"></div>	
+	                </div>
+		     	  	</#if>
+		         		         
+				     <div class="odd_line">
+				     	<div class="">
+				     	  <#if match?? && match.introduce??>
+					     	  <div class="match_column_top" style="margin-top:20px;">
+				     	  	   	  <p id="custom_title">
+								  	 <span class="pull_left">
+								  	 	<img src="${stx}/img/tit_saishi.png"><span class="name">赛事介绍</span>
+								  	 </span>
+								  </p>	
+					     	  	   <div class="content_introuds">
+					     	  	       ${(match.introduce)!''}
+					     	  	   </div>
+					     	  </div>
+				     	  </#if>	
+					     </div>
+				     </div>
+		     
+				     <div class="even_line">
+				     	<div class="">
+				     		<#if match?? && match.awards?? && (match.awards?size > 0) >
+				     	  <div class="match_column_top">
+			     	  	   	  <p id="custom_title">
+							  	 <span class="pull_left">
+							  	 	<img src="${stx}/img/tit_saishi.png"><span class="name">比赛奖项</span>
+							  	 </span>
+							  </p>	
+				     	  	   <div class="prize">
+					     	  	   <div class="swiper-father">
+						     	  	   <div class="swiper-container swiper-container-h">
+										    <div class="swiper-wrapper">
+													<#list match.awards as reward>
+														<div class="swiper-slide prize_slide">
+															<#if reward.awardType?? && reward.awardType=='first'>
+								      	                    	<p class="top_icon one_iocn pull-left  flex flex-align-center flex-pack-center">
+															<#elseif reward.awardType?? && reward.awardType=='second'>
+															  	<p class="top_icon two_iocn pull-left  flex flex-align-center flex-pack-center">
+															<#elseif reward.awardType?? && reward.awardType=='third'>
+															    <p class="top_icon three_iocn pull-left  flex flex-align-center flex-pack-center">
+															<#else>
+														        <p class="top_icon pull-left flex flex-align-center flex-pack-center">
+									                         </#if>
+													         	<img border=0 src="${(reward.prizeImg)!''}"></p>
+													         <div class="pull-left aside_text">	
+														      	  <p class="prize_name">${(reward.awardName)!''}</p>
+														      	  <p class="prize_name2">${(reward.prizeName)!''}</p>
+													      	  </div>
+														   </div>
+													 </#list>
+										    </div>
+      	   
+					                    </div>
+					                    	<div class="swiper-button-prev swiper-button-prev2 swiper-button-black"></div>
+			                                <div class="swiper-button-next swiper-button-next2 swiper-button-black"></div>	
+					                </div>
+				                </div>
+			                </div>
+			                </#if>
+				     	</div>
+				     </div>	
+				     <#if match?? && match.chapters??>
+				     	 <#assign i = 0>
+			             <#list  match.chapters as chapter>
+		             	 
+		                 	   
+	              	   	   <#assign i = i + 1>
+			      	   	   <#assign j = i % 2>
+				      	   	   
+		              	<#if chapter?? && chapter.type=='pic_desc'>		
+		              	  	 
+				      	   	   <#if j != 0>
+				      	   	       <div class="odd_line">
+				      	   	    <#else>   
+				      	   	       <div class="even_line">
+				      	   	   </#if>
+			              		   <div class="clear">
+				              			<div class="match_column_top" style="width:900px;margin:0 auto">
+										     <p id="custom_title">
+											  	 <span class="pull_left">
+											  	 	<img src="${stx}/img/tit_saishi.png"><span class="name">${(chapter.name)!''}</span>
+											  	 </span>
+											  </p>	
+				              				<#if chapter.compositeVos?? &&(chapter.compositeVos?size > 0)>
+							      	   			<#list chapter.compositeVos as cc>
+							                       <div class="equipment">
+							                       	   <span class="img"><img src="${(cc.attaUrl)!''}" /></span>
+							                       	   <div class="equipment_name">${(cc.name)!''}</div>
+							                       </div>
+								                 </#list>
+				              				</#if>  
+						                </div>
+							     	</div>
+							      </div>
+							      
+						</#if>
+						<#if chapter?? && chapter.type=='pic_explain'>
+						 	<#if j != 0>
+				      	   	       <div class="odd_line">
+				      	   	    <#else>   
+				      	   	       <div class="even_line">
+				      	   	</#if>
+		              		<div class=" clear">
+		              			<div class="match_column_top" style="width:900px;margin:0 auto">
+                                     <p id="custom_title">
+									  	 <span class="pull_left">
+									  	 	<img src="${stx}/img/tit_saishi.png"><span class="name">${(chapter.name)!''}</span>
+									  	 </span>
+									  </p>
+								    <#if chapter.compositeVos?? &&(chapter.compositeVos?size > 0)>
+					      	   			<#list chapter.compositeVos as evo>					                      
+					                       	     <p class="img"><img src="${(evo.attaUrl)!''}" /></p>
+					                       	     <p class="content_introuds">${(evo.name)!''}</p>
+						                 </#list>
+					                 </#if>  
+				                </div>
+					     	</div>
+					      </div>
+						</#if>
+						
+						 <#if chapter?? && chapter.type=='desc'>
+	              			<#if j != 0>
+			      	   	       <div class="odd_line">
+			      	   	    <#else>   
+			      	   	       <div class="even_line">
+				      	   	</#if>
+						     		<div class="">
+							     	  	<div class="match_column_top" style="width:900px;margin:0 auto">
+	                                     <p id="custom_title">
+										  	 <span class="pull_left">
+										  	 	<img src="${stx}/img/tit_saishi.png"><span class="name">${(chapter.name)!''}</span>
+										  	 </span>
+										  </p>
+							     	  	   <p class="content_introuds">${(chapter.content)!""}</p>
+							     	    </div>
+							        </div>
+						       </div>
+					  	</#if>
+						<#if  chapter?? && chapter.type=='video_desc'>
+							<#if j != 0>
+			      	   	       <div class="odd_line">
+			      	   	    <#else>   
+			      	   	       <div class="even_line">
+				      	   	</#if>
+							<div class="">
+		              			<div class="match_column_top" style="width:900px;margin:0 auto">
+                                     <p id="custom_title">
+									  	 <span class="pull_left">
+									  	 	<img src="${stx}/img/tit_saishi.png"><span class="name">${(chapter.name)!''}</span>
+									  	 </span>
+									  </p>
+								     <#if chapter.compositeVos?? &&(chapter.compositeVos?size > 0)>
+					      	   			 <#list chapter.compositeVos as composite>
+					                       <video src='${(composite.attaUrl)!''}'  class='showVideo' width='650' height="390" controls="controls"><ideo>
+					                       <P>${(composite.name)!''}</P>
+						                 </#list>
+								     </#if> 	
+				                </div>
+					     	</div>
+					      </div>
+						</#if>
+	            </#list>
+	 	  	</#if>
+	 	  	<#if match?? && match.chapters??>
+	 	  	  	<#if match.chapters?? &&(match.chapters?size > 0)>
+			             <#assign k = match.chapters?size>
+			              <#else>
+			              		<#assign k = 0> 		
+			              </#if>
+			              <#assign m = k % 2>
+			              <#if m != 0>
+			      	   	       <div class="even_line">
+			      	   	    <#else>   
+			      	   	       <div class="odd_line">
+				      	   	</#if>
+				            <#else> 
+				               	 <div class="even_line">
+						    </#if>          
+				
+							 	<div class="match_column_top clear">
+							     	   <!-- <p class="share_icon clear">
+							     	      <a><img src="${stx}/img/icon_kongjian_s.png"></a>
+							     	      <a><img src="${stx}/img/icon_pengyou_s.png"></a>
+							     	      <a><img src="${stx}/img/icon_qq_s.png"></a>
+							     	      <a><img src="${stx}/img/icon_weibo_s.png"></a>
+							     	      <a><img src="${stx}/img/icon_weixin_s.png"></a>
+							     	   </p> -->
+							     	  <div class="bdsharebuttonbox share_icon clear">
+							     	        <span class="pull-left s_p">分享至：</span>
+								            <p class="gb_resItms pull-left">  
+								                 <a title="分享到微信" href="#" class="bds_weixin" data-cmd="weixin" ></a> 								               
+								               <!--   <a title="分享到腾讯微博" href="#" class="bds_tqq" data-cmd="tqq" ></a>  -->
+								               	<!--  <a title="分享到QQ好友" href="#" class="bds_sqq" data-cmd="sqq" ></a> -->
+								               	 <a title="分享到QQ空间" href="#" class="bds_qzone" data-cmd="qzone" ></a>  
+								                 <a title="分享到新浪微博" href="#" class="bds_tsina" data-cmd="tsina" ></a>
+								               
+								                <!-- <li> <a title="分享到人人网" href="#" class="bds_renren" data-cmd="renren" ></a>人人网 </li>-->
+								            </p>  
+								      </div>
+								              
+							    </div>
+							 </div>
+		                    </div>
+		                    
+				          	  <div class="card_box pull-right" id="card_box">
+								  <div class="match_card">
+								  	  <div class="head_img"></div>
+								  	  <#if relevant??>
+									  	  <p class="match_time m1 common_ellipsis"><img src="${stx}/img/icon_jiezhi.png"><span>报名截止：${(relevant.regTime)!''}</span></p>
+									  	  <p class="match_time m1 common_ellipsis"><img src="${stx}/img/icon_time.png"><span>比赛时间：${(relevant.startTime)!''} 至  ${(relevant.endTime)!''}</span></p>
+									  	  <p class="match_time m1"><img src="${stx}/img/icon_add.png"> <span>比赛地址：${(relevant.address)!''}</span></p>
+									  	  <#if relevant.regStatus??>
+									  	      <#if relevant.regStatus=='normal'>
+									  	          <p class="bottom_btn"><a href="${ctx}/match/item/${(match.matchCode)!''}" class="bm_btn">开始报名</a></p>
+									  	      </#if>
+									  	      <#if relevant.regStatus=='pause'>
+									  	      		<p class="bottom_btn"><a class="bm_btn" style="display:none;">暂停报名</a></p>
+									  	      </#if>
+									  	      <#if relevant.regStatus=='end'>
+									  	      		<p class="bottom_btn"><a class="bm_btn" style="display:none;">比赛结束</a></p>
+									  	      </#if>
+									  	      <#if relevant.regStatus=='enroll_end'>
+									  	      		<p class="bottom_btn"><a class="bm_btn" style="display:none;">报名截止</a></p>
+									  	      </#if>
+									  	  <#else>
+										  	  <p class="bottom_btn"><a href="${ctx}/match/item/${(match.matchCode)!''}" class="bm_btn">开始报名</a></p>
+									  	  </#if>
+								  	  </#if>
+								  </div>
+								  
+								  	  <#if correlations?? &&(correlations?size > 0)>
+								  		<div class="match_card_lie">
+									  	  <div class="top_title">
+									  	  	  <img src="${stx}/img/tit_right.png" />
+									  	  	  <span>${(gameName)!''}</span>
+									  	  </div>
+					      	   			  <#list correlations as correlation>
+										  	  <div class="content_list">
+										  	  	  <p class="w1"><img src="${stx}/img/sq.png"><span class="common_ellipsis">${(correlation.matchName)!''}</span>
+										  	  	   <#if correlation.canApply>
+										  	  	   <a href="${ctx}/match/item/${(correlation.matchCode)!''}">报名</a>
+										  	  	  </#if>
+										  	  	  
+										  	  	  </p>
+										  	  	  <p class="w2"><img src="${stx}/img/icon_time.png">比赛时间：${(correlation.startTime)!''} 至  ${(correlation.endTime)!''} </p>
+										  	  </div>
+					      	   			  </#list>
+								  		</div>
+					      	   		   </#if>	 
+							</div>
+	                   </div>
+	                 </div>
+		          
+
+                 <#include "common/footer.html">
+		
+		</div>
+	</body>
+	<script type="text/javascript" src="${stx}/js/jquery-2.1.1.min.js"></script>
+	<script src="${stx}/js/swiper-4.3.3.min.js"></script>
+	<script type="text/javascript"> 
+	
+ 	var mySwiper = new Swiper('.swiper-container-m',{
+		slidesPerView : 5,
+		spaceBetween : 30,
+		  navigation: {
+			    nextEl: '.swiper-button-next1',
+			    prevEl: '.swiper-button-prev1',
+			  },
+	/*     observer:true, */
+		}) 
+ 	
+ 	var mySwiper = new Swiper('.swiper-container-h',{
+		slidesPerView : 3,
+		spaceBetween : 20,
+		  navigation: {
+			    nextEl: '.swiper-button-next2',
+			    prevEl: '.swiper-button-prev2',
+			  },
+	/*     observer:true, */
+		}) 
+	
+		//全局变量，动态的文章ID  
+		var ShareURL = "";  
+		//绑定所有分享按钮所在A标签的鼠标移入事件，从而获取动态ID  
+		$(function () {  
+		    $(".bdsharebuttonbox a").mouseover(function () {  
+		        ShareURL = $(this).attr("data-url");  
+		    });  
+		});  
+		  
+		/*  
+		* 动态设置百度分享URL的函数,具体参数  
+		* cmd为分享目标id,此id指的是插件中分析按钮的ID  
+		*，我们自己的文章ID要通过全局变量获取  
+		* config为当前设置，返回值为更新后的设置。  
+		*/  
+		function SetShareUrl(cmd, config) {  
+		    if (ShareURL) {  
+		        config.bdUrl = ShareURL;  
+		    }  
+		    return config;  
+		}  
+		
+		 
+		  
+		//插件的配置部分，注意要记得设置onBeforeClick事件，主要用于获取动态的文章ID  
+		window._bd_share_config = {  
+		    "common": {  
+		        onBeforeClick: SetShareUrl, "bdSnsKey": {}, "bdText": ""  
+		        , "bdMini": "2", "bdMiniList": false, "bdPic": "http://assets.jq22.com/plugin/2017-05-24-18-14-49.png", "bdStyle": "0", "bdSize": "24"  
+		    }, "share": {}  
+		};  
+		//插件的JS加载部分  
+		with (document) 0[(getElementsByTagName('head')[0] || body)  
+		    .appendChild(createElement('script'))  
+		    .src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='  
+		    + ~(-new Date() / 36e5)];  
+		</script> 
+</html>

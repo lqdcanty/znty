@@ -1,0 +1,497 @@
+html {
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    font-family:'Microsoft YaHei';
+    font-size: 0.14rem;
+    outline: 0;
+    -webkit-text-size-adjust:none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    overflow-x: auto;
+}
+
+body {
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+    font-family:'Microsoft YaHei'!important ;
+    width: 100%;
+    -webkit-user-select: none;
+    position: relative;
+    background-color:#EFEFF4;
+    min-height: 100%;
+    font-size: 0.14rem;
+    line-height: normal;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+ul li {list-style: none;}
+a {text-decoration: none;color: #333;}
+ul ,p {margin: 0;padding: 0;}
+p{margin-bottom: 0 !important;}
+input[type="text"] {
+    -webkit-appearance: none;
+}
+img {
+    border:0;
+}
+textarea{
+    -webkit-appearance: none;
+}
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-weight: normal;
+}
+input[type="text"] {
+    -webkit-appearance: none;
+}
+input{
+    outline: none;
+}
+.clearfix::after{
+    content:".";/*加一段内容*/
+    display:block;/*让生成的元素以块级元素显示，占满剩余空间*/
+    height:0;/*避免生成的内容破坏原有布局高度*/
+    clear:both;/*清除浮动*/
+    visibility:hidden;/*让生成的内容不可见*/
+}
+
+.h5_header{
+    display:flex;
+    align-items:center;
+    padding-top: 0.4rem;
+    justify-content:center;
+    flex-direction:row;
+    flex-wrap:wrap;
+    height: 0.88rem;
+    background: #FF8F00;
+    color: #FFFFFF;
+    text-align: left;
+    position: relative;
+    width: 100%;
+    -webkit-transform: translateZ(0);
+    box-sizing: content-box;
+
+}
+.h5_header::before{
+    content: '';
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: #ECECEC;
+}
+.h5_header img{
+    height: 0.35rem;
+    width: 0.23rem;
+    padding-right: 0.04rem;
+    margin-left: 0.3rem;
+}
+.h5_header .back{
+    font-size: 0.32rem;
+    margin-left: 0.1rem;
+    height: 0.32rem;
+    line-height: 0.32rem;
+}
+.h5_header .title{
+    font-size: 0.32rem;
+    text-align: center;
+    margin-left: -1.1rem;
+    color: #333333;
+    flex:2;
+}
+.gd_content{
+    position: absolute;
+    top: 0rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0 auto;
+    background: #F9F9F9;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.gd_content_box{
+    width: 100%;
+    height: auto;
+}
+.competition_content_box{
+    width: 100%;
+    height: auto;
+    margin-top: 0.3rem;
+    background: white;
+}
+.competition_content_box .gd_content_head{
+    width: 100%;
+    font-size: 0.28rem;
+    color: #333333;
+    height: 0.89rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-left: 0.3rem;
+    position: relative;
+}
+.gd_content_inner{
+    padding: 0 0.3rem 0.5rem;
+    font-family: MicrosoftYaHei;
+    font-size: 0.26rem;
+    color: #666666;
+    text-align: left;
+    line-height:0.46rem;
+}
+.gd_content_inner img{
+    width: 100%;
+    padding: 0.1rem 0;
+}
+.gd_content .entyr_from tr:last-of-type{
+    border-bottom: none !important;
+}
+
+.gd_content_head::before{
+    content: '';
+    display: inline-block;
+    width: 0.06rem;
+    height: 0.26rem;
+    background: #29BA66;
+    position: absolute;
+    left: 0;
+    top: 0.315rem;
+}
+
+.gd_content_btn{
+    width: 6.9rem;
+    height: 1rem;
+    line-height: 1rem;
+    text-align: center;
+    margin: 0 auto;
+    background: #29BA66;
+    border-radius: 100px;
+    font-family: MicrosoftYaHei;
+    font-size: 0.3rem;
+    color: #FFFFFF;
+    letter-spacing: 2px;
+}
+.competition_content_box:last-of-type{
+    padding: 0.2rem 0;
+}
+
+.gd_ul_match .choosed{
+    border-color: #29BA66;
+    position: relative;
+}
+.gd_ul_match .choosed span{
+    color: #29BA66;
+}
+.gd_ul_match .choosed::before{
+    content: '';
+    background: url("../img/icon_xx_zu.png") no-repeat 0 0;
+    background-size: 100%;
+    height: 0.4rem;
+    width: 0.4rem;
+    position: absolute;
+    left: 0.3rem;
+    top: 0.26rem;
+}
+
+.gd_form_box{
+    width: 100%;
+    height: auto;
+}
+.gd_form_list li{
+    font-size: 0.28rem;
+    color: #333333;
+    height: 0.89rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-left: 0.3rem;
+    border-bottom: 1px #EFEFF4 solid;
+}
+.gd_form_list li p {
+    height: 0.4rem;
+    width: 1.12rem;
+    flex: 1;
+}
+.gd_form_list li div {
+    height: 0.4rem;
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: -1.5rem;
+    position: relative;
+}
+.gd_form_list li div .text {
+    height: 100%;
+    width: 100%;
+    border: none;
+    margin-right: 0.3rem;
+    font-size: 0.28rem;
+}
+.gd_form_list li div span {
+    display: block;
+    width: 50%;
+    height: 0.4rem;
+    position: relative;
+}
+.gd_form_list li div span .radio {
+    height: 0.36rem;
+    width: 0.36rem;
+    opacity: 0;
+    display: none;
+}
+.gd_form_list li div span .radio:checked+label::after {
+    position: absolute;
+    content: "";
+    width: 0.1rem;
+    height: 0.2rem;
+    top: 0.02rem;
+    left: 0.10rem;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
+.gd_form_list li div span label {
+    position: absolute;
+    height: 0.34rem;
+    left: 0;
+    top: 0;
+    width: 0.34rem;
+    border-radius: 50%;
+    border: 2px solid #29BA66;
+}
+.gd_form_list li div span .radio:checked+label {
+    background-color: #29BA66;
+    border: 1px solid #29BA66;
+}
+.form_read{
+    height: 0.89rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: #F9F9F9;
+    font-size: 0.24rem;
+}
+.form_read img{
+    width: 0.32rem;
+    height: 0.32rem;
+    margin-left: 0.3rem;
+    margin-right: 0.1rem;
+}
+.form_read p{
+    height: 0.32rem;
+    line-height: 0.32rem;
+    margin-right: 0.1rem;
+}
+.form_read span{
+    height: 0.32rem;
+    line-height: 0.32rem;
+    color: #29BA66;
+}
+.gd_submit_area{
+    width: 100%;
+    background: #ffffff;
+    height: 1.6rem;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+}
+.gd_submit{
+    width: 6.9rem;
+    height: 1rem;
+    line-height: 1rem;
+    font-size: 0.3rem;
+    text-align: center;
+    color: white;
+    margin: 0.3rem auto;
+    background: #29BA66;
+    border-radius: 100px;
+}
+.gd_success_card{
+    width: 6.6rem;
+    height: auto;
+    margin: 0.4rem auto;
+    box-shadow: 0 0 30px 0 rgba(0,0,0,0.10);
+    border-radius: 10px;
+}
+.gd_success_card_top{
+    width: 100%;
+    height: 2.2rem;
+    background: url("../img/img_baoming.png") no-repeat;
+    background-position: -0.3rem -0.3rem;
+    background-size: 7.18rem;
+}
+
+.gd_top{
+    margin-top: 0.42rem;
+    text-align: center;
+    font-family: MicrosoftYaHei;
+    font-size: 0.26rem;
+    color: #7A7A7A;
+    letter-spacing: 0.02rem;
+}
+.gd_top span{
+    font-size: 0.26rem;
+    line-height: 0.26rem;
+    height: 0.26rem;
+    display: inline-block;
+}
+.gd_top span img{
+    width: 0.17rem;
+    height: 0.17rem;
+    margin-bottom: 0.03rem;
+}
+.gd_success_card_bot{
+    background: white;
+    padding-bottom: 0.2rem;
+}
+.gd_success_card_bot ul li{
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    width: 100%;
+    clear: both;
+    font-size: 0.26rem;
+    padding-bottom: 0.25rem;
+}
+.gd_success_card_bot ul li:first-of-type{
+    padding-top: 0.2rem;
+}
+.gd_success_card_bot ul li p:first-of-type{
+    margin-right: 0.1rem;
+    color: #999999;
+    width: 40%;
+    float: left;
+    text-align: right;
+}
+.gd_success_card_bot ul li p:last-of-type{
+    margin-left: 0.1rem;
+    color: #333333;
+    font-weight: 600;
+    width: 45%;
+    float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.gd_buyMedal{
+    width: 100%;
+    height: 2.88rem;
+    margin: 0.3rem auto;
+    background: white;
+}
+.gd_buyMedal_head{
+    height: 0.98rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.gd_buy_tips{
+    font-family: MicrosoftYaHei;
+    font-size: 0.28rem;
+    color: #333333;
+    text-align: left;
+    /*line-height: 36px;*/
+    margin-left: 0.3rem;
+    position: relative;
+}
+.gd_buy_tips::before{
+    content: '';
+    width: 0.06rem;
+    height: 0.26rem;
+    background: #29BA66;
+    position: absolute;
+    left: -0.3rem;
+    top: 3px;
+}
+.gd_buy_price{
+    font-family: MicrosoftYaHei;
+    font-size: 0.28rem;
+    color: #29BA66;
+    text-align: left;
+    line-height: 0.36rem;
+    margin-left: 2.8rem;
+}
+.gd_buy_btn{
+    background: #29BA66;
+    border-radius: 100px;
+    width: 1.72rem;
+    height: 0.58rem;
+    line-height: 0.58rem;
+    text-align: center;
+    font-size: 0.28rem;
+    color: white;
+    margin-left: 0.3rem;
+}
+.gd_content .star{
+    display: none;
+}
+.gd_content .entyr_from tr td:first-child{
+    padding-left: 0.46rem;
+}
+
+.gd_buyMedal_body{
+    height: 1.9rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+}
+.gd_content .sex span{
+    background-image: url("../img/icon_xb_weixuan.png");
+}
+.gd_content .sex span.active {
+    background: url(../img/icon_xb_xuanzh.png) no-repeat;
+    background-size: contain;
+}
+.gd_content .yzm,.gd_content .f_c{
+    color: #29BA66 !important;
+}
+.gd_content .common_layout,.gd_content .check_read{
+    margin-top: 0;
+}
+
+
+.gd_buyMedal_body img{
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: 0.3rem;
+}
+.gd_buyMedal_body p{
+    font-family: MicrosoftYaHei-Bold;
+    font-size: 0.28rem;
+    color: #333333;
+    text-align: left;
+    line-height: 0.36rem;
+    font-weight: 600;
+    margin-left: 0.2rem;
+}
+.field-tooltipWrap {
+    width: 100%;
+    height: 0.75rem;
+    position: fixed;
+    top:0;
+    left: 0;
+    opacity: 0.8;
+    background: #E50113;
+    font-size: 0.24rem;
+    color: #FFFFFF;
+    padding-left: 0.3rem;
+    line-height: 0.75rem;
+    z-index: 999;
+}

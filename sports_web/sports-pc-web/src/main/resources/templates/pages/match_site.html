@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>选择赛场</title>
+
+    <!-- Custom styles for this template -->
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+	<link href="${stx}/css/pagination.css" rel="stylesheet">
+	<style>
+		[v-cloak] {
+    display: none ;
+}
+	</style>
+  </head>
+	<body class="sign_backimg">
+		 <#include "common/alert.html">
+         <#include "common/nav.html">
+		<div class="signUp_from" id="match_content"  style="margin-top:0;min-height: 650px;"  v-cloak >
+			 <p class="title">
+ 	  	   	    <span><img src="${stx}/img/tit_l.png"></span>&nbsp;&nbsp;选择赛场&nbsp;&nbsp;<span><img src="${stx}/img/tit_r.png"></span>
+ 	  	   	    <!-- 三级联动选择地区  -->
+   	   	    	<div class="wrap clear">
+			        <div class="nice-select clear" name="nice-select" @click="isProvince = !isProvince">
+			            <input type="text" :value="checkProvince"  placeholder="请选择省份" readonly>
+			            <ul v-show="isProvince">
+			            	<li @click.stop="thisProvince('全部')" :class="{'active': checkProvince == provinces}">全部</li>
+			                <li @click.stop="thisProvince(provinces)" v-for="provinces in provinces.list" data-value="1" :class="{'active': checkProvince == provinces}">[[provinces]]</li>
+			            </ul>
+			        </div>
+			
+			        <div class="nice-select" name="nice-select" @click="selCity">
+			            <input type="text" :value="checkCity" placeholder="请选择城市" readonly>
+			            <ul v-show="isCity">
+			                <li @click.stop="thiscity(citys)" v-for="citys in city.list" data-value="1" :class="{'active': checkProvince == provinces}">[[citys]]</li>
+			            </ul>
+			        </div>
+			
+			        <div class="nice-select" name="nice-select" @click="selArea">
+			            <input type="text" :value="checkArea" readonly placeholder="请选择区县">
+			            <ul v-show="isArea">
+			                <li @click.stop="thisArea(area)"  v-for="area in areas.list"  data-value="1" :class="{'active': checkProvince == provinces}">[[area]]</li>
+			            </ul>
+			        </div>
+		      </div> 
+ 	  	    </p>	  	     
+ 	  	    
+ 	  	    <div class="court_list container">
+ 	  	    	 <table class="choose_court" cellpadding="0" cellspacing="0">
+ 	  	    	 	<tr>
+ 	  	    	 		<th>比赛场地</th>
+ 	  	    	 		<th>赛场地址</th>
+ 	  	    	 		<th>比赛时间（开始-结束）</th>
+ 	  	    	 	</tr>
+ 	  	    	 </table>				  
+ 	  	    </div>
+ 	  	    
+ 	  	    	<!--------------选择赛场------------->
+				  <div class="match_address">
+				  	 <ul>
+				  	
+					  	<li @click="chooseMatch(index, matchSite)"  v-for="(matchSite,index) in MatchListData" :key="matchSite" :class="{'active':checkGroupId == matchSite.siteCode && checkEventists.length}">
+				  	   		<span class="local">[[matchSite.fieldName]]</span>
+				  	   		<span class="local">[[matchSite.fieldAddress]]</span>
+				  	   		<span class="local">[[matchSite.startTime]] 至 [[matchSite.endTime]]</span>	
+				  	   		<!-- [[matchSite.isShow]] -->
+				  	   		 <!--==========more=============-->
+				  	   		
+							  	 <div class="more_choose clear local_lie"  v-for="group in matchSite.groups" v-show="matchSite.isShow && matchSite.groups.length" transition="fade">
+							  	 	 <div class="order">  
+									   <span style="white-space:pre;">  </span><span class="line"></span>  
+									   <span style="white-space:pre;">  </span><span class="txt">[[group.groupName]]</span>  
+									   <span style="white-space:pre;">  </span><span class="line"></span>  
+								     </div> 
+			                         <div class="pull-left pull_width" v-for="event in group.events">
+									  	   <div class="left pull-left choose_map choose clear" 
+									  	   		@click.stop="cardClick(event,matchSite.siteCode)"
+									  	   		:class="{'no_choose': event.endTime < new Date().getTime(), 'choose_after': event.active}">
+									  	   	    <div class="msy pull-left clear">
+									  	   	    	 <p><img src="${stx}/img/icon_mingcheng.png">[[event.itemName]]</p>
+							     	  	   	     	<p class="ellipsis_clamp2">
+							     	  	   	     		<img src="${stx}/img/icon_shijian.png" />
+							     	  	   	     		<span>比赛时间：</span>[[event.startTimeStr]]至 [[event.endTimeStr]]
+							     	  	   	     	</p>
+							     	  	   	        <p>
+							     	  	   	        	<img src="${stx}/img/icon_minge.png" />
+							     	  	   	        	剩余名额：[[event.surplusQuota]]
+							     	  	   	        </p>
+									  	   	    </div>
+									  	   	    <div class="money pull-left">
+									  	   	        <p :class="event.endTime < new Date().getTime() ? 'g_match2' : 'g_match' ">[[event.itemTypeCn]]</p>
+									  	   	    	<span>[[event.entryFeeStr]]</span>元<br>
+													报名费
+									  	   	    </div>
+									  	   </div>
+								  	</div>					    				    
+							  	 </div> 
+						  
+						  	 <!--end-->
+							<p class="xiala"><img src="${stx}/img/icon_xla_1.png"></p>
+					  	 </li>
+				  	 	
+				  	 </ul>
+				  </div>
+				  
+				    <!-- 分页  -->
+	 	  	        <div v-if="totalRow > 5">
+	 	  	    	     <div id="pagination" class="m-style"></div>
+	 	  	    	</div>
+	 	  	    	
+	 	  	    	<div v-if="!MatchListData.length" class="no_data">
+	 	  	    	 	<img src="${stx}/img/img_dsj_weikong.png">
+	 	  	    	    <p>暂无数据</p>
+	 	  	    	</div>	
+	 	  	    	
+				  <div class="container">
+				  	<p class="pay_money">已选择<span id="number">[[checkEventists.length]]</span>个项目     支付总额：<span id="total">[[allMoney]]</span>元</p>
+				  	<p id="cMatch"></p>
+				  	<p class="common_btn" style="cursor:pointer"><a id="saveSite" @click="saveSite">下一步</a></p>
+				  </div>
+		</div>
+		 <#include "common/footer.html">
+	</body>
+	<script type="text/javascript" src="${stx}/js/jquery-2.1.1.min.js"></script>
+    <script src="${stx}/js/vue.js"></script>
+	<script src="${stx}/js/config.js"></script>
+	<script src="${stx}/js/jquery.pagination.js"></script>
+	<script>
+	Array.prototype.indexOf = function(item) {
+		for (var i = 0; i < this.length; i++) {
+			if (this[i].itemCode == item.itemCode) return i;
+		}
+		return -1;
+	};
+	Array.prototype.remove = function(val) {
+		var index = this.indexOf(val);
+			if (index > -1) {
+			this.splice(index, 1);
+		}
+	};
+	</script>
+	<script>
+	
+	     var vm = null;     //全局声明vue对象
+		
+/* 	    var fieldArea ={
+	    		 isChoose:false,
+	    		 id:'filed-fieldCode',
+	     	     haveGroup:true
+	     };
+	     
+	    var groupData ={
+	    		
+	    		isChoose: false,
+	    		id:"group-groupCode"
+	    };
+	    
+	    var itemDate ={
+	    	isChoose: false,
+	    	//选中团体时修改  vueData.permitMultiChoose=false
+	        isTuanti:false,
+	        id:"item-eventCode"
+	    }; */
+	    
+		var vueData = {	
+	    	//比赛项是否允许多选	 
+	        permitMultiChoose:false,
+		 	MatchListData: [], 
+		 	
+		 	parameter:'',
+		 	address:'',
+		 	provinces:[],
+		 	city:[],
+		 	areas:[],
+		 	isCity:false,
+		 	isArea:false,
+		 	isProvince:false,
+			pageCount:0,
+			allMoney: [],
+			activeIndex:null,//当前选中的赛区
+			checkAreaType: '',
+			checkAddress: '',
+			totalMoney:0,
+			totalNum:0,
+			checkProvince: '',   //选中的省
+			checkCity: '',   //选中的市
+			checkArea: '' ,  //选中的区
+			groupLimit:'',
+			
+			totalRow: 0,
+			
+			checkEventists: [],
+			checkMoney: [],
+			checkGroupId: '',
+			checkType:"",   //判断选中的类型 
+			allMoney: 0
+		};
+	     
+		/**
+		 * 页面加载完毕 $.ready
+		 */	     
+       $(function(){  	   
+    	    vueInit();
+    	    Resultinquiry();
+       });
+    
+
+
+  	  /**
+  	   * vue初始化，dom操作
+  	   */     
+       function vueInit(){
+	   		 vm = new Vue({
+				 delimiters: ['[[', ']]'],
+				 el:"#match_content",
+				 data:vueData ,
+				 methods:{
+					 chooseMatch:chooseMatch,
+					 cardClick: cardClick, 
+					 province:province,
+					 thisProvince:thisProvince,
+					 thiscity:thiscity,
+					 thisArea:thisArea,
+					 selCity:selCity,
+					 selArea:selArea,
+					 getDatalists:getDatalists,
+					 saveSite:saveSite,
+					 getAllMoney: getAllMoney,
+					 isInArray:isInArray,
+				 },
+			 });
+  		 
+	  	   var str = window.location.href;
+		   mcode = str.match(/item(\S*)/)[1].substr(1);
+		   vueData.parameter = mcode; 	
+		   
+		   getCity('province');
+		   getDatalists();
+       };
+  	  
+       
+       
+       //获取省、市、区下拉框填充数据方法
+       function getCity(areaType, province) {
+    	   var params = {matchCode: vueData.parameter, areaType: areaType};
+    	   if(areaType == 'city') {
+    		   params.parentArea = province
+    	   }else if(areaType == 'area') {
+    		   params.parentArea = province;
+    	   };
+    	   
+    	   getResultMethods('${ctx}/match/area/list', params, function(d) {
+    		   console.log(d);
+    		   if(areaType == 'province') {
+    			   vueData.provinces = d;
+    		   }else if(areaType == 'city') {
+    			   vueData.city = d;
+    		   }else if(areaType == 'area') {
+    			   vueData.areas = d;
+    		   }
+    		   
+    		 //三个下拉框隐藏
+    		   vueData.isCity = false;
+    		   vueData.isArea = false;
+    		   vueData.isProvince = false;
+    	   });
+       };
+       
+       
+       //获取列表数据
+    	function getDatalists(currPage){
+    	   
+    		currPage = !currPage ? 1 : currPage;
+    		
+    		var params = {matchCode: vueData.parameter, areaType: vueData.checkAreaType, areaName: vueData.checkAddress, currentPage: currPage, pageSize: 5};
+    		
+    		console.log(params)
+    		
+    		getResultMethods('${ctx}/match/sites/pages', params, function(d) {
+    			console.log(d);
+    			
+    			d.sites.forEach(function(item){
+    				item.isShow = false;
+    				item.groups = [];
+    			});
+    			
+    			vueData.MatchListData = d.sites;
+    			vueData.totalRow = d.totalRow;
+    			
+    			setTimeout(function(){
+ 					 $('#pagination').pagination({
+ 				    	    jump: false,
+ 				    	    totalData: d.totalRow,
+ 				    	  	showData: d.pageSize,
+ 			                pageCount: d.totalPage,
+ 				    	    current: d.currentPage,
+ 				    	    coping: true,
+ 				    	    prevContent: '上页',
+ 				    	    nextContent: '下页',
+ 				    	    callback: function (api) {
+ 				    	        getDatalists(api.getCurrent());
+ 				    	    }
+ 					 });
+ 				 }, 100)
+    		});
+    		
+  	 }
+       
+  	  
+  	  // 赛事栏点击事件
+  	  function chooseMatch(index, matchSite){
+                  
+  		  if(!matchSite.groups.length) {
+  			getResultMethods('${ctx}/match/events', {siteCode: matchSite.siteCode}, function(d){
+  	  		/*     console.log(d) */
+  
+  	 		    if(d.groups.length==0){
+  	 	      		$("#animationTipBox").show();
+  	 	      		$("#animationTipBox .dec_txt").text("该赛场暂无比赛项")
+  	 	      		 setTimeout(function(){
+  	 	      			$("#animationTipBox").css("display","none");
+  	 	      			},3000)
+  	 		    	return
+  	 		    }
+  	  		 	vueData.MatchListData.forEach(function(item) {
+  	  				if(item.siteCode == matchSite.siteCode){
+  	  					d.groups.forEach(function(child){
+  	  						child.events.forEach(function(childitem) {
+  	  							childitem.active = false;
+  	  							childitem.only_id = matchSite.siteCode;
+  	  						})
+  	  					});
+  	  					item.groups = d.groups; 
+  	  				} 	  				
+  	  			 })    
+  	 		 }); 
+  		  }
+
+
+  		     
+  		  matchSite.isShow = !matchSite.isShow; 
+  	  };
+  	  
+  	  
+  	  function isInArray(item){
+		  var status=false;
+  		  vueData.checkEventists.forEach(function(d) {
+  			  console.log(item.itemCode)
+  			    console.log(d.itemCode)
+				if( d.itemCode == item.itemCode){
+					status=true;
+				}
+			})
+			return status;
+  	  }
+  	  
+  	  //card点击
+  	   function cardClick(item,code) {
+  		  console.log(item.itemType)
+  		  if(item.endTime < new Date().getTime()) return 0;
+  	/* 	 debugger;  */
+  		  var that = this;		  
+   
+  		   if(item.itemType!=vueData.checkType){  //当前选中比赛类型发生变化
+	  			that.checkEventists.splice(0, that.checkEventists.length);       //清空选中数组集合checkEventists
+	  			that.checkType =  item.itemType       //当前选中类型=点击比赛类型
+	  		  	this.MatchListData.forEach(function(d) {
+	  				 d.groups.forEach(function(k) {
+	  					k.events.forEach(function(f) {
+	  						f.active = false;
+	  					});
+	  				 });
+	  			  });
+	  			item.active=true;
+	  			that.checkEventists.push(item);
+  		  }else{  //当前选中比赛类型没有发生变化
+  			   if(item.itemType == 'personal'){ //个人
+  				   if(code!=vueData.checkGroupId){     //判断赛场是否改变--改变
+  					  this.MatchListData.forEach(function(d) {
+  		  				 d.groups.forEach(function(k) {
+  		  					k.events.forEach(function(f) {
+  		  						f.active = false;
+  		  					});
+  		  				 });
+  	  	  			  });
+ 					  that.checkEventists=[]; 
+ 					  
+  				   }
+  				   var isInt=isInArray(item);
+				   if(isInt){ //判断当前选中的比赛是否存在----存在
+					    item.active=false;
+					 	vueData.checkEventists.remove(item);
+				   }else{//不存在
+					   item.active=true;
+					   that.checkEventists.push(item);//checkEventists中添加当前选中的
+				   }
+  			   }else{ //团体--单选
+  				  this.MatchListData.forEach(function(d) {
+	  				 d.groups.forEach(function(k) {
+	  					k.events.forEach(function(f) {
+	  						f.active = false;
+	  					});
+	  				 });
+  	  			  });
+  				  item.active=true;
+  				  that.checkEventists=[];	//清空选中数组集合checkEventists
+  				  console.log(that.checkEventists)
+  				  that.checkEventists.push(item);		//checkEventists放入团体赛
+  			   }
+  		  } 
+  		 this.checkGroupId = item.only_id;
+  		   console.log( vueData.checkEventists)
+  		   vueData.groupLimit = vueData.checkEventists[0].groupLimit;
+ 		 this.getAllMoney();
+
+  		  /* item.active = !item.active;
+  		 
+  		  if(item.only_id != this.checkGroupId) {
+  			  this.checkEventists.splice(0, this.checkEventists.length);
+  			  
+  			  this.MatchListData.forEach(function(d) {
+  				  if(vueData.checkGroupId === d.siteCode) {
+  					  d.groups.forEach(function(k) {
+  						  k.events.forEach(function(f) {
+  							  f.active = false;
+  						  });
+  					  });
+  				  }
+  			  });
+  		  }
+  		  
+  		  
+  		
+  		  if(item.active) {
+  			  this.checkEventists.push(item);
+  			  this.getAllMoney();
+  		  }else {
+	  			this.checkEventists.forEach(function(child, index) {
+	  				if(child.itemCode == item.itemCode) vueData.checkEventists.splice(index, 1);
+	  			});
+  				this.getAllMoney();
+  		  } */
+
+  	  };  
+  	  
+  	  //计算总金额
+  	  function getAllMoney() {
+  		  var money = 0;
+  		  this.checkEventists.forEach(function(d) {
+  			 money += d.entryFee;
+		  });
+  		  this.allMoney = money / 100;
+  	  };
+  	  
+  	  
+  	  
+  	  //获取省的数据 
+  	  
+  	  function province(){			
+ 		 getResultMethods('${ctx}/match/area/list', {matchCode: vueData.parameter, areaType: "province"}, function(d){
+ 			vueData.provinces = d
+			console.log(d)
+		 });
+  		 vueData.isProvince = !vueData.isProvince
+  	  }
+  	  
+  	  // 选择省获取市的数据 
+  	  function thisProvince(province){
+  		 
+  		 if(province == '全部') {
+  			vueData.checkAreaType = '';   //列表请求数据参数赋值
+  	  		vueData.checkAddress = '';
+  			
+  			vueData.checkProvince = province;    //选择全部, 选中省、市、区为空（方便input默认显示）
+  			vueData.checkCity = '';
+  			vueData.checkArea = '';   
+  			
+  			vueData.city = [];     //选择全部，市、区下拉框数据清空
+  			vueData.areas = [];   
+  	  		getDatalists(); 
+  	  		
+  	  		vueData.isCity = false;    //三个下拉框隐藏
+		   	vueData.isArea = false;
+		   	vueData.isProvince = false;
+  		 }else {
+  	  		getCity('city', province);  //获取市下拉数据
+  	  		vueData.checkAreaType = 'province';   //列表请求数据参数赋值
+  	  		vueData.checkAddress = province;
+  	  		vueData.checkProvince = province;
+  	  		
+  			vueData.checkCity = '';
+  			vueData.checkArea = '';  
+  	  		getDatalists();  
+  		 }
+  	  }
+  	  
+  	  // 选择市获取区的数据   
+  	  function thiscity(city){
+  		  
+  		getCity('area', city);   //获取区下拉
+  		vueData.checkAreaType = 'city';
+  		vueData.checkAddress = city;
+  		vueData.checkCity = city;
+  		getDatalists();
+  	  }
+  	  
+  	  // 获取区的数据 
+  	  function thisArea(area){
+  		vueData.checkAreaType = 'area';
+  		vueData.checkAddress = area;
+  		vueData.checkArea = area;
+	  		vueData.isCity = false;    //三个下拉框隐藏
+		   	vueData.isArea = false;
+		   	vueData.isProvince = false;
+  		getDatalists();
+  	  }
+
+  	  
+  	  // 判断是否省市未点击 
+  	  
+	function selCity(){
+   		if(!this.checkProvince || this.checkProvince == '全部') {
+      		$("#animationTipBox").show();
+      		$("#animationTipBox .dec_txt").text("请选择省份")
+      		 setTimeout(function(){
+      			$("#animationTipBox").css("display","none");
+      			},3000)
+      		this.isCity = false;
+      		
+      		vueData.isCity = false;    
+		   	vueData.isArea = false;
+		   	vueData.isProvince = false;
+    	}else {
+    		this.isCity = !this.isCity
+    	}
+	      
+     };
+                      
+     function selArea(){
+   		if(!this.checkProvince || this.checkProvince == '全部' || !this.checkCity) {
+       		$("#animationTipBox").show();
+       		$("#animationTipBox .dec_txt").text("请选择省份和城市")
+       		 setTimeout(function(){
+       			$("#animationTipBox").css("display","none");
+       			},3000)
+       			this.isCity = false;
+       			this.isArea = false;
+       			
+       			vueData.isCity = false;    
+    		   	vueData.isArea = false;
+    		   	vueData.isProvince = false;
+     	}else {
+     		this.isArea=!this.isArea
+     	}
+   };
+   
+   
+   
+   //下一步 提交数据 
+   
+    function saveSite(){
+  /*   	    vueData.siteCodes = siteCode
+			vueData.eventdCodes = item.itemCode  */
+		if(!this.checkEventists.length) {
+			$("#animationTipBox").show();
+       		$("#animationTipBox .dec_txt").text("请选择赛场 ")
+       		setTimeout(function(){
+       			$("#animationTipBox").css("display","none");
+       		},3000);
+       		return 0;
+		}
+  
+		var params = {
+			siteCode: this.checkGroupId,
+			eventdCodes: this.checkEventists.map(function(d) {return d.itemCode}),
+			matchCode: this.parameter
+  		};
+		
+		console.log(params);
+		
+		postResultMethods("${ctx}/order/apply/init?" + createTimestamp(), JSON.stringify([params]), function(d) {
+			
+			if(vueData.checkType == 'personal'){
+				window.location.href = "${ctx}/order/enroll/"　+　d.orderCode + "/" + d.matchCode + "?ts=" + createTimestamp()+ "&oid=" + d.matchCode;
+			} else {
+				//window.location.href = "${ctx}/order/enrollGroup/"　+　d.orderCode + "/" + d.matchCode + "/"+vueData.groupLimit+"?ts=" + createTimestamp()+ "&oid=" + d.matchCode;
+				
+				window.location.href="${ctx}/order/apply/edit?orderCode="+d.orderCode + "&matchCode="+d.matchCode+"&editStatus=1&" + createTimestamp();
+				
+			}			 			 
+		});
+   }; 	
+   
+   function createTimestamp () {
+    	return parseInt(new Date().getTime() / 1000) + '';
+   }; 
+   
+	 function Resultinquiry(){
+		 $("#Resultinquiry").click(function(){
+	      		$("#animationTipBox").show();
+        		$("#animationTipBox .dec_txt").text('成绩查询暂未开放，敬请期待 ')
+        		 setTimeout(function(){
+        			$("#animationTipBox").css("display","none");
+        			},
+        			3000)
+		 })
+
+	 }
+	</script>
+</html>

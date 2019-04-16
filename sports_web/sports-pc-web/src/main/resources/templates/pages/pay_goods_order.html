@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>选择付款方式支付</title>
+        <link href="${stx}/css/layout.css" rel="stylesheet">
+	<link href="${stx}/css/pagination.css" rel="stylesheet">
+    <link rel="stylesheet" href="${stx}/goodsInfo/swiper.min.css">
+    <link href="${stx}/goodsInfo/goodsInfo.css" rel="stylesheet">
+</head>
+<body>
+ <#include "common/nav.html">
+<div id='app' v-cloak>
+	<div class="loading" v-if="!hasData">
+	    <img src="${stx}/goodsInfo/loading.png">
+	</div>
+    <div class="container" v-else style='margin-top: 40px;'>
+       <div class='orderInfo_title'>
+       	<!-- <p style='color:#000;font-weight:600;font-size:18px'>选择付款方式</p> -->	
+       		<div>
+				<p>交易号：{{orderInfo?orderInfo.payOrderCode:''}}</p>   		
+       		</div>
+       		<div class='clear'>
+				<p class='pull-left'>创建时间：{{orderInfo?orderInfo.orderTime:''}}</p>   
+				<p class='pull-right' style='font-size: 18px;'>实付：<span style='color: #d4282d!important;'>¥{{orderInfo?orderInfo.orderPrice*0.01:0 | capitalize}}</span></p>		
+       		</div>
+       </div>
+      <!--  <div class="order-panel mt40">
+	        <div class="panel-title">
+	           支付方式
+	        </div>
+	        <div class='layer-module-body clear' style='padding:30px'>
+	        	<div class=' pay-type'>
+	        	 	<p class='pull-left '>
+	                	<span @click="selDeful('zfb')">
+	                		<img src="${stx}/goodsInfo/selIt.png" v-show="payType=='zfb'">
+	                	</span>
+	                </p>
+	        		<img src="${stx}/img/img_zfbzf.png">
+	        	</div>
+	        	<div  class=' pay-type'>
+	        		<p class='pull-left '>
+	                	<span @click="selDeful('wx')">
+	                		<img src="${stx}/goodsInfo/selIt.png" v-show="payType=='wx'">
+	                	</span>
+	                </p>
+	        		<img src="${stx}/img/img_wxzf.png">
+	        	</div>
+	        </div>
+        </div>
+        <div class='layer-module-foot'>
+        	<a v-if="payType=='wx'"  :href="'/shop/wechat/pay/'+orderInfo.payOrderCode">立即付款</a>
+        	<a v-if="payType=='zfb'" :href="'/shop/alipay/'+orderInfo.payOrderCode">立即付款</a>
+        	<a style='display:none'></a>
+        </div> -->
+        <div class="container from_table pay_code">
+ 	  	     	  <div class="code_lie">
+ 	  	     	  	   <div id="orderContent">
+		                       <div class="pay_mode clear">
+		                       	   <span style="border: 1px #E2E2E2 solid;" class="code_img pull-left code_right"><img :src="'${ctx}/shop/wechat/pay/'+orderInfo.payOrderCode" /></span>
+		                       	   <span class="phone pull-left"><img src="${stx}/img/img_swx.png"></span>
+		                       </div>  
+		                       <div class="pay_mode_bottom clear">
+		                       	   <span class="code_img pull-left code_right"><img src="${stx}/img/img_wxin.png" style="border:1px #E2E2E2 solid;"></span>
+		                       </div>
+ 	  	     	  	   </div>
+ 	  	     	  </div>				     			              
+ 	  	     </div>
+    </div>
+</div>
+<#include "common/footer.html">
+<script src="${stx}/js/jquery-2.1.1.min.js"></script>
+<script src="${stx}/js/vue.js"></script>
+<script>
+$(function(){
+	$('#app').css({
+		'min-height':parseInt(window.innerHeight)-92-150+'px'
+	})
+})
+		
+var vm = new Vue({
+	   el: '#app',
+	   data: {
+		   payType:'wx',
+		   orderInfo:null,
+		   hasData:false
+	   },
+	   filters: {
+		   capitalize: function (value) {
+		     if (!value) return ''
+		     let realVal=Number(value).toFixed(2)
+		     return Number(realVal);
+		   }
+		 },
+	   created:function(){
+		   var that=this;
+		   if(that.getCode('code')){
+		    	this.getData(that.getCode('code'));
+		    }
+		   
+	   },
+	   
+	   mounted:function(){
+		   var that=this;
+	   },
+	   updated:function(){
+		   var that=this;
+	   },
+	   methods:{
+		   selDeful:function(_payType){
+				this.payType=_payType
+			},
+			createTimestamp:function(){
+				return parseInt(new Date().getTime() / 1000) + '';
+			},
+			getData:function(code){
+				var that=this;
+				$.ajax({
+	  				url:"/shop/user/order/"+code,
+	  				type:'GET',
+	  				data:this.addAddrInfo,
+	  			 	dataType: 'JSON',
+	  			    contentType: 'application/json;charset=UTF-8',
+	  				success:function(res){
+	  					console.log(res)
+	  					that.hasData=true;
+	  					if(res.resultCode==200){
+	  						that.orderInfo=res.result.order;
+	  						setInterval(function(){ 
+	  					      $.ajax({
+	  				                 url:  "${ctx}/order/wechat/check/"+that.orderInfo.payOrderCode + "?" + that.createTimestamp(),
+	  				                 type: 'post',
+	  				                 dataType: 'json',
+	  				                 success: function(data) {
+	  				                 	if(data.resultCode==200 && data.result.orderStatus=='success'){
+	  				                 		//window.location.href = "${ctx}/static/order_list";
+	  				                 		window.location.href = "${ctx}/shop/my/order?page=1";
+	  				                 	}
+	  				                 }
+	  				             });
+	  					}, 5000);
+	  					}else{
+	  						
+	  					}
+	  				}
+	  			});
+			},
+			getCode:function(name){
+			        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+			        var r = window.location.search.substr(1).match(reg);
+			        if(r!=null)return  unescape(r[2]); return null;
+			}
+	   }
+})
+</script>
+</body>
+</html>

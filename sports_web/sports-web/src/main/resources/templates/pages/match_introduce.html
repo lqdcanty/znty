@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>报名系统-赛事介绍</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+		<link rel="stylesheet" type="text/css" href="${staticPath}/css/swiper-3.3.1.min.css?v=${cssV}" />
+		 <style>
+
+		/* 	.common_btn_a{    width: 100%;
+		     margin-top: 0.2rem;} */
+		  /*  .button{    position: inherit;} */
+		    .match_introduce .match_introduce_group{margin-bottom:0}
+		</style> 
+	</head>
+	<body>
+	 <div id="wrapper">
+	 	  <!--header-->
+	 	  <div class="nav flex flex-pack-justify flex-align-center">
+	 	  	   <span class="logo_icon"><img src="${staticPath}/img/logo_hangzhou.png"></span>
+	 	  	   <span id="photoMysearch" class="user_icon"><img src="${staticPath}/img/icon_user@2x.png" onClick="javascript:window.location.href='${ctx}/ucenter'"></span>
+	 	  </div>
+	 	  <!--banner-->
+	 	  <div class="banner">
+	 	       <#if match.banner?? && match.banner!=''>
+		 	        <img src="${(match.banner)!''}" />
+		 	        <#else>
+		 	         <img src="${staticPath}/img/img_banner.png" /> 
+	 	        </#if>
+	 	  	   
+	 	  </div>
+	 	  <!--description-->
+	 	  <div class="products_description">
+	 	  	   <div class="products_tap">
+	 	  	   	     <p class="name">
+	 	  	   	     	<span class="span_n"><img src="${staticPath}/img/icon_name.png">比赛名称</span>
+	 	  	   		        <span>${(match.matchName)!''}</span>
+	 	  	   	     </p>
+	 	  	   	     <p class="time">
+	 	  	   	     	<span class="span_n"><img src="${staticPath}/img/icon_time.png">比赛时间</span>
+	 	  	   	        <span>${(match.startTime?string("yyyy年MM月dd日"))!''}-${(match.endTime?string("yyyy年MM月dd日"))!''}</span>
+	 	  	   	     </p>
+	 	  	   </div>
+	 	  	    
+	 	  	   
+	 	  	   
+	 	  	   <#if match?? && match.introduce??>
+	 	  	   <div class="match_introduce custom_title">
+	 	  	       <div class="match_introduce_text">${match.introduce}</div>
+	 	  	   	     <p class="open flex flex-pack-center flex-align-center" id="open_this"><img src="${staticPath}/img/icon_zhankai.png">展开</p>
+	 	  	   </div>
+	 	  	   </#if>
+	 	  </div>
+	      <!--prize-->
+	      <#if match?? && match.awards?? && (match.awards?size > 0) >
+	         <div class="prize common_layout custom_title">
+	      	  <p class="title"><i></i>比赛奖项</p>	      
+	          <div class="swiper-container swiper-container-horizontal">
+				    <div class="swiper-wrapper">
+				       <#list  match.awards as award>
+				        <div class="swiper-slide prize_slide">
+				            <#if award.awardType?? && award.awardType=='first'>
+	      	                    <p class="top_icon one_iocn  flex flex-align-center flex-pack-center">
+								<#elseif award.awardType?? && award.awardType=='second'>
+								  	<p class="top_icon two_iocn  flex flex-align-center flex-pack-center">
+								<#elseif award.awardType?? && award.awardType=='third'>
+								   <p class="top_icon three_iocn  flex flex-align-center flex-pack-center">
+								<#else>
+					       <p class="top_icon   flex flex-align-center flex-pack-center">
+                         </#if>
+				        	   <img src="${(award.prizeImg)!''}"></p>	
+				      	   	   <p class="prize_name">${(award.awardName)!''}</p>
+				      	   	   <p class="prize_name2">${(award.prizeName)!''}</p>
+				        </div>
+				         </#list>
+				    </div>	      	   
+	            </div>
+	          </div>
+         </#if>
+         <#if match?? && match.customerService??>
+		     <div class="kefu flex flex-align-center flex-pack-center">
+		          <span><img src="${staticPath}/img/icon_kefu.png"></span>
+		          <span>${match.customerService}</span>
+		     </div>
+	     </#if>
+	      <#if match?? && match.chapters??>
+	           <#list  match.chapters as chapter>
+	              <#if chapter?? && chapter.equipmentsVos?? &&(chapter.equipmentsVos?size > 0)  && chapter.type=='pic_desc'>
+	                <div class="game_equipment common_layout custom_title">
+	                  <p class="title"><i></i>${(chapter.name)!''}</p>
+			      	   <#list chapter.equipmentsVos as equipment>
+				      	   <div class="equipment_lie  common_back_color">
+				      	   	  <span class="equipment_icon flex flex-align-center flex-pack-justify">
+				      	   	         <span class="zhuang_icon"><img src="${(equipment.url)!''}"></span>
+				      	   	         <span class="zhuang_text">${(equipment.name)!''}</span>
+				      	   	         <span class="j_icon flex flex-align-center"><img src="${staticPath}/img/icon_right.png"></span>
+				      	   	  </span>
+				      	   	 <!--  <span class="equipment_title">${(equipment.name)!''}</span> -->
+				      	   	  
+				      	   </div>
+		      	       </#list>
+		      	       </div>
+		      	   <#elseif  chapter?? && chapter.equipmentsVos?? &&(chapter.equipmentsVos?size > 0)  && chapter.type=='pic_explain'>
+		      	     <div class="game_scene common_layout custom_title">
+				      	   <p class="title"><i></i>${(chapter.name)!''}</p>
+				      	   <#list chapter.equipmentsVos as equipment>
+				      	   <div class="secne_content common_back_color">
+				      	   	<p class="game_img"><img src="${(equipment.url)!''}" /></p>
+				      	   	<p class="game_i">
+				      	   	   ${(equipment.name)!''}
+				      	   	</p>
+				      	   </div>
+				      	 </#list>
+				      	   
+				      </div>
+	               <#else>
+	                <div class="prize common_layout match_introduce  custom_title">
+	                  <p class="title" style="padding-bottom: 0rem;"><i></i>${(chapter.name)!''}</p>
+	 	  	          <div class="match_introduce_group">${(chapter.content)!""}</div>
+	 	  	         </div>
+	              </#if>
+  	            
+	            
+	            </#list>
+	 	  </#if>
+	       
+	       
+	       
+	      <!-- <div class="game_Method common_layout custom_title">
+	      	   <p class="title"><i></i>参赛办法</p>
+	      	   <div class="Method_content common_back_color">
+	      	   	  请各参赛原将报名表打印一份并加盖单位公章并于4月13日之前交送与体育部黄霞老师电话。电子版报名表于前发送至，逾期视为弃权。联系电话，以便联系。逾期视为弃权。报名表务必填写各队队长的联系电话，以便联系。
+	      	   </div>
+	       </div>
+	      
+	      <div class="game_scene common_layout custom_title">
+	      	   <p class="title"><i></i>赛事现场</p>
+	      	   <div class="secne_content common_back_color">
+	      	   	<p class="game_img"><img src="" /></p>
+	      	   	<p class="game_i">
+	      	   		为了丰富员工体育文化生活，增进交流，营造和谐、健康、向上的工作氛围，国网西安供电公司于2013年9月30日上午，组织开展了职工跳绳比赛。
+	      	   	</p>
+	      	   </div>
+	      </div>
+	      
+	      <div class="needing_attention common_layout custom_title">
+	      	   <p class="title"><i></i>注意事项</p>
+	      	   <ul class="common_back_color">
+	      	   	<li>1、绳子软硬、粗细适中。初学者通常宜用硬绳，熟练后可改为软绳。</li>
+				<li>2、跳绳时须放松肌肉和关节，脚尖和脚跟须用力协调，防止扭伤。</li>
+				<li>3、胖人和中年妇女宜采用双脚同时起落。同时，上跃也不要太高，以免关节因过于负重而受伤。</li>
+				<li>4、跳绳者应穿质地软、重量轻的高帮鞋，避免脚踝受伤。</li>
+				<li>5、跳绳前先让足部、腿部、腕部、踝部作些准备活动，跳绳后则可作些放松活动。</li>
+				<li>6、选择软硬适中的草坪、木质地板和泥土地的场地较好，切莫在硬性水泥地上跳绳，以免损伤关节，并易引起头昏。</li>
+	      	   </ul>
+	      </div>
+	      -->
+	      <div class="kong_content"></div>
+	      <#if  match?? && match.canApply >
+	      	  <a href="${ctx}/game/item/${(match.matchCode)!''}" class="common_btn_a"><p class="button">报 名</p></a>
+	      <#else>
+	           <a class="common_btn_a"><p class=" button custom_btnstate${(match.applyStatus)!}">${(match.applyStatusDesc)!''}</p></a>
+	      </#if>
+	      
+	      
+	      
+	 </div>	
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+	<script type="text/javascript" src="${staticPath}/js/swiper-3.3.1.jquery.min.js?v=${cssV}"></script>
+	 <script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+	<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+	<script>
+	     var height = true;
+		 var path = "${ctx}";
+	     
+	     $(function(){
+	    	 console.log($('.match_introduce_text ').css('height'))
+	    	 $(".open").click(function(){
+	    		
+	    		  if(height == true){
+	    			  $(".match_introduce_text").addClass("height_text"); 
+	    			  $(this).html('<img src="${staticPath}/img/icon_zhankai.png" style="transform: rotate(180deg);">收起')
+	    			  height = false  
+	    		  } else {
+	    			  $(".match_introduce_text").removeClass("height_text"); 
+	    			  $(this).html('<img src="${staticPath}/img/icon_zhankai.png">展开')
+	    			  height = true;  
+	    		  }
+	    	 })
+	     });
+		 var tokens = '';
+		 // 获取头像的接口
+		 function myPhoto(tokens){
+			 var t = (new Date()).valueOf(); //获取头像传参
+			 getResultMethods(path + "/user/register/check",{token:tokens,t:t},function(data){
+				 console.log(data)
+				 if(data.resultCode == 200){
+					 if(data.result.headimgUrl!='' && data.result.headimgUrl!=null && data.result.headimgUrl.length>0){
+						 $('#photoMysearch img').attr('src',data.result.headimgUrl)
+					 }else{
+						 $('#photoMysearch img').attr('src','${staticPath}/img/icon_user_1@2x.png')
+					 }
+				 }else{
+					 $('#photoMysearch img').attr('src','${staticPath}/img/icon_user@2x.png')
+				 }
+
+			 })
+		 }
+		 myPhoto(tokens)
+	     
+	     var mySwiper2 = new Swiper('.swiper-container',{  
+	 	    slidesPerView: 3,
+	 		spaceBetween: 30,
+	 	    observer:true,//修改swiper自己或子元素时，自动初始化swiper
+	 	});
+     </script>
+</html>

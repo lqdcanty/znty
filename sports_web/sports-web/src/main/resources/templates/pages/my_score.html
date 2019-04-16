@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>我的成绩</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+    <style>
+        #mescroll{
+            position: absolute;
+            top: 1.28rem;
+            bottom: 0;
+            overflow-y: scroll;
+            height:auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper" style="height: 100%;overflow-y: scroll;">
+        <div class="h5_header">
+            <img src="${staticPath}/img/icon_back.png"/>
+            <div class="back" onclick="callAndroid()">返回</div>
+            <div class="title">我的成绩</div>
+        </div>
+        <div class="service_content mescroll" id="mescroll">
+            <ul id="mescroll_list">
+                <!--<li>-->
+                    <!--<div class="div_title" style="font-weight: normal;">-->
+                        <!--<img src="${staticPath}/img/icon_name.png"/>智慧中国趣味定向大赛-->
+                    <!--</div>-->
+                    <!--<div class="div_text my_score">-->
+                        <!--<img src="http://zntyfdfs.efida.com.cn/group1/M00/00/03/rBADF1tOprCAQCWZAAY_lIgRU7Y070.png" />-->
+                        <!--<div>-->
+                            <!--<p>预选赛</p>-->
+                            <!--<p style="margin-top: 0.44rem">2018-07-20</p>-->
+                        <!--</div>-->
+                        <!--<span>第<p class="ranking">33</p>名 ></span>-->
+                    <!--</div>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="div_title" style="font-weight: normal;">-->
+                        <!--<img src="${staticPath}/img/icon_name.png"/>智慧中国趣味定向大赛-->
+                    <!--</div>-->
+                    <!--<div class="div_text my_score">-->
+                        <!--<img src="http://zntyfdfs.efida.com.cn/group1/M00/00/03/rBADF1tOprCAQCWZAAY_lIgRU7Y070.png" />-->
+                        <!--<div>-->
+                            <!--<p>预选赛</p>-->
+                            <!--<p style="margin-top: 0.44rem">2018-07-20</p>-->
+                        <!--</div>-->
+                        <!--<span>第<p class="ranking">33</p>名 ></span>-->
+                    <!--</div>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="div_title" style="font-weight: normal;">-->
+                        <!--<img src="${staticPath}/img/icon_name.png"/>智慧中国趣味定向大赛-->
+                    <!--</div>-->
+                    <!--<div class="div_text my_score">-->
+                        <!--<img src="http://zntyfdfs.efida.com.cn/group1/M00/00/03/rBADF1tOprCAQCWZAAY_lIgRU7Y070.png" />-->
+                        <!--<div>-->
+                            <!--<p>预选赛</p>-->
+                            <!--<p style="margin-top: 0.44rem">2018-07-20</p>-->
+                        <!--</div>-->
+                        <!--<span>第<p class="ranking">33</p>名 ></span>-->
+                    <!--</div>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="div_title" style="font-weight: normal;">-->
+                        <!--<img src="${staticPath}/img/icon_name.png"/>智慧中国趣味定向大赛-->
+                    <!--</div>-->
+                    <!--<div class="div_text my_score">-->
+                        <!--<img src="http://zntyfdfs.efida.com.cn/group1/M00/00/03/rBADF1tOprCAQCWZAAY_lIgRU7Y070.png" />-->
+                        <!--<div>-->
+                            <!--<p>预选赛</p>-->
+                            <!--<p style="margin-top: 0.44rem">2018-07-20</p>-->
+                        <!--</div>-->
+                        <!--<span>第<p class="ranking">33</p>名 ></span>-->
+                    <!--</div>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="div_title" style="font-weight: normal;">-->
+                        <!--<img src="${staticPath}/img/icon_name.png"/>智慧中国趣味定向大赛-->
+                    <!--</div>-->
+                    <!--<div class="div_text my_score">-->
+                        <!--<img src="http://zntyfdfs.efida.com.cn/group1/M00/00/03/rBADF1tOprCAQCWZAAY_lIgRU7Y070.png" />-->
+                        <!--<div>-->
+                            <!--<p>预选赛</p>-->
+                            <!--<p style="margin-top: 0.44rem">2018-07-20</p>-->
+                        <!--</div>-->
+                        <!--<span>第<p class="ranking">33</p>名 ></span>-->
+                    <!--</div>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="div_title" style="font-weight: normal;">-->
+                        <!--<img src="${staticPath}/img/icon_name.png"/>智慧中国趣味定向大赛-->
+                    <!--</div>-->
+                    <!--<div class="div_text my_score">-->
+                        <!--<img src="http://zntyfdfs.efida.com.cn/group1/M00/00/03/rBADF1tOprCAQCWZAAY_lIgRU7Y070.png" />-->
+                        <!--<div>-->
+                            <!--<p>预选赛</p>-->
+                            <!--<p style="margin-top: 0.44rem">2018-07-20</p>-->
+                        <!--</div>-->
+                        <!--<span>第<p class="ranking">33</p>名 ></span>-->
+                    <!--</div>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<div class="div_title" style="font-weight: normal;">-->
+                        <!--<img src="${staticPath}/img/icon_name.png"/>智慧中国趣味定向大赛-->
+                    <!--</div>-->
+                    <!--<div class="div_text my_score">-->
+                        <!--<img src="http://zntyfdfs.efida.com.cn/group1/M00/00/03/rBADF1tOprCAQCWZAAY_lIgRU7Y070.png" />-->
+                        <!--<div>-->
+                            <!--<p>预选赛</p>-->
+                            <!--<p style="margin-top: 0.44rem">2018-07-20</p>-->
+                        <!--</div>-->
+                        <!--<span>第<p class="ranking">33</p>名 ></span>-->
+                    <!--</div>-->
+                <!--</li>-->
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+<script>
+    var tokens = getThePrameValue('appToken')=='null'?'':getThePrameValue('appToken');
+    var callAndroid = function(){
+        android.back("back")
+    };
+    var path = '${ctx}';
+    // var loadingBox = new loadingBox();
+    var emptyWorn = new emptyWorn($('#mescroll_list'),'','～快去参加比赛吧～');
+
+    // loadingBox.creat();
+    if(!getThePrameValue('platform')){
+        $('#mescroll').css(
+            'top',0.88+'rem'
+        );
+        callAndroid = function(){
+            window.location.href = path + '/ucenter'
+        };
+    }else if(getThePrameValue('platform') == 'iOS') {
+        if (clientType('iphoneX')) {
+            //是iphoneX
+            $('#mescroll').css(
+                'top',1.76+'rem'
+            );
+        }
+        callAndroid = function (){
+            window.webkit.messageHandlers.back.postMessage(null)
+        }
+
+    }
+
+
+
+
+    //获取成绩列表/score/myRankList
+    function getMYGradeList(currentPage){
+        getResultMethods(path + '/score/myRankList', {
+            currentPage:currentPage,
+            pageSzie:10,
+            token:tokens
+        }, function(data) {
+            if(data.resultCode ==200){
+                if(currentPage == 1){
+                    $('#mescroll ul').html('')
+                    console.log('刷新-数据清除')
+                    if(data.result.data&&data.result.data.length == 0){
+                        emptyWorn.show()
+                    }else{
+                        emptyWorn.hide()
+                    }
+                }
+                renderMyRankList(data.result.data)
+                mescroll.endBySize(data.result.data.length, data.result.allRow, '');
+                // loadingBox.close();
+            }else{
+                // loadingBox.close();
+                var tips = new loadingTips(data.resultMsg,2500)
+                tips.creat()
+                mescroll.endErr();
+            }
+
+        },function (data) {
+            var tips = new loadingTips('网络错误，请稍后重试',2500)
+            tips.creat()
+            mescroll.endErr();
+        })
+
+    }
+
+    //我的成绩列表渲染
+    function renderMyRankList(datas) {
+         console.log(datas.length)
+        if(datas.length == 0){
+            return false;
+        }
+        datas.forEach(function (item) {
+            var time = '';
+
+            var arrs = [];
+            var rankList = item.comList;
+            // for(var i =0;i<rankList.length;i++){
+            //     var newArr = rankList[i].rank;
+            //     for(var j = 0;i<newArr.length;j++){
+            //         arrs.push(newArr[j])
+            //     }
+            // }
+            // rankList.forEach(function (it) {
+            //     var names = it.competition.competitionName;
+            //     var newArr = it.rank;
+            //     newArr.forEach(function (v) {
+            //         v.competitionName = names;
+            //         arrs.push(v)
+            //     })
+            // })
+            console.log(rankList)
+            var rankHtml = '';
+            var matchImg = item.match.matchImg;
+            var matchCode =item.match.matchCode;
+            rankList.forEach(function (value) {
+
+                var dates = new Date(value.date);
+                var year = dates.getFullYear();
+                var month = (dates.getMonth() + 1 < 10 ? '0' + (dates.getMonth() + 1) : dates.getMonth() + 1);
+                var day = (dates.getDate() < 10 ? '0' + dates.getDate() : dates.getDate());
+                var areaNames = value.competition.areaName?(value.competition.areaName+'-'):"";
+                var groupName = value.competition.groupName?(value.competition.groupName+'-'):'';
+                var eventNames = value.competition.eventName?value.competition.eventName:'';
+                var competitionName = areaNames+groupName+eventNames;
+
+                var rankStr= '<div class="div_text my_score my_score_tips" data-competitionCode="'+value.competition.competitionCode+'" data-matchCode="'+matchCode+'">\
+                            <img src="'+matchImg+'" />\
+                            <div>\
+                            <p>'+competitionName+'</p>\
+                            <p style="margin-top: 0.44rem">'+year+'-'+month+'-'+day+'</p>\
+                            </div>\
+                            <span><p class="ranking">'+value.score+'</p></span>\
+                            </div>';
+                rankHtml += rankStr;
+            })
+
+            var tipsStr= '<li >\
+                            <div class="div_title" style="font-weight: normal;"><img src="${staticPath}/img/icon_name.png"/>'+item.match.matchName+'</div>'+rankHtml+'</li>';
+            $('#mescroll ul').append(tipsStr)
+        })
+        $('.my_score_tips').click(function () {
+            console.log('前进')
+            var competitionCodes = $(this).attr('data-competitionCode');
+            var matchCode = $(this).attr('data-matchCode');
+            // localStorage.setItem('competitionCode',competitionCodes);
+            // localStorage.setItem('matchCode',matchCode);
+            // localStorage.setItem('from',2);
+            // localStorage.setItem('token',tokens);
+            // window.location.href =path+ '/myGrade';
+            window.location.href =path+ '/myGrade?competitionCode='+competitionCodes+'&matchCode='+matchCode.toString()+'&from='+2;
+        })
+    }
+
+    //初始化下拉加载组件
+    var mescroll = new MeScroll("mescroll", {
+        up: {
+            auto: true, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+            isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+            htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+            callback: endLoad //上拉回调,此处可简写; 相当于 callback: function (page) { upCallback(page); }
+            // toTop:{ //配置回到顶部按钮
+            //     src : "../res/img/mescroll-totop.png", //默认滚动到1000px显示,可配置offset修改
+            //     //offset : 1000
+            // }
+        }
+    });
+
+
+    function endLoad(page) {
+        console.log('加载')
+        if(page.num == 1){
+            setTimeout(function () {
+                getMYGradeList(page.num)
+
+            },1500)
+        }else{
+            getMYGradeList(page.num)
+        }
+    }
+</script>
+<style>
+    .service_content{
+        background: #efeff4 !important;
+        margin-bottom: 0;
+    }
+    .service_content ul li{
+        margin-top: 0.2rem;
+        background: white;
+    }
+</style>
+</html>

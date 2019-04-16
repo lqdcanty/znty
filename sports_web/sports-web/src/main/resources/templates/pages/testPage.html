@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>地址列表</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+    <style>
+        #mescroll{
+            position: absolute;
+            top: 1.28rem;
+            bottom: 0;
+            overflow-y: scroll;
+            height:auto;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper" style="height: 100%;overflow-y: scroll;">
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="callAndroid()">返回</div>
+        <div class="title">测试页面</div>
+    </div>
+    <div class="service_content mescroll" id="mescroll">
+        <div id="controllers"></div>
+        <!--<ul id="mescroll_list">-->
+        <!---->
+        <!--</ul>-->
+
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+<script type="text/javascript">
+    $('#controllers').html('测试前')
+    var timer = setTimeout(function () {
+        $('#controllers').html('setTimeout执行')
+    },500)
+    $('#controllers').html('定时器后，顺序执行')
+
+
+</script>
+<style>
+    .service_content{
+        background: #efeff4 !important;
+        margin-bottom: 0;
+    }
+    .service_content ul li{
+        margin-top: 0.2rem;
+        background: white;
+    }
+</style>
+</html>

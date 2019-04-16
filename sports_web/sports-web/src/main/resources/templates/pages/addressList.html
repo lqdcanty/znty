@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>地址列表</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+    <style>
+        #phoneAddressReceive{
+            width: 3.8rem;
+            height: 0.5rem;
+            border: 1px solid #eeeeee;
+            border-radius: 4px;
+            float: left;
+            margin-left: 0.4rem;
+            margin-top: 0.1rem;
+            line-height: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .slide-box::-webkit-scrollbar{
+            display:none;
+        }
+        #mescroll{
+            position: absolute;
+            top: 1.28rem;
+            bottom: 0.8rem;
+            overflow-y: scroll;
+            height:auto;
+            color: #4b4b4b;
+            font-size: 0.26rem;
+        }
+        .topShopping{
+            width: 82%;
+            margin-top: 0.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.3rem;
+            line-height: 0.8rem;
+            margin-left: 0.2rem;
+        }
+        .T_address{
+            width: 82%;
+            margin-right: 0.2rem;
+            margin-left: 0.2rem;
+            font-size:0.27rem;
+            line-height: 0.4rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical
+        }
+        .addressButtton{
+            width: 92%;
+            border-radius: 50rem;
+            height: 0.6rem;
+            border: none;
+            margin: 0 0.3rem;
+            background: linear-gradient(to right,#ffbd00,#ff8f15);
+            color:#fff;
+            cursor:pointer;
+        }
+        .containButton{
+            position: absolute;
+            bottom: 0;
+            height: 0.8rem;
+            line-height: 0.8rem;
+            width: 100%;
+            background: #eee;
+            z-index: 66;
+        }
+        .commonInput{
+            border:none;
+            width:100%;
+        }
+        .dialogAddressUpdate{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+        }
+        .dialogAddress{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+        }
+        .addAddress_from{
+            width: 6rem;
+            min-height: 6rem;
+            position: relative;
+            /*top: 1.6rem;*/
+            top: 55%;
+            transform: translate(0,-50%);
+            left: 0;
+            right: 0;
+            bottom: 0rem;
+            margin: auto;
+            background: white;
+            font-size: 0.26rem;
+            color: #4b4b4b;
+        }
+        .addAddress_from ul{
+            width:100%;
+            /*height:70%;*/
+        }
+        .addAddress_from ul li{
+            height: 0.8rem;
+            line-height: 0.8rem;
+            clear: both;
+        }
+        .addAddress_from ul li>div:first-of-type{
+            float: left;
+            margin-left:0.3rem;
+        }
+        .addAddress_from ul li:last-child{
+            height:1.8rem;
+        }
+        .addAddress_from ul li>div:last-of-type{
+            float: right;
+            margin-right:0.3rem;
+        }
+        .addAddress_from input{
+            width: 3.8rem;
+            height: 0.5rem;
+            border: 1px solid #eeeeee;
+            border-radius: 4px;
+        }
+        .addAddress_from textarea{
+            width: 3.8rem;
+            height: 1.5rem;
+            border: 1px solid #eeeeee;
+            border-radius: 4px;
+        }
+        .add_btn{
+            height: 1rem;
+            width: 100%;
+            clear: both;
+        }
+        .add_btn p{
+            width: 1rem;
+            height: 0.6rem;
+            line-height: 0.6rem;
+            margin-top: 0.3rem;
+            
+        }
+        .add_btn p:first-of-type{
+            float: left;
+            border: 1px solid #eeeeee;
+            background: white;
+            color: #4b4b4b;
+            text-align: center;
+            margin-left: 1.5rem;
+        }
+        .add_btn p:last-of-type{
+            float: right;
+            border: 1px solid #fff;
+            background: #FF8F00;
+            color: #fff;
+            text-align: center;
+            margin-right: 1.5rem;
+        }
+        select{
+            width: 2.8rem;
+            height: 0.6rem;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper" style="height: 100%;overflow-y: scroll;">
+    <div class="h5_header" style="position:absolute;">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="back()">返回</div>
+        <div class="title">选择收货地址</div>
+    </div>
+    <div class="mescroll" id="mescroll" style="background:#fff">
+        <div class="render_address" style="width:100%;">
+            <!--<div style="padding-bottom: 0.3rem;border-bottom: 1px solid #eee;">-->
+                <!--<div class="topShopping">-->
+                    <!--<span style="margin-left: 0.2rem;">安妮股份</span>-->
+                    <!--<span style="margin-right: 0.2rem;">86-592-3152188</span>-->
+                <!--</div>-->
+                <!--<div class="T_address">-->
+                    <!--<span style="color:red;">[默认地址]</span>-->
+                    <!--<span>厦门市集美区杏林锦园南路99号厦门安妮股份有限公司厦门安妮股份有限公司厦门安妮股份有限公司</span>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        </div>
+    </div>
+    <section class="dialogAddress">
+        <div class="addAddress_from" id="addAddress_from" >
+            <p style="text-align: center;width: 100%;height: 1rem;line-height: 1rem;">添加新地址</p>
+            <ul>
+                <li>
+                    <div><span style="color:#F00;">*</span>收货人</div>
+                    <div>
+                        <input maxlength="20" id="userAddress" class="commonInput" type="text" />
+                    </div>
+                </li>
+                <li>
+                    <div><span style="color:#F00;">*</span>联系电话</div>
+                    <div>
+                        <input id="phoneAddress" class="commonInput" type="text" />
+                    </div>
+                </li>
+                <li>
+                    <div><span style="color:#F00;">*</span>收货地址</div>
+                    <div>
+                        <div id="targetAdd" data-toggle="distpicker" style="width: 3.8rem;float: right;">
+                            <select id="privince" data-province="-- 选择省 --"></select>
+                            <select id="city" data-city="-- 选择市 --"></select>
+                            <select id="area" data-district="-- 选择区 --"></select>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div><span style="color:#F00;">*</span>详细地址</div>
+                    <div style="position: relative;">
+                        <textarea id="detailAddress" class="commonInput"></textarea>
+                        <p style="height:0.5rem;eline-height: 0.5rem;text-align: right;position: absolute;display: flex;align-items:center;right: 0;bottom: -0.2rem;">设置默认地址<input style="width: 0.3rem;height: 0.3rem;" id="ifDefult" type="checkbox"></p>
+                    </div>
+                </li>
+                <li>
+                    <div class="add_btn" style="margin-right: 0rem;">
+                        <p class="add_cancel">取消</p>
+                        <p class="add_sure">确定</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <section class="dialogAddressUpdate" style="z-index:99;">
+        <div class="addAddress_from" >
+            <p style="text-align: center;width: 100%;height: 1rem;line-height: 1rem;">修改地址</p>
+            <ul>
+                <li>
+                    <div><span style="color:#F00;">*</span>收货人</div>
+                    <div>
+                        <input maxlength="20" id="userAddressUpdate" class="commonInput" type="text" />
+                    </div>
+                </li>
+                <li>
+                    <div><span style="color:#F00;">*</span>联系电话</div>
+                    <div>
+                        <input id="phoneAddressUpdate" class="commonInput" type="text" />
+                    </div>
+                </li>
+                <li>
+                    <div><span style="color:#F00;">*</span>收货地址</div>
+                    <div id="phoneAddressReceive" class="commonInput" data_showP = "N" onclick="showPCA()"></div>
+                    <div style="display:none;" id="showPCA">
+                        <div id="target" data-toggle="distpicker" style="width: 3.8rem;float: right;">
+                            <select id="privinceUpdate" data-province="-- 选择省 --"></select>
+                            <select id="cityUpdate" data-city="-- 选择市 --"></select>
+                            <select id="areaUpdate" data-district="-- 选择区 --"></select>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div><span style="color:#F00;">*</span>详细地址</div>
+                    <div style="position: relative;">
+                        <textarea id="detailAddressUpdate" class="commonInput"></textarea>
+                        <p style="height:0.5rem;eline-height: 0.5rem;text-align: right;position: absolute;display: flex;align-items:center;right: 0;bottom: -0.2rem;">设置默认地址
+                            <input style="width: 0.3rem;height: 0.3rem;" id="ifDefaultUpdate" type="checkbox">
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="add_btn" style="margin-right: 0rem;">
+                        <p class="add_cancel_update">取消</p>
+                        <p class="add_sure_update">确定</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <div class="containButton">
+        <button class="addressButtton" onclick="addAddress()">添加新地址</button>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+<script type="text/javascript" src="${staticPath}/js/dispicker/distpicker.data.js"></script>
+<script type="text/javascript" src="${staticPath}/js/dispicker/distpicker.js"></script>
+<script>
+    var tokens = getThePrameValue('appToken')=='null'?'':getThePrameValue('appToken');
+    var path = '${ctx}';
+    // var loadingBox = new loadingBox();
+    // loadingBox.creat();
+    var emptyWorn = new emptyWorn($('#mescroll'),'暂无数据','快去添加收货地址吧吧')
+    // 修改获取的变量
+    if(!getThePrameValue('platform')){
+        $('#mescroll').css(
+            'top',0.88+'rem'
+        );
+    }else{
+        if(getThePrameValue('platform') == 'iOS') {
+            if (clientType('iphoneX')) {
+                //是iphoneX
+                $('#mescroll').css(
+                    'top',1.76+'rem'
+                );
+            }
+        }
+    }
+
+    function back() {
+        // var vals = window.location.href.split('?')[1];
+        var goodsCode=getThePrameValue('goodsCode');
+        var orderCode=getThePrameValue('orderCode');
+        var medalnums=getThePrameValue('medalnums');
+        var cancelAddress = getThePrameValue('cancelAddress');
+        var url = path +'/medalOrderPage?goodsCode='+goodsCode+'&medalnums='+medalnums+'&cancelAddress='+cancelAddress;
+        if(getThePrameValue('orderCode')){
+            url = url + '&orderCode='+orderCode;
+        }
+        window.location.href = url;
+    }
+    function addAddress(){
+        $('#userAddress').val('');
+        $('#phoneAddress').val('');
+        $('#detailAddress').val('');
+        $('#targetAdd').distpicker('reset');
+        // $('#privince').val();
+        // $('#city').val();
+        // $('#area').val();
+        $('#ifDefult').attr("checked",false);
+        $('.dialogAddress').show()
+    }
+    $('.add_cancel').click(function () {
+        $('.dialogAddress').hide()
+    })
+    $('.add_cancel_update').click(function(){
+        $('.dialogAddressUpdate').hide()
+        $('#phoneAddressReceive').attr('data_showP','N');
+        $('#showPCA').css({
+            'display':'none'
+        })
+        // $('#privinceUpdate').val('');
+        // $('#cityUpdate').val('');
+        // $('#areaUpdate').val('')
+        $('#target').distpicker('reset');
+        $('#phoneAddressReceive').html(countryAreaC)
+        // mescroll.resetUpScroll()
+    });
+    $('.add_sure').click(function () {
+        var userAddress = $('#userAddress').val();
+        var phoneAddress =$('#phoneAddress').val();
+        var detailAddress = $('#detailAddress').val();
+        var privince= $('#privince').val();
+        var city = $('#city').val();
+        var area = $('#area').val();
+        if(!userAddress||!phoneAddress||!detailAddress){
+            var tips = new loadingTips('请完整填写收件人信息',2500)
+            tips.creat()
+            return false
+        }
+        if(!(/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/.test(phoneAddress))){
+            var tips = new loadingTips('请输入正确的手机号码',2500)
+            tips.creat()
+            return false
+        }
+        console.log($('#ifDefult'))
+        var checked = $('#ifDefult').is(':checked');
+        console.log(checked)
+        getResultMethods(path + '/shop/user/address/edit', {
+            addressCode:'',
+            realname:userAddress,
+            mobile:phoneAddress,
+            province:privince,
+            city:city,
+            area:area,
+            address:detailAddress,
+            isdefault:checked
+        }, function(data) {
+            if(data.resultCode == 200){
+                $('.dialogAddress').hide()
+                mescroll.resetUpScroll()
+            }else{
+                var tips = new loadingTips(data.resultMsg,2500)
+                tips.creat()
+            }
+        })
+
+    })
+
+
+    //获取
+    function getData(datas){
+        // var competitionCodes=getThePrameValue('competitionCode')
+
+        getResultMethods(path + '/shop/user/address/list', {
+            currentPage:datas,
+            pageSize:10
+        }, function(data) {
+            if(data.resultCode ==200){
+                renderFun(data.result.list)
+                mescroll.endBySize(data.result.list.length, data.result.totalRow, '');
+            }else{
+                mescroll.endErr();
+                var tips = new loadingTips('地址数据请求失败，请稍后重试',2500)
+                tips.creat()
+            }
+        },function (data) {
+            mescroll.endErr();
+            var tips = new loadingTips('地址数据请求失败，请稍后重试',2500)
+            tips.creat()
+        })
+
+    }
+
+    function renderFun(data) {
+        if(data.length == 0){
+            emptyWorn.show()
+            return false
+        }else{
+            emptyWorn.hide()
+        }
+        data.forEach(function (item) {
+            var ifDefult = '';
+            if(item.isdefault){
+                ifDefult = '[默认地址]';
+            }
+            var dataRealName = item.realname
+            if(dataRealName && dataRealName.length>6){
+                dataRealName = dataRealName.substr(0,6) + '...'
+            }
+            var str = '<ul class="slide-box" style="display: -webkit-box;overflow-x: auto;-webkit-overflow-scrolling: touch;position: relative;margin-bottom:0.1rem;">\n' +
+                '        <li style="width: 100%;">\n' +
+                '            <section>\n' +
+                '                <div style="padding-bottom: 0.3rem;border-bottom: 1px solid #eee;overflow:  hidden;" data-addresscode="'+item.addressCode+'">                            \n' +
+                '                    <div class="topShopping">                                \n' +
+                '                        <span style="width: 4rem;overflow: hidden;text-overflow: ellipsis;">'+dataRealName+'</span>                                \n' +
+                '                        <span>'+item.mobile+'</span>                                \n' +
+                '                    </div>                         \n' +
+                '                    <div class="T_address">                                \n' +
+                '                        <span style="color:red;">'+ifDefult+'</span>                                \n' +
+                '                        <span>'+item.province+item.city+item.area+item.address+'</span>                            \n' +
+                '                    </div>         \n' +
+                '                </div>     \n' +
+                '            </section>\n' +
+                '        </li>\n' +
+                '        <li onclick="updateAddress(this)" data-isdefault="'+item.isdefault+'" data-province="'+item.province+'" data-city="'+item.city+'" data-area="'+item.area+'" '+
+                '            data-realname="'+item.realname+'" data-mobile="'+item.mobile+'" data-address="'+item.address+'" data-addresscodeChange="'+item.addressCode+'" style="width: 1rem;height:1rem;position: absolute;text-align: center;right: 0.15rem;top: 0.63rem;vertical-align: middle;line-height: 1rem;">\n' +
+                '            <img style="width: 0.36rem;height:0.36rem;" src="${staticPath}/img/icon_edit.png">\n' +
+                '        </li>\n' +
+                '    </ul>'
+            // var str = '<ul style="display: -webkit-box;overflow-x: auto;-webkit-overflow-scrolling: touch;">' +
+            //     '<div style="padding-bottom: 0.3rem;border-bottom: 1px solid #eee;" data-addressCode="'+item.addressCode+'">\
+            //                 <div class="topShopping">\
+            //                     <span style="margin-left: 0.2rem;">'+item.realname+'</span>\
+            //                     <span style="margin-right: 0.2rem;">'+item.mobile+'</span>\
+            //                     </div>\
+            //                     <div class="T_address">\
+            //                     <span style="color:red;">'+ifDefult+'</span>\
+            //                     <span>'+item.province+item.city+item.area+item.address+'</span>\
+            //                 </div>\
+            //             </div>';
+            $('.render_address').append(str)
+        })
+        $('.render_address>ul>li>section>div').click(function () {
+            var address = $(this).attr('data-addressCode');
+            var goodsCode=getThePrameValue('goodsCode');
+            var orderCode=getThePrameValue('orderCode');
+            var medalnums=getThePrameValue('medalnums');
+            var url = path +'/medalOrderPage?goodsCode='+goodsCode+'&address='+address+'&medalnums='+medalnums;
+            if(getThePrameValue('orderCode')){
+                url = url + '&orderCode='+orderCode;
+            }
+            window.location.href = url;
+        })
+    }
+
+
+
+
+    //初始化下拉加载组件
+    var mescroll = new MeScroll("mescroll", {
+        up: {
+            auto: true, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+            isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+            htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+            callback: endLoad //上拉回调,此处可简写; 相当于 callback: function (page) { upCallback(page); }
+            // toTop:{ //配置回到顶部按钮
+            //     src : "../res/img/mescroll-totop.png", //默认滚动到1000px显示,可配置offset修改
+            //     //offset : 1000
+            // }
+        }
+    });
+
+
+    function endLoad(page) {
+        console.log('加载')
+        emptyWorn.hide()
+        if(page.num == 1){
+            setTimeout(function () {
+                $('.render_address').html('')
+                getData(page.num)
+
+            },1500)
+        }else{
+            getData(page.num)
+        }
+    }
+    // 修改地址方法
+    var addressCodeUpdate = '';
+    var countryAreaC = '';
+    function updateAddress(abc){
+        var hEmpty = '';
+        // 设置数据
+        countryAreaC = $(abc).attr('data-province') + $(abc).attr('data-city') + $(abc).attr('data-area')
+        $('#phoneAddressReceive').html(countryAreaC)
+        var a = $(abc).attr('data-addresscodeChange');
+        var b = $(abc).attr('data-mobile');
+        var c = $(abc).attr('data-realname')
+        var d = $(abc).attr('data-address')
+        var e = $(abc).attr('data-province')
+        var f = $(abc).attr('data-city')
+        var g = $(abc).attr('data-area')
+        hEmpty = $(abc).attr('data-isdefault')
+        addressCodeUpdate = $(abc).attr('data-addresscodeChange');
+        $('#phoneAddressUpdate').val($(abc).attr('data-mobile'));
+        $('#userAddressUpdate').val($(abc).attr('data-realname'));
+        $('#detailAddressUpdate').val($(abc).attr('data-address'));
+        // $('#privinceUpdate').val($(abc).attr('data-province'));
+        // $("#privinceUpdate").trigger("change");
+        // $('#cityUpdate').val($(abc).attr('data-city'));
+        // $("#cityUpdate").trigger("change");
+        // $('#areaUpdate').val($(abc).attr('data-area'));
+        // $("#areaUpdate").trigger("change");
+        $("#distpicker").distpicker({
+            privinceUpdate:e,
+            cityUpdate:f,
+            areaUpdate:g
+        });
+        if(hEmpty.trim()=='true'){
+            $('#ifDefaultUpdate').prop("checked",true);
+        }else{
+            $('#ifDefaultUpdate').removeAttr("checked");
+        }
+        $('.dialogAddressUpdate').show();
+    }
+    $('.add_sure_update').click(function () {
+        var userAddressUpdate = $('#userAddressUpdate').val();
+        var phoneAddressUpdate =$('#phoneAddressUpdate').val();
+        var detailAddressUpdate = $('#detailAddressUpdate').val();
+        var privinceUpdate= $('#privinceUpdate').val();
+        var cityUpdate = $('#cityUpdate').val();
+        var areaUpdate = $('#areaUpdate').val();
+        if(!userAddressUpdate||!phoneAddressUpdate||!detailAddressUpdate){
+            var tips = new loadingTips('请完整填写收件人信息',2500)
+            tips.creat()
+            return false
+        }
+        if(!(/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/.test(phoneAddressUpdate))){
+            var tips = new loadingTips('请输入正确的手机号码',2500)
+            tips.creat()
+            return false
+        }
+        console.log($('#ifDefult'))
+        var checkedUpdate = $('#ifDefaultUpdate').is(':checked');
+        console.log(checkedUpdate)
+        getResultMethods(path + '/shop/user/address/edit', {
+            addressCode:addressCodeUpdate,
+            realname:userAddressUpdate,
+            mobile:phoneAddressUpdate,
+            province:privinceUpdate,
+            city:cityUpdate,
+            area:areaUpdate,
+            address:detailAddressUpdate,
+            isdefault:checkedUpdate
+        }, function(data) {
+            if(data.resultCode == 200){
+                $('.dialogAddressUpdate').hide()
+                $('#phoneAddressReceive').attr('data_showP','N');
+                $('#showPCA').css({
+                    'display':'none'
+                })
+                $('#target').distpicker('reset');
+                mescroll.resetUpScroll()
+            }else{
+                var tips = new loadingTips(data.resultMsg,2500)
+                tips.creat()
+                // $('.dialogAddressUpdate').hide();
+                // $('#phoneAddressReceive').attr('data_showP','N');
+                // $('#showPCA').css({
+                //     'display':'none'
+                // })
+            }
+        })
+
+    })
+    // 点击展示省市区
+    function showPCA(){
+        if($(this).attr('data_showP')=='N'){
+            $(this).attr('data_showP','Y');
+            $('#showPCA').css({
+                'display':'block'
+            })
+        }else{
+            $(this).attr('data_showP','N');
+            $('#showPCA').css({
+                'display':'none'
+            })
+        }
+    }
+
+    var countryAreaU = '';
+    //绑定值获取事件
+    $(document).ready(function () {
+        $("#areaUpdate").change(function () {
+            countryAreaU = $('#privinceUpdate option:selected').val()+ $('#cityUpdate option:selected').val() + $('#areaUpdate option:selected').val()
+            $('#phoneAddressReceive').html(countryAreaU)
+        });
+        $("#cityUpdate").change(function () {
+            countryAreaU = $('#privinceUpdate option:selected').val()+ $('#cityUpdate option:selected').val() + $('#areaUpdate option:selected').val()
+            $('#phoneAddressReceive').html(countryAreaU)
+        });
+        $("#privinceUpdate").change(function () {
+            countryAreaU = $('#privinceUpdate option:selected').val()+ $('#cityUpdate option:selected').val() + $('#areaUpdate option:selected').val()
+            $('#phoneAddressReceive').html(countryAreaU)
+        });
+    })
+</script>
+<style>
+    .service_content{
+        background: #efeff4 !important;
+        margin-bottom: 0;
+    }
+    .service_content ul li{
+        margin-top: 0.2rem;
+        background: white;
+    }
+</style>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>赛事列表</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+		<style>
+			#wrapper .details_page .list_img img{width:1.5rem;margin-top: 0.05rem;height:1rem;}
+			#wrapper .details_page{margin-bottom:0.2rem}
+			#wrapper .details_page{height:1.4rem}
+			#wrapper .details_page div{height: 1rem;
+    position: relative;
+    top: -0.05rem;}
+		</style>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="alert">请至少选择一个比赛分组</div>
+			   <#if  matchs?? &&  (matchs?size > 0)>
+				    <#list matchs as m>
+						<div class="details_page flex flex-pack-justify flex-align-center" onClick="javascript:window.location.href='${ctx}/game/detail/${(m.matchCode)!''}'">
+						     <a class="list_img"><img src="${(m.poster)!''}"></a>
+							 <div>
+							 	<p class="details_title list_details_title"><img src="${staticPath}/img/icon_name.png">${(m.matchName)!''}</p>
+							 	<p class="game_time"><img src="${staticPath}/img/icon_time.png">报名截止时间：${(m.regTime?string("yyyy-MM-dd"))!''}</p>
+							 </div>
+							 <span style="display:flex;justify-content: center;align-items: center"><img src="${staticPath}/img/icon_right.png"></span>
+						</div>
+			       </#list>
+			       <#else>
+			        <div class="none_data">
+						 <div class="none_img">
+						 	  <p><img src="${staticPath}/img/img_no.png" /></p>
+						 	  <span>暂无赛事</span>
+						 </div>
+		             </div>
+			   
+			   </#if>
+			
+		</div>
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+	<script type="text/javascript" src="${staticPath}/js/vue.js?v=${cssV}"></script>
+	<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+	<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+	<script>		
+		checkGroupInit("checkMatch",true,null)
+        checkBoxGroupInit("checkMatchActive",true,null)
+	</script>
+</html>

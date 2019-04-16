@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.GoodsMapper">
+	<resultMap id="BaseResultMap" type="com.efida.sports.entity.Goods">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="goods_pic" jdbcType="VARCHAR" property="goodsPic" />
+		<result column="product_price" jdbcType="INTEGER" property="productPrice" />
+		<result column="extra_money" jdbcType="INTEGER" property="extraMoney" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+		<result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+		<result column="thumb" jdbcType="LONGVARCHAR" property="thumb" />
+		<result column="description" jdbcType="LONGVARCHAR" property="description" />
+		<result column="match_code" jdbcType="VARCHAR" property="matchCode" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, goods_code, title,goods_pic, product_price,
+		extra_money,
+		create_time,
+		gmt_create, gmt_modified,thumb,
+		description,match_code
+	</sql>
+
+	<select id="selectGoods" resultType="com.efida.sports.entity.Goods">
+		select
+		id, goods_code goodsCode, title title,goods_pic goodsPic, product_price productPrice, extra_money extraMoney,
+		create_time createTime, description 
+		from goods
+		<where>
+			1=1
+			<if test="goodsName != null and goodsName != ''">
+				and title like concat('%','${goodsName}','%')
+			</if>
+		</where>
+		order by id desc
+	</select>
+
+	<select id="selectGoodsCount" resultType="com.efida.sports.entity.Goods">
+		select
+		id, goods_code goodsCode, title title,goods_pic goodsPic, product_price productPrice, extra_money extraMoney,
+		create_time createTime, description 
+		from goods
+		<where>
+			1=1
+			<if test="goodsName != null and goodsName != ''">
+				and title like concat('%','${goodsName}','%')
+			</if>
+		</where>
+	</select>
+
+</mapper>

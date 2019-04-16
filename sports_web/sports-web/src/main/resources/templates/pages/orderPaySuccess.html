@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>支付成功</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+    <style>
+        #mescroll{
+            position: absolute;
+            top: 1.28rem;
+            bottom: 0;
+            overflow-y: scroll;
+            height:auto;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper" style="height: 100%;overflow-y: scroll;">
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="back()">返回</div>
+        <div class="title">支付成功</div>
+    </div>
+    <div class="mescroll" id="mescroll">
+        <div class="paySuccess_content">
+            <p style="color: #999999;">支付成功</p>
+            <img src="${staticPath}/img/icon_chenggong.png">
+            <p style="color: #FF8F00" class="goToPayCenter">查看更多订单信息，前往订单中心>></p>
+        </div>
+        <!--<ul id="mescroll_list">-->
+        <!---->
+        <!--</ul>-->
+
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+<script>
+    var tokens = '';
+    var callAndroid = null;
+    var path = '${ctx}';
+    // var loadingBox = new loadingBox();
+    // loadingBox.creat();
+
+    if(!getThePrameValue('platform')){
+        $('#mescroll').css(
+            'top',0.88+'rem'
+        );
+    }else if(getThePrameValue('platform') == 'iOS'){
+        if (clientType('iphoneX')) {
+            //是iphoneX
+            $('#mescroll').css(
+                'top',1.76+'rem'
+            );
+        }
+    }
+
+
+
+    function back() {
+        var jumpOrderCenterIf = getThePrameValue('jumpOrderCenterIf')
+        if(jumpOrderCenterIf && jumpOrderCenterIf!=''){
+            window.location.href = path + '/orderCenter';
+        }else{
+            window.location.href = path + '/myMedal';
+        }
+
+    }
+
+    //获取
+    function getData(datas){
+        // var competitionCodes=getThePrameValue('competitionCode')
+
+        getResultMethods(path + '/score/myRankList', {
+
+        }, function(data) {
+
+        })
+    }
+    $('.goToPayCenter').click(function () {
+        window.location.href = path + '/orderCenter';
+    })
+
+
+
+    // //初始化下拉加载组件
+    // var mescroll = new MeScroll("mescroll", {
+    //     up: {
+    //         auto: true, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+    //         isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+    //         htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+    //         callback: endLoad //上拉回调,此处可简写; 相当于 callback: function (page) { upCallback(page); }
+    //         // toTop:{ //配置回到顶部按钮
+    //         //     src : "../res/img/mescroll-totop.png", //默认滚动到1000px显示,可配置offset修改
+    //         //     //offset : 1000
+    //         // }
+    //     }
+    // });
+
+
+    function endLoad(page) {
+        console.log('加载')
+        if(page.num == 1){
+            setTimeout(function () {
+                getMYGradeList(page.num)
+
+            },1500)
+        }else{
+            getMYGradeList(page.num)
+        }
+    }
+</script>
+<style>
+    .mescroll{
+        background: white;
+    }
+   .paySuccess_content{
+       width: 100%;
+       padding-top: 1.5rem;
+
+   }
+   .paySuccess_content p{
+       font-size: 0.3rem;
+       text-align: center;
+       margin: 0 auto;
+   }
+   .paySuccess_content img{
+       display: block;
+       margin: 0 auto;
+       padding: 0.4rem 0;
+   }
+</style>
+</html>

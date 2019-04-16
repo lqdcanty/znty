@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.RegisterDayReportMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.efida.sports.entity.RegisterDayReport">
+        <id column="id" property="id" />
+        <result column="report_code" property="reportCode" />
+        <result column="reg_terminal" property="regTerminal" />
+        <result column="channel_code" property="channelCode" />
+        <result column="channel_name" property="channelName" />
+        <result column="report_time" property="reportTime" />
+        <result column="report_day" property="reportDay" />
+        <result column="total_register" property="totalRegister" />
+        <result column="new_register" property="newRegister" />
+        <result column="login_register" property="loginRegister" />
+        <result column="week_active_register" property="weekActiveRegister" />
+        <result column="month_active_register" property="monthActiveRegister" />
+        <result column="access_count" property="accessCount" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, report_code, reg_terminal, channel_code, channel_name, report_time, report_day, total_register, new_register,login_register,week_active_register,month_active_register,access_count, gmt_create, gmt_modified
+    </sql>
+
+  <select id="getSumRegister"  resultType="java.lang.Long"  >  
+      SELECT SUM(new_register) FROM register_day_report
+  </select>
+  
+
+
+  <select id="getNewRegsiyer" resultType="Long" parameterType="java.util.Date">  
+      SELECT SUM(new_register) FROM register_day_report
+      where
+       <![CDATA[
+            report_day >= #{startTime}
+        ]]>
+      
+  </select>
+  
+    <select id="getActiveRegitsers" parameterType="java.util.Date">
+        SELECT  COUNT(1) FROM register_day_report WHERE 
+        <![CDATA[
+            report_day >= #{startTime}
+        ]]>
+   </select>
+   
+   
+   
+	<!--统计数据-->
+	<resultMap id="channelRegisterNumModelMap" type="com.efida.sports.model.ChannelRegisterNumModel">
+		<result column="channelCode" property="channelCode" />
+		<result column="totalRegister" property="totalRegister" />
+	</resultMap>
+   
+   
+   <select id="getChannelRegisterNum" resultMap="channelRegisterNumModelMap">
+       SELECT SUM(new_register) AS totalRegister,channel_code as channelCode
+       FROM register_day_report WHERE channel_code IS NOT NULL GROUP BY channel_code
+   </select>
+   
+   
+    
+	<!--统计数据-->
+	<resultMap id="RegisterDayReportTrendMap" type="com.efida.sports.model.RegisterDayReportTrendModel">
+		<result column="reportDate" property="date" />
+		<result column="newRegister" property="newRegister" />
+		<result column="totalRregister" property="totalRregister" />
+		<result column="channelCode" property="channelCode" />
+		<result column="channelName" property="channelName" />
+	</resultMap>
+	
+	
+	
+	<select id="selectPageRegisterTrend"  parameterType="java.util.Map" resultMap="RegisterDayReportTrendMap">
+	   select report_day as reportDate ,sum(total_register) as totalRregister,sum(new_register) as newRegister from register_day_report
+	    <where>
+        <if test="startTime!=null ">
+            <![CDATA[
+           and report_day >=#{startTime}  
+            ]]>
+        </if>
+        <if test="endTime!=null ">
+           <![CDATA[
+            and  report_day <=#{endTime}
+            ]]>
+        </if>
+       </where>  
+	    group by report_day
+	</select>
+	
+	<select id="selectRegisterTrend"  parameterType="java.util.Map" resultMap="RegisterDayReportTrendMap">
+	   select report_day as reportDate ,sum(total_register) as totalRregister,sum(new_register) as newRegister from register_day_report
+	    <where>
+        <if test="startTime!=null ">
+            <![CDATA[
+           and report_day >=#{startTime}  
+            ]]>
+        </if>
+        <if test="endTime!=null ">
+           <![CDATA[
+            and  report_day <=#{endTime}
+            ]]>
+        </if>
+       </where>  
+	    group by report_day
+	</select>
+	
+	
+	<select id="getTopNumChannel"  parameterType="java.util.Map" resultType="String">
+	SELECT channel_code FROM (SELECT channel_code,sum(new_register) AS total FROM register_day_report 
+	 <where>
+	     channel_code is not null
+        <if test="startTime!=null ">
+            <![CDATA[
+           and report_day >=#{startTime}  
+            ]]>
+        </if>
+        <if test="endTime!=null ">
+           <![CDATA[
+            and  report_day <=#{endTime}
+            ]]>
+        </if>
+       </where>  
+	   GROUP BY channel_code ) a1 ORDER BY a1.total DESC 
+	   <if test="topNum!=null and topNum!='0' ">
+	       LIMIT 0,${topNum}
+        </if>
+	</select>
+	
+	
+	
+	
+	<select id="selectChannelAnalysis"  parameterType="java.util.Map" resultMap="RegisterDayReportTrendMap">
+	   select channel_code as channelCode,max(total_register) as totalRregister,sum(new_register) as newRegister from register_day_report
+	    <where>
+        <if test="startTime!=null ">
+            <![CDATA[
+           and report_day >=#{startTime}  
+            ]]>
+        </if>
+        <if test="endTime!=null ">
+           <![CDATA[
+            and  report_day <=#{endTime}
+            ]]>
+        </if>
+        <if test="null != channelCodes and channelCodes.size > 0">
+			and channel_code in
+			<foreach collection="channelCodes" item="channelCode" open="(" separator=","  close=")">
+				#{channelCode}
+			</foreach>
+		</if>
+       </where>  
+       group by channel_code
+	</select>
+	
+	
+	<select id="channelTrendAnalysis"  parameterType="java.util.Map" resultMap="RegisterDayReportTrendMap">
+	  SELECT channel_code as channelCode,report_day as reportDate,new_register AS newRegister,total_register AS totalRregister
+	   FROM register_day_report  
+	    <where>
+        <if test="startTime!=null ">
+            <![CDATA[
+           and report_day >=#{startTime}  
+            ]]>
+        </if>
+        <if test="endTime!=null ">
+           <![CDATA[
+            and  report_day <=#{endTime}
+            ]]>
+        </if>
+        <if test="null != channelCodes and channelCodes.size > 0">
+			and channel_code in
+			<foreach collection="channelCodes" item="channelCode" open="(" separator=","  close=")">
+				#{channelCode}
+			</foreach>
+		</if>
+       </where>  
+       group by channel_code,report_day
+	</select>
+    
+    
+    
+    
+    
+    <select id="getRegTerminals"  parameterType="java.util.Map" resultType="String">
+	   SELECT reg_terminal as regTerminal
+	   FROM register_day_report  
+	    <where>
+	     reg_terminal !='dmp' 
+	     and reg_terminal is not null
+        <if test="endTime!=null ">
+           <![CDATA[
+            and  report_day <=#{endTime}
+            ]]>
+        </if>
+       </where>  
+       group by reg_terminal
+	</select>
+    
+    
+    
+       
+    <select id="getChannelCods"  parameterType="java.util.Map" resultType="String">
+	   SELECT channel_code as channelCode
+	   FROM register_day_report  
+	    <where>
+	    channel_code is not null
+        <if test="endTime!=null ">
+           <![CDATA[
+            and  report_day <=#{endTime}
+            ]]>
+        </if>
+       </where>  
+       group by channel_code
+	</select>
+    
+     <select id="selectRegisterDayReport"  parameterType="java.util.Map" resultMap="BaseResultMap">
+	  select 
+       <include refid="Base_Column_List" />
+	   FROM register_day_report  
+	    <where>
+           <![CDATA[
+            and  report_day <=#{endTime}
+            and  report_day >=#{startTime}
+            ]]>
+       </where>  
+	</select>
+    
+    
+    
+
+</mapper>

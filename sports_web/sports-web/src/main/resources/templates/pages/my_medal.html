@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>我的奖章</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+    <style>
+        .newMedal{
+            margin-left: 0.33rem;
+            vertical-align: middle;
+            width: 0.25rem;
+            height: 0.28rem;
+            margin-top: -0.03rem;
+        }
+        .oldMedal{
+            width: 1.5rem;
+            height: 1.5rem;
+            margin: 0.3rem 0.2rem 0.3rem 0.3rem;
+        }
+        .ulMedal{
+            color: #666;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 1.5rem;
+            margin-top: 0.3rem;
+            font-size: 0.28rem;
+        }
+        .ulMedal li{
+            width: 3.5rem;
+            list-style: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper" style="background:#fff;overflow-x:hidden;">
+        <div class="h5_header">
+            <img src="${staticPath}/img/icon_back.png"/>
+            <div class="back" onclick="callAndroid()">返回</div>
+            <div class="title">我的奖章</div>
+        </div>
+        <div id="mescroll" class="mescroll">
+            <div id="sectionCertificate">
+                <div style="display:none;height:2.95rem">
+                    <section style="border-top: 0.2rem solid #EFEFF4;width: 100%;">
+                        <div style="height:0.84rem;border-bottom:1px solid #eee;line-height:0.84rem;vertical-align: middle;">
+                            <img class="newMedal" src="${staticPath}/img/icon_name.png" />
+                            <span style="
+                                font-size: 0.26rem;
+                                display: inline-block;
+                                margin-left: 0.115rem;
+                                line-height: 0.26rem;
+                            ">智慧中国趣味定向大赛</span>
+                        </div>
+                        <div style="display:flex">
+                            <img class="oldMedal" src="${staticPath}/img/img_zhanwei_jzh@2x.png" />
+                            <ul class="ulMedal">
+                                <li>比赛名称a</li>
+                                <li>2018-07-12</li>
+                                <li data-certificate="" style="cursor:pointer" onclick="lookBook()">查看证书</li>
+                            </ul>
+                            <div class="ulMedal">
+                                <p></p>
+                                <p></p>
+                                <p style="vertical-align: middle">
+                                    <img style="height:0.27rem;width:0.27rem;vertical-align: middle" src="${staticPath}/img/icon_gr_jiangzh@2x.png">
+                                    <span style="color:#FF8F00;margin-left:0.115rem;vertical-align: middle">领取奖章</span>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <section class="medalSchool">
+            <img class="backgroundPhoto" src="${staticPath}/img/img_dl_lzs_bg@2x.png">
+            <img class="medalSchool_a" src="${staticPath}/img/img_star_a@2x.png">
+            <img class="medalSchool_b" src="${staticPath}/img/img_dx_jiangzh@2x.png">
+            <img class="medalSchool_c" id="medalSchool_c" src="${staticPath}/img/img_zhanwei_b@2x.png">
+            <img class="medalSchool_d" src="${staticPath}/img/img_dl_dingbu@2x.png">
+            <img class="medalSchool_e" src="${staticPath}/img/img_dl_dibu@2x.png">
+            <img onclick="gotoMessageCenter()" class="medalSchool_f" src="${staticPath}/img/icon_dl_share@2x.png">
+            <img onclick="closeCertificate()" class="medalSchool_g" src="${staticPath}/img/icon_dl_close@2x.png">
+            <div style="
+                position: absolute;
+                top: 5.4rem;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                margin: auto;
+                width: 100%;
+                height: 0.88rem;
+                text-align: center;
+                line-height: 0.88rem;
+            ">
+                <button onclick="goBuyThing()" style="
+                    width: 3.6rem;
+                    height: 0.66rem;
+                    line-height: 0.66rem;
+                    border-radius: 5rem;
+                    border: none;
+                    color: #fff;
+                    background: linear-gradient(#F9C052,#FF8F00);
+                ">领取实物</button>
+            </div>
+        </section>
+        <div id="nativeShare">
+            <p>分享至</p>
+            <p class="nativeShareCancel">取消</p>
+        </div>
+        <div class="share_mask_box"></div>
+    </div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+<script type="text/javascript" src="${staticPath}/js/mobileShare.js"></script>
+<script>
+    var path = '${ctx}';
+    var res = null;
+    var copy_num = '';
+    var version = '';
+    // var tokens = getThePrameValue('appToken')=='null'?'':getThePrameValue('appToken');
+    var tokens = ''
+    var callAndroid = function(){
+        android.back("back")
+    };
+    // 查看证书
+    function lookBook(myobj){
+        var certCode = $(myobj).attr("data-certificate")
+        var url = $(myobj).attr("data-certificateU")
+        var datacertCode = {}
+        datacertCode.certCode = certCode
+        $.ajax({
+            url:  path + '/score/cert/updeteCertStatus',
+            type: 'post',
+            dataType: 'json',
+            data: datacertCode,
+            success: function(d) {
+                if(d.resultCode == 200){
+                    console.log(d)
+                }
+            },
+            error:function(d){
+
+            }
+        })
+        window.location.href = path + '/myCertificate?certCodeUl='+url;
+    }
+    function goBuyThing(){
+        window.location.href = path + '/medalPage';
+    }
+    var emptyWorn = new emptyWorn($('#sectionCertificate'),'暂无奖章','～快来参赛，获取您的专属奖章～')
+    function jumpFile(page){
+        var datebase = {}
+        datebase.token = tokens
+        datebase.currentPage = page
+        datebase.pageSize = '10'
+        $.ajax({
+            url:  path + '/score/cert/getScoreCertList',
+            type: 'get',
+            dataType: 'json',
+            data: datebase,
+            success: function(d) {
+                if(d.resultCode == 200){
+                    if(page == 1){
+                        $('#sectionCertificate').html('')
+                    }
+                    if(d.result.scoreCert.length>0 && d.result.scoreCert){
+                        var arrayCertificate = d.result.scoreCert
+                        for(var i=0;i<arrayCertificate.length;i++){
+                            var comtitionName = arrayCertificate[i].comtitionName == null ? arrayCertificate[i].eventName:arrayCertificate[i].comtitionName;
+                            var divCertificate = $('<div style="height:2.95rem">\n' +
+                                '            <section style="\n' +
+                                '                border-top: 0.2rem solid #EFEFF4;\n' +
+                                '                width: 100%;\n' +
+                                '            ">\n' +
+                                '                <div style="height:0.84rem;border-bottom:1px solid #eee;line-height:0.84rem;vertical-align: middle;">\n' +
+                                '                    <img class="newMedal" src="${staticPath}/img/icon_name.png" />\n' +
+                                '                    <span style="\n' +
+                                '                        font-size: 0.26rem;\n' +
+                                '                        display: inline-block;\n' +
+                                '                        margin-left: 0.115rem;\n' +
+                                '                        line-height: 0.26rem;\n' +
+                                '                    ">'+arrayCertificate[i].matchName+'</span>\n' +
+                                '                </div>\n' +
+                                '                <div style="display:flex">\n' +
+                                '                    <img class="oldMedal" src="${staticPath}/img/img_lb_zhang@2x.png" />\n' +
+                                '                    <ul class="ulMedal">\n' +
+                                '                        <li>'+comtitionName+'</li>\n' +
+                                '                        <li>'+arrayCertificate[i].partTimeStr+'</li>\n' +
+                                '                        <li data-certificate="'+arrayCertificate[i].scoreCertCode+'" data-certificateU="'+arrayCertificate[i].certPicUrl+'" style="cursor:pointer" onclick="lookBook(this)">查看证书</li>\n' +
+                                '                    </ul>\n' +
+                                '                    <div class="ulMedal">\n' +
+                                '                        <p></p>\n' +
+                                '                        <p></p>\n' +
+                                '                        <p style="vertical-align: middle">\n' +
+                                '                            <img style="height:0.27rem;width:0.27rem;vertical-align: middle" src="${staticPath}/img/icon_gr_jiangzh@2x.png">\n' +
+                                '                            <span onclick="goCertificate(this)" data-certificateU="'+arrayCertificate[i].certPicUrl+'" style="color:#FF8F00;margin-left:0.115rem;vertical-align: middle">领取奖章</span>\n' +
+                                '                        </p>\n' +
+                                '                    </div>\n' +
+                                '                </div>\n' +
+                                '            </section>\n' +
+                                '        </div>')
+                            $('#sectionCertificate').append(divCertificate)
+                        }
+                        emptyWorn.hide()
+                    }else{
+                        mescroll.endBySize(d.result.scoreCert.length, d.result.allRow, '');
+                        emptyWorn.show()
+                        return false
+                    }
+                    if(d.result.share.length>0 && d.result.share){
+                        var shareData = {
+                            title:d.result.share.title,
+                            desc:d.result.share.content,
+                            link:d.result.share.shareUrl,
+                            imgUrl:d.result.share.picUrl
+                        }
+                        mobileShare(path,shareData)
+
+                    }
+                    mescroll.endBySize(d.result.scoreCert.length, d.result.allRow, '');
+                }else{
+                    console.log(d.resultCode)
+                    mescroll.endBySize(d.result.scoreCert.length, d.result.allRow, '');
+                    emptyWorn.show()
+                    return false
+                   // mescroll.endErr();
+                }
+
+            },
+            error:function (d) {
+                console.log(d)
+                mescroll.endBySize(d.result.scoreCert.length, d.result.allRow, '');
+                emptyWorn.show()
+                return false
+            }
+        });
+    }
+
+    // 关闭奖章
+    function closeCertificate(){
+        $('.medalSchool').css({
+            display:'none'
+        })
+    }
+
+    //消息中心
+    function gotoMessageCenter() {
+        window.location.href=path+ '/massageCenter'
+    }
+
+    // 领取奖章
+    function goCertificate(mycertry) {
+        var url = $(mycertry).attr("data-certificateU")
+        if(url!=null && url.length>0){
+            $('#medalSchool_c').attr('src',url)
+        }
+        window.location.href = path + '/medalPage';
+        // $('.medalSchool').css({
+        //     display:'block'
+        // })
+        // localStorage.setItem('goodsCode','G20180806000001')
+    }
+    if(!getThePrameValue('platform')){
+        // $(document.body).css(
+        //     'top',0.88+'rem'
+        // );
+        // $('.h5_header').css(
+        //     'padding-top',0
+        // )
+        callAndroid = function (){
+            window.location.href=path+ '/ucenter'
+        }
+        $('#sectionCertificate').css({
+            "margin-top":"0.88rem"
+        })
+    }else if(getThePrameValue('platform')) {
+        if(getThePrameValue('platform') == 'iOS'){
+            if (clientType('iphoneX')) {
+                //是iphoneX
+                $(document.body).css(
+                    'top', 1.76 + 'rem'
+                );
+            }
+            callAndroid = function (){
+                window.webkit.messageHandlers.back.postMessage(null)
+            }
+        }else if(getThePrameValue('platform') == 'Android'){
+
+        }else{
+
+        }
+    }
+    var mescroll = new MeScroll("mescroll", {
+        up: {
+            auto: true, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+            isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+            htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+            callback: endLoad, //上拉回调,此处可简写; 相当于 callback: function (page) { upCallback(page); }
+        }
+    });
+
+    function endLoad(page) {
+        console.log('加载')
+        if(page.num == 1){
+            setTimeout(function () {
+                jumpFile(page.num)
+            },1500)
+        }else{
+            jumpFile(page.num)
+        }
+    }
+</script>
+<style>
+    #nativeShare{
+        width: 100%;
+        height: 2.4rem;
+        background: white;
+        position: fixed;
+        bottom: 0rem;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        z-index: 999;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding-bottom: 1rem;
+        display: none;
+    }
+    .soshm-item{
+        margin-bottom: 0.4rem;
+    }
+    #nativeShare p{
+        width: 100%;
+        height: 0.8rem;
+        font-size: 0.3rem;
+        color: #333;
+        text-align: center;
+        line-height: 0.8rem;
+        position: absolute;
+
+    }
+    #nativeShare p:first-of-type{
+        left: 0;
+        top: 0;
+    }
+    #nativeShare p:last-of-type{
+        left: 0;
+        bottom: 0;
+        border-top: 1px solid #E2E2E2;
+    }
+</style>
+</html>

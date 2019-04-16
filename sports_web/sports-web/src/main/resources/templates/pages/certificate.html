@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>参赛证书</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+</head>
+<body>
+<div id="wrapper" style="background:#fff;overflow-x:hidden;">
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="callAndroid()">返回</div>
+        <div class="title">参赛证书</div>
+    </div>
+    <div style="position:absolute;">
+        <div style="margin: 0.3rem 0.3rem 1.54rem 0.3rem;">
+            <img style="width: 100%;" id="certificateId" src="" />
+        </di
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/soshm.min.js"></script>
+<script>
+    var res = null;
+    var copy_num = '';
+    var version = '';
+    var path = '${ctx}';
+    var callAndroid = function(){
+        android.back("back")
+    };
+    if(!getThePrameValue('platform')){
+        $(document.body).css(
+            'top',0.88+'rem'
+        );
+        $('.h5_header').css(
+            'padding-top',0
+        )
+        callAndroid = function (){
+            window.location.href=path+ '/myMedal'
+        }
+    }else if(getThePrameValue('platform')) {
+        if(getThePrameValue('platform') == 'iOS'){
+            if (clientType('iphoneX')) {
+                //是iphoneX
+                $(document.body).css(
+                    'top', 1.76 + 'rem'
+                );
+            }
+            callAndroid = function (){
+                window.webkit.messageHandlers.back.postMessage(null)
+            }
+        }else if(getThePrameValue('platform') == 'Android'){
+
+        }else{
+
+        }
+    }
+    if(getThePrameValue('certCodeUl')){
+        $('#certificateId').attr("src",getThePrameValue('certCodeUl'))
+    }
+</script>
+</html>

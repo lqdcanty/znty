@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>个人中心</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <style>
+        .backgroundUserCenter{
+            height:3.5rem;
+        }
+        .myOrderCenter{
+            height: 1.57rem;
+            background: #FFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 0.2rem solid #EFEFF4;
+        }
+        .shopUser{
+            width: 0.58rem;
+            height: 0.54rem;
+        }
+        .shopUserUL{
+            width: 0.4rem;
+            height:0.4rem;
+        }
+        .rightUL li{
+            width: 6.9rem;
+            margin: auto;
+            height: 0.4rem;
+            line-height: 0.4rem;
+        }
+        .rightUL{
+            font-family: PingFangSC-Regular;
+            font-size: 0.28rem;
+            color: #333333;
+            text-align: left;
+        }
+        .rightUL li div::after {
+            content: '>';
+            width: 0.14rem;
+            height: 0.24rem;
+        }
+        .shopUserChild{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: PingFangSC-Regular;
+            font-size: 0.24rem;
+            color: #666666;
+            text-align: left;
+        }
+        .nameUser{
+            margin-left: 0.2rem;
+        }
+        .marginThree{
+            margin-top: 0.6rem;
+            padding-bottom: 0.3rem;
+            height: 0.4rem;
+            line-height: 0.4rem;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #E2E2E2;
+        }
+        .divButton{
+            width: 6.9rem;
+            margin: auto;
+            height: 0.88rem;
+            line-height: 0.88rem;
+            border: none;
+            outline: none;
+            border-radius: 0.5rem;
+            background-image: linear-gradient(-180deg, #F9C052 0%, #FF8F00 100%);
+            box-shadow: 0 0.1rem 0.3rem 0 rgba(255,143,0,0.50);
+            font-family: PingFangSC-Regular;
+            font-size: 0.3rem;
+            color: #FFFFFF;
+            text-align: center;
+        }
+        .spanMessage{
+            position: absolute;
+            right: 0.3rem;
+            height: 0.88rem;
+            line-height: 0.88rem;
+            vertical-align: middle;
+        }
+        .personPhoto{
+            position: absolute;
+            top: 0.88rem;
+            left: 0;
+            right: 0;
+            text-align:  center;
+        }
+        .nameTotal{
+            position: absolute;
+            top: 2.28rem;
+            text-align: center;
+            left: 0;
+            right: 0;
+        }
+        .nameTotal span{
+            font-family: PingFangSC-Medium;
+            font-size: 0.28rem;
+            color: #FFFFFF;
+            text-align: left;
+        }
+        .redball{
+            position: absolute;
+            width: 0.16rem;
+            height: 0.16rem;
+            background: #F74C31;
+            border-radius: 50%;
+            right: -0.1rem;
+            top: 0.2rem;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper" style="background:#fff;overflow-x:hidden;">
+    <div class="backgroundUserCenter" onclick="goUcenterChild()">
+        <div style="position:relative">
+            <span class="spanMessage" style="display:none">
+                <img src="${staticPath}/img/icon_msg.png" style="width: 0.4rem;height: 0.4rem;vertical-align: middle;"/>
+                <span class="redball"></span>
+            </span>
+            <div class="personPhoto">
+                <span><img id="photoMysearch" style="width:1.3rem;height:1.3rem;border-radius: 50%;" src="${staticPath}/img/icon_user_1@2x.png"/></span>
+                <!--<span>
+                    <input type="file" style="opacity:0; filter:alpha(opacity=0); height: 1.3rem; width: 1.3rem; position: absolute; top: 0; left: 0; z-index: 9;right: 0;margin: auto;" onchange="handleFiles(this,'icon')">
+                    <img id="photoMysearch" style="width:1.3rem;height:1.3rem;border-radius: 50%;" src="${staticPath}/img/icon_user@2x.png"/>
+                </span>-->
+            </div>
+            <div class="nameTotal">
+                <span><input id="nuckNames" disabled="disabled" type="text" value= "请更改昵称" style="border: none;outline: none;background: none;text-align: center;"/></span>
+            </div>
+        </div>
+        <img style="height:100%;" src="${staticPath}/img/bg_geren@2x.png">
+    </div>
+    <div class="myOrderCenter">
+        <div class="shopUserChild" style="margin-left: 0.89rem;">
+            <span><img class="shopUser" onclick="shopUser('WAIT_PAY')" src="${staticPath}/img/icon_wallet.png"/></span><span style="margin-top:0.1rem">待支付</span>
+        </div>
+        <div class="shopUserChild">
+            <span><img class="shopUser" onclick="shopUser('WAIT_COMPLETE')" src="${staticPath}/img/icon_perfect.png"/></span><span style="margin-top:0.1rem">待完善</span>
+        </div>
+        <div class="shopUserChild">
+            <span><img class="shopUser" onclick="shopUser('SUCCESS')" src="${staticPath}/img/icon_success.png"/></span><span style="margin-top:0.1rem">已成功</span>
+        </div>
+        <div class="shopUserChild" style="margin-right: 0.76rem;">
+            <span><img class="shopUser" onclick="shopUser('')" src="${staticPath}/img/icon_baoming_a@2x.png"/></span><span style="margin-top:0.1rem">全部比赛</span>
+        </div>
+    </div>
+    <ul class="rightUL">
+        <li onclick="myCardTest()">
+            <div class="marginThree" style="margin-top: 0.3rem;">
+                <span style="display: flex;"><img class="shopUserUL" src="${staticPath}/img/icon_applycard.png"/>
+                    <span class="nameUser">我的报名卡</span>
+                </span>
+            </div>
+        </li>
+        <li onclick="myScoreYeah()">
+            <div class="marginThree">
+                <span style="display: flex;"><img class="shopUserUL" src="${staticPath}/img/icon_mygrade.png"/>
+                    <span class="nameUser">我的成绩</span>
+                </span>
+            </div>
+        </li>
+        <li onclick="myWinner()">
+            <div class="marginThree">
+                <span style="display: flex;"><img class="shopUserUL" src="${staticPath}/img/icon_receive_medal.png"/>
+                    <span class="nameUser">我的奖章</span>
+                </span>
+            </div>
+        </li>
+        <li onclick="myOrdering()">
+            <div class="marginThree">
+                <span style="display: flex;"><img class="shopUserUL" src="${staticPath}/img/icon_order.png"/>
+                    <span class="nameUser">我的订单</span>
+                </span>
+            </div>
+        </li>
+        <li onclick="helpCallback()">
+            <div class="marginThree">
+                <span style="display: flex;"><img class="shopUserUL" src="${staticPath}/img/icon_mykefu.png"/>
+                    <span class="nameUser">帮助与反馈</span>
+                </span>
+            </div>
+        </li>
+        <li onclick="aboutUs()">
+            <div class="marginThree">
+                <span style="display: flex;"><img class="shopUserUL" src="${staticPath}/img/icon_aboutmy.png"/>
+                    <span class="nameUser">关于我们</span>
+                </span>
+            </div>
+        </li>
+    </ul>
+    <div style="margin-top: 1.1rem;text-align: center;margin-bottom: 2rem;">
+        <button id="divButton" onclick="divLoginOut()" class="divButton">退出登录</button>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script>
+    var path = "${ctx}";
+    var footerAll = new footerAll(3)
+    footerAll.showFooter()
+    // 我的报名卡
+    function myCardTest(){
+        window.location.href=path+ '/user/register/card'
+    }
+    // 我的成绩
+    function myScoreYeah(){
+        window.location.href=path+ '/score/my'
+    }
+    // 我的奖章
+    function myWinner(){
+        window.location.href=path+ '/myMedal'
+    }
+    // 我的订单
+    function myOrdering(){
+        window.location.href=path+ '/orderCenter'
+    }
+    // 帮助与反馈
+    function helpCallback(){
+        window.location.href=path+ '/custom/service'
+    }
+    // 关于我们
+    function aboutUs(){
+        window.location.href=path+ '/about'
+    }
+    var urlPhoto = ''
+    // 上传头像
+    function handleFiles(obj,id) {
+        var file = document.getElementById("photoMysearch");
+        var files = obj.files;
+        img = new Image();
+        if(window.URL){
+            //File API
+            img.src = window.URL.createObjectURL(files[0]); //创建一个object URL，并不是你的本地路径
+            img.onload = function(e) {
+                window.URL.revokeObjectURL(this.src); //图片加载后，释放object URL
+            }
+        }
+        file.src=img.src;
+        //上传文件
+        var fd = new FormData();//实例化一个表单
+        fd.append('file', files[0]);//追加图片元素
+        $.ajax({
+            url:path+'file/upload',
+            // url:'https://zntywx.efida.com.cn/file/upload',
+            data:fd,
+            type: "post",
+            dataType: "json",
+            cache: false,//上传文件无需缓存
+            processData: false,//用于对data参数进行序列化处理 这里必须false
+            contentType: false, //必须
+            success: function (data) {
+                console.log(data)
+                if(data.resultCode == 200){
+                    urlPhoto = data.result.url
+                    if(urlPhoto != '' && urlPhoto.length>0){
+                        var numName = document.getElementById('nuckNames').value;
+                        // var test = 'http://zntyfdfs.efida.com.cn/group1/M00/00/08/rBADF1tyetOATnyDAABN-HdmivM279.png'
+                        var datas = {}
+                        datas.headimgUrl = urlPhoto
+                        datas.nickName = numName
+                        $.ajax({
+                            url:path+'/user/wx/update',
+                            // url:'https://zntywx.efida.com.cn/file/upload',
+                            data:datas,
+                            type: "post",
+                            dataType: "json",
+                            success: function (data) {
+                                console.log(data)
+                            },
+                        })
+                    }
+
+                }
+            },
+            error:function(){
+                var tips = new loadingTips('头像修改失败，请重试',2500)
+                tips.creat()
+            }
+        })
+
+    }
+
+    // 修改昵称
+    function testName(){
+        var numNamesec = document.getElementById('nuckNames').value;
+        // var test = 'http://zntyfdfs.efida.com.cn/group1/M00/00/08/rBADF1tyetOATnyDAABN-HdmivM279.png'
+        var datassec = {}
+        datassec.headimgUrl = urlPhoto
+        datassec.nickName = numNamesec
+        $.ajax({
+            url:path+'/user/wx/update',
+            // url:'https://zntywx.efida.com.cn/file/upload',
+            data:datassec,
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+            },
+        })
+    }
+
+    // 获取用户头像和昵称
+    function goPhotoName(){
+        getResultMethods(path + "/user/get/card",{token:''},function(data){
+            if(data.resultCode == 200){
+                if(data.result.register.headimgUrl!=''  && data.result.register.headimgUrl!=null && data.result.register.headimgUrl.length>0){
+                    $('#photoMysearch').attr('src',data.result.register.headimgUrl)
+                }else{
+                    $('#photoMysearch').attr('src','${staticPath}/img/icon_user_1@2x.png')
+                }
+                document.getElementById('nuckNames').value = (data.result.register.nickName==''||data.result.register.nickName==null)?data.result.register.account:data.result.register.nickName
+            }else{
+                $('#photoMysearch').attr('src','${staticPath}/img/icon_user_1@2x.png')
+            }
+        })
+
+    }
+    goPhotoName();
+    // 退出登录
+    function divLoginOut(){
+        getResultMethods(path + "/user/wx/quit/login",{},function(data){
+            console.log(data)
+            if(data.resultCode == 200) {
+                 window.location.href=path+ '/game/type'
+            }else{
+                var tips = new loadingTips('退出登录失败',2500);
+                tips.creat();
+            }
+        })
+    }
+
+    // 判断是否隐藏退出登录按钮
+    var ua = navigator.userAgent.toLowerCase();
+    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+        $("#divButton").css({
+            "visibility":"hidden"
+        })
+    } else {
+        $("#divButton").css({
+            "visibility":"initial"
+        })
+    }
+
+    // 个人中心
+    function shopUser(num){
+        window.location.href=path+ '/auth/personal?number='+num
+    }
+
+    //消息中心
+    function gotoMessageCenter() {
+        window.location.href=path+ '/massageCenter'
+    }
+    // 去个人消息修改头像
+    function goUcenterChild(){
+        window.location.href=path+ '/ucenter/ucenterChild'
+    }
+</script>
+</html>

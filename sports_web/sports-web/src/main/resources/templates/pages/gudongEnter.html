@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>报名线上比赛</title>
+    <link rel="stylesheet" href="${staticPath}/css/gudong.css?v=${cssV}" />
+    <style>
+        .gd_font{
+            font-family: MicrosoftYaHei;
+            font-size: 0.32rem;
+            color: #333333
+        }
+
+        .gd_ul_match li{
+            list-style: none;
+            width: 6rem;
+            height: 1rem;
+            line-height: 1rem;
+            margin: auto;
+            background: #FFFFFF;
+            border: 2px solid #E0E0E0;
+            border-radius: 1rem;
+            margin-top: 0.3rem;
+        }
+
+        .gd_ul_match li span{
+            font-family: MicrosoftYaHei;
+            font-size: 0.34rem;
+            color: #666666;
+            letter-spacing: 0.02rem;
+            text-align: center;
+        }
+        .gd_content{
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="h5_header gd_font" style="background: #fff;box-shadow: 0 0.01rem 0 0 #ECECEC">
+        <img src="${staticPath}/img/icon_fanhui.png" onclick="callAndroid()"/>
+        <div class="back" onclick="callAndroid()"></div>
+        <div class="title">报名线上比赛</div>
+    </div>
+    <div class="h5_header_space" style="height: 1.28rem"></div>
+    <div class="gd_content" style="bottom: 1.4rem;">
+        <div class="gd_content_box">
+            <div class="gd_top">
+                <span><img src="${staticPath}/img/icon_tit.png" /></span>
+                <span style="margin-left: 0.09rem;margin-right: 0.09rem;">选择比赛组别</span>
+                <span><img src="${staticPath}/img/icon_tit.png" /></span>
+            </div>
+            <div style="text-align:center;">
+                <ul class="gd_ul_match" style="text-align: center;">
+                    <li>
+                        <span>迷你3km-男子组</span>
+                    </li>
+                    <li>
+                        <span>迷你3km-女子组</span>
+                    </li>
+                    <li>
+                        <span>乐跑10km-男子组</span>
+                    </li>
+                    <li>
+                        <span>乐跑10km-女子组</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="gd_top" style="margin-top: 0.6rem;">
+                <span><img src="${staticPath}/img/icon_tit.png" /></span>
+                <span style="margin-left: 0.09rem;margin-right: 0.09rem;">填写报名信息</span>
+                <span><img src="${staticPath}/img/icon_tit.png" /></span>
+            </div>
+            <div class="gd_form_box" style="margin-top:0.3rem;border-top: 1px solid #E2E2E2;">
+                <ul class="gd_form_list">
+                    <li>
+                        <p>姓名</p>
+                        <div>
+
+                            <input maxlength = "12" class="text" id="userName" type="text" placeholder="请输入真实姓名"/>
+
+                        </div>
+                    </li>
+                    <li>
+                        <p>性别</p>
+                        <div>
+                                <span style="display: block">
+                                    <input id="itemMale" class="radio" name="sex" type="radio" value="1" />
+                                    <label for="itemMale"></label>
+                                    <p style="flex: none;position: absolute;left: 0.6rem;top: 0;line-height: 0.4rem;">男</p>
+                                </span>
+                            <span style="display: block">
+                                    <input id="itemFemale" class="radio" name="sex" type="radio" value="2" />
+                                    <label for="itemFemale"></label>
+                                    <p style="flex: none;position: absolute;left: 0.6rem;top: 0;line-height: 0.4rem;">女</p>
+                                </span>
+                        </div>
+                    </li>
+                    <li>
+                        <p>手机号码</p>
+                        <div>
+                            <input style="background:#fff;" class="text" id="tel" type="text" placeholder="请输入手机号码"/>
+                        </div>
+                    </li>
+                    <li>
+                        <p>验证码</p>
+                        <div style="color: #b7b7b7;">
+                            <input id="codeCheck" style="width:2.9rem;margin-right: 0.2rem;height: 100%;border: none;font-size: 0.28rem;" type="text" placeholder="请输入验证码" name="verifyCode" data-required="true" data-conditional="verifyCode"  data-descriptions="captchacode">|
+                            <a class="yzm" style="margin-left: 0.5rem;color: #29BA66;" onclick="getCode(this)">发送验证码</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="form_read">
+                    <img src="${staticPath}/img/icon_tongyia.png">
+                    <p>我已经阅读并接受</p>
+                    <span>免责声明</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="gd_submit_area">
+        <p class="gd_submit">提交</p>
+    </div>
+
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script>
+    var path = "${ctx}";
+    window.onload=function (ev) {
+
+        if (clientType('iphoneX')) {
+            $('.h5_header').css(
+                'padding-top','0.88rem'
+            );
+            $('.gd_content').css(
+                'top',1.76+'rem'
+            );
+
+        }else{
+            $('.h5_header').css(
+                'padding-top','0.4rem'
+            );
+            $('.gd_content').css(
+                'top',1.28+'rem'
+            );
+        }
+    }
+
+    $('.gd_ul_match li').click(function () {
+        $('.gd_ul_match li').removeClass('choosed')
+        $(this).addClass('choosed')
+    })
+    $('.form_read img').click(function () {
+        $(this).attr('src','${staticPath}/img/icon_tongyi.png')
+    })
+    $('.gd_submit').click(function () {
+        window.location.href = path+'/app/gudongSuccess';
+    })
+    callAndroid = function () {
+        window.history.back()
+    }
+</script>
+</body>
+</html>

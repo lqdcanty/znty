@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;"> -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>运动员报 名信息</title>
+    <!-- Custom styles for this template -->
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+    <link href="${stx}/css/validate.css" rel="stylesheet"> 
+   <!--  <link rel="stylesheet" href="${stx}/laydate/theme/default/laydate.css"> -->
+    <link rel="stylesheet" href="${stx}/layui/css/layui.css" media="all">
+    <style>
+    	.description-wrap{
+    		position:absolute;
+    	}
+    	.upload-wrap{display:none;margin-bottom: 20px;}
+    </style>
+</head>
+    <body class="sign_backimg">
+     <#include "common/alert.html">
+		<div class="modal_agreement">
+		<div class="modal_agreement">
+			 <div class="agreement_content">
+			 	  <p class="close" id="close"><img src="${stx}/img/icon_cl.png"></p>
+			 	  <div class="content">
+			 	  	<p>免责声明</p>
+						<p>
+				  <span class="f_14">参赛者承诺</span><br>
+					本人自愿报名参加本次赛事（以下统称“比赛”），并承诺已全面了解、同意遵守由首届全国智能体育大赛组委会及承办机构（以下统称“组办方”）制定的各项比赛规则、规程、规定、要求及采取的措施，并承担由于违反以上规定造成损失的全部责任。已为参加比赛做好充分准备，并确认自身身体条件和精神健康状况方面符合参加比赛的各项要求，本人认识到在参加比赛时存在对自身造成伤害的风险，包括终生残疾或死亡，本人承认并接受此风险的存在。本人不会为此追究比赛组织方、比赛赞助方、赛事裁判和工作人员的任何责任。
+					本人对参赛可能发生的各种风险和意外已作了全面、审慎的评估，并愿意自行承担由此产生的一切后果。本人保证在参赛过程中为个人安全负责。本人同意“组织方”有权利无偿使用本人的姓名和肖像以及其它个人资料进行各项宣传活动。
+					本人或法定代理人已认真阅读并理解上述内容，现予以确认。<br>
+					特此承诺。
+				</p>
+				<p>
+				<span class="f_14">赛事参赛声明</span><br>
+                                          注：请所有参赛选手报名之前务必认真、仔细阅读本赛事所有赛事信息及参赛者承诺，在您提交报名信息后即被默认为您已阅读、理解并同意遵守本赛事规则中的一切内容并签署及提交免责声明。作为参赛选手、我本人、我的监护人、管理人、法定代理人以及任何可能代表我提起赔偿请求或诉讼的人做出以下声明：<br>
+                1、本人自愿参加本次比赛，我确认本人具有参加赛事相应的民事行为能力和民事责任能力，并且已获得监护人的同意；<br>
+				2、本人确认全面理解并同意首届全国智能体育大赛制定的各项比赛规则、规程、规定、要求及采取的措施。<br>
+				3、本人确认已认真阅读了组织方就选手参加本次赛事可能发生的一切风险（包括但不限于因参加本次比赛所可能产生的人身伤亡风险）的提示，我在此明确同意将自行承担因参加本次比赛所可能产生的一切风险和责任。<br>
+				4、本人承诺已通过正规医疗机构进行体检，并结合检查报告进行自我评估，确认自己的身体状况能适应本次比赛中的相关运动，本人认识到在参加比赛时存在对自身造成伤害的风险，包括终生残疾或死亡，本人承认并接受此风险的存在。承诺愿意承担参赛可能带来的一切风险（包括但不限于因参加本次比赛所可能产生的人身伤亡风险）；<br>
+				5、本人参加此次比赛以及参赛全过程所发生的人身伤害、局部或永久性伤残、死亡、医疗或住院费用、财产损坏、任何形式的盗窃或财产损失等事项，由我自己承担全部责任，免除组织方责任，组织方对此不承担任何形式的赔偿，本人不会为此追究比赛组织方、比赛赞助方、比赛裁判和工作人员的任何责任；<br>
+				6、本人授权比赛组织方及指定媒体无偿使用本人的肖像、姓名、声音等用于首届全国智能体育大赛的宣传与推广；<br>
+				</p>
+				<p>
+				<span class="f_14">组委会特别提示有以下疾病患者不宜参加比赛：</span><br>
+				先天性心脏病和风湿性心脏病患者；<br>
+				高血压和脑血管疾病患者；<br>
+				心肌炎和其它心脏病患者；<br>
+				冠状动脉病患者和严重心率不齐者；<br>
+				血糖过高或过少的糖尿病患者；<br>
+				其它不适合运动的疾病患者。<br>
+				</p>	 	  		
+			 	  </div>
+			 </div>
+		</div>
+		</div>
+        <#include "common/nav.html">
+		<div class="signUp_from">	  	     
+ 	  	     <div class="container from_table">
+ 	  	     	  <div class="order">  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+					   <span style="white-space:pre;">  </span><span class="txt">个人信息</span>  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+				  </div> 
+				  <form class="entyr_from" id="entyr_from" action="" method="post">
+				  	  <input type="hidden"  value="${(orderCode)!''}" name="orderCode" id="orderCode"/>
+				  	  <input type="hidden"  value="${(register.registerCode)!''}" name="registerCode" id="registerCode"/>
+					  <table class="user_msy" cellspacing="0" cellpadding="0" >
+					  	<tr>
+					  		<td class="name"><span class="star">*</span>真实姓名</td>
+					  		<td class="input_box"><input type="text" name="playerName" id="playerName" placeholder="请输入真实姓名" data-required="true" data-descriptions="playerName" data-describedby="playerName-description" size="18" value="">
+					  			<div id="playerName-description" class="description-wrap"></div>
+					  		</td>				  		
+					  	</tr>
+					  	
+					  	<tr>
+					  		<td class="name"><span class="star">*</span>性别</td>
+					  		<td class="input_box">
+					  			<div class="sex">
+									<div class="male">
+										<span class="female-custom active"></span>
+									    <input type="radio" name="sex" data-required="true" checked="checked"  value="m" data-descriptions="sex"  id="male"> <label for="male">男</label>
+								    </div>
+								    <div class="female">
+									    <span class="female-custom"></span>
+									    <input type="radio"  name="sex" data-required="true" value="f" data-descriptions="sex"  id="female"> <label for="female">女</label>						    
+								    </div>
+							
+								</div>
+					  		</td>				  		
+					  	</tr>
+					  	<tr>
+					  		<td class="name"><span class="star">*</span>手机号码</td>
+					  		<td class="input_box" id="y_num"><input type="text" id="tel" name="playerPhone" placeholder="请输入手机号码" data-required="true"  data-validate="playerPhone" data-describedby="phone-description">
+					  		    <div id="phone-description" class="description-wrap"></div>
+					  		</td>				  	
+					  			
+					  	</tr>					  		
+					  	<tr>
+					  		<td class="name"><span class="star">*</span>验证码</td>
+					  		<td class="input_box">
+						  		<span class="verifyCode"><input type="text" placeholder="请输入验证码" name="verifyCode" id="verifyCode" data-required="true" data-conditional="verifyCode" data-describedby="verifyCode-description"  data-descriptions="verifyCode">
+						  		<a class="yzm" onclick="getCode(this)">发送验证码</a>
+						  		</span>
+						  	    <div id="verifyCode-description" class="description-wrap"></div>
+						  	</td>
+	
+					  	</tr>
+					  	<#if pro.playerNationality?? && pro.playerNationality.isShow>
+						  	<tr>
+						  	    <td class="name name_left">						  			
+						  	    	<#if pro.playerNationality?? && pro.playerNationality.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  			国籍</td>
+						  		<td>
+						  			<#if pro.playerNationality?? && pro.playerNationality.isRequired>
+							  			<input type="text" placeholder="请输入国籍" name="playerNationality" id="playerNationality" data-required="true" data-descriptions="playerNationality" data-describedby="playerNationality-description" size="18" value="">
+						  			<#else>
+						  			    <input type="text" placeholder="请输入国籍" name="playerNationality" id="playerNationality"  size="18" value="">
+						  			</#if>
+						  		   <div id="playerNationality-description" class="description-wrap"></div>	
+						  		</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerWeight?? && pro.playerWeight.isShow>
+						  	<tr>
+						  	    <td class="name name_left">
+						  	    	<#if pro.playerWeight?? && pro.playerWeight.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  	    	体重</td>
+						  		<td>
+						  			<#if pro.playerWeight?? && pro.playerWeight.isRequired>
+							  			<input type="text" placeholder="请输入体重(KG)" name="playerWeight"  id="playerWeight" data-required="true" data-validate="playerWeight"  data-describedby="playerWeight-description" size="18" value="">
+						  			<#else>
+						  				<input type="text" placeholder="请输入体重(KG)" name="playerWeight"  id="playerWeight"   size="18" value="">
+						  			</#if>
+						  		   <div id="playerWeight-description" class="description-wrap"></div>
+						  		</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerBloodType?? && pro.playerBloodType.isShow>
+							<tr>
+								<td class="name name_left">
+									<#if pro.playerBloodType?? && pro.playerBloodType.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+								血型</td>
+								<td>
+								    <#if pro.playerBloodType?? && pro.playerBloodType.isRequired>
+								    <input type="text" placeholder="血型" name="playerBloodType" id="playerBloodType" data-required="true" data-descriptions="playerBloodType" data-describedby="playerBloodType-description" size="18" value="">
+							  		<#else>	
+							  		<input type="text" placeholder="血型" name="playerBloodType" id="playerBloodType"  size="18" value="">
+						  			</#if>
+								
+								
+								  <div id="playerBloodType-description" class="description-wrap"></div>
+								</td>
+							</tr>
+						</#if>
+ 					  	<#if pro.playerCerType?? && pro.playerCerType.isShow>
+						  	<tr>
+						  		<td class="name">
+						  			<#if pro.playerCerType?? && pro.playerCerType.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  		证件类型</td>
+						  		<td class="input_box">
+						  			<select name="playerCerType" id="playerCerType" data-required="true" data-descriptions="playerCerType" data-describedby="playerCerType-description" >
+						  				<option value="1">身份证</option>
+						  				<option value="2">护照</option>
+						  				<!-- <option value="3">驾照</option> -->
+						  				<option value="4">军官证</option>
+						  			</select>
+						  			<div id="playerCerType-description" class="description-wrap"></div>
+						  		</td>	
+						  				  		
+						  	</tr>
+						  	<#if pro.playerCerNo?? && pro.playerCerNo.isShow == false>
+							  	<tr>
+							  	    <td class="name name_left"><span class="star">*</span>证件号码</td>
+							  		<td>
+								  		<#if pro.playerCerNo?? && pro.playerCerNo.isRequired>
+								  		<input type="text" placeholder="请输入您的证件号码" name="playerCerNo" id="playerCerNo" data-required="true" data-descriptions="playerCerNo" data-describedby="playerCerNo-description" size="18" value="">
+									  	<#else>	
+									  	<input type="text" placeholder="请输入您的证件号码" name="playerCerNo" id="playerCerNo" size="18" value="">
+								  		</#if>	
+							  		
+							  		    <div id="playerCerNo-description" class="description-wrap"></div>
+							  		</td>
+							  	</tr>
+							</#if> 
+					  	</#if>
+					  	<#if pro.playerCerNo?? && pro.playerCerNo.isShow>
+						  	<tr>
+						  	    <td class="name name_left">
+						  	    	<#if pro.playerCerNo?? && pro.playerCerNo.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>	
+						  	         证件号码</td>
+						  		<td>
+							  		<#if pro.playerCerNo?? && pro.playerCerNo.isRequired>
+							  		<input type="text" placeholder="请输入您的证件号码" name="playerCerNo" id="playerCerNo" data-required="true" data-descriptions="playerCerNo" data-describedby="playerCerNo-description" size="18" value="">
+								  	<#else>	
+								  	<input type="text" placeholder="请输入您的证件号码" name="playerCerNo" id="playerCerNo" size="18" value="">
+							  		</#if>	
+						  		
+						  		    <div id="playerCerNo-description" class="description-wrap"></div>
+						  		</td>
+						  	</tr>
+						</#if>  	
+					  	<#if pro.playerEmergencyName?? && pro.playerEmergencyName.isShow>
+							<tr>
+								<td class="name name_left">
+									<#if pro.playerEmergencyName?? && pro.playerEmergencyName.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+								紧急联系人</td>
+								<td>
+								   <#if pro.playerEmergencyName?? && pro.playerEmergencyName.isRequired>
+								   <input type="text" placeholder="紧急联系人" name="playerEmergencyName" id="playerEmergencyName" data-required="true" data-descriptions="playerEmergencyName" data-describedby="playerEmergencyName-description" size="18" value="">
+							  		<#else>	
+							  		<input type="text" placeholder="紧急联系人" name="playerEmergencyName" id="playerEmergencyName"  size="18" value="">	
+						  			</#if>
+								
+								   <div id="playerEmergencyName-description" class="description-wrap"></div>
+								</td>
+							</tr>
+						</#if>
+						<#if pro.playerEmergencyPhone?? && pro.playerEmergencyPhone.isShow>
+						  	<tr>
+						  		<td class="name name_left">
+						  		<#if pro.playerEmergencyPhone?? && pro.playerEmergencyPhone.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  		紧急联系电话</td>
+						  		<td>
+						  		    <#if pro.playerEmergencyPhone?? && pro.playerEmergencyPhone.isRequired>
+						  		    
+						  		    <input type="text" placeholder="请输入您的紧急联系电话" name="playerEmergencyPhone" id="playerEmergencyPhone" data-required="true" data-validate="playerEmergencyPhone"  data-describedby="playerEmergencyPhone-description">
+							  		<#else>		
+							  		<input type="text" placeholder="请输入您的紧急联系电话" name="playerEmergencyPhone" id="playerEmergencyPhone" >
+						  			</#if>
+						  		
+						  		  <div id="playerEmergencyPhone-description" class="description-wrap"></div>
+						  		</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerHeight?? && pro.playerHeight.isShow>
+						  	<tr>
+						  		<td class="name">
+						  		<#if pro.playerHeight?? && pro.playerHeight.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  		身高</td>
+						  		<td class="input_box">
+						  		<#if pro.playerHeight?? && pro.playerHeight.isRequired>
+						  		<input type="text"  placeholder="请输入身高(CM)" name="playerHeight" id="playerHeight" data-required="true" data-validate="playerHeight"  data-describedby="playerHeight-description">
+						  	    <#else>	
+						  	    <input type="text"  placeholder="请输入身高(CM)" name="playerHeight" id="playerHeight" >
+						  		</#if>
+						  		
+						  		  <div id="playerHeight-description" class="description-wrap"></div>
+						  		</td>
+						  		
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerWorkUnit?? && pro.playerWorkUnit.isShow>
+						  	<tr>
+						  	    <td class="name name_left">
+						  	    <#if pro.playerWorkUnit?? && pro.playerWorkUnit.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  	    工作单位</td>
+						  		<td>
+						  		 <#if pro.playerWorkUnit?? && pro.playerWorkUnit.isRequired>
+						  		 <input type="text" placeholder="请输入您的工作单位" name="playerWorkUnit" id="playerWorkUnit" data-required="true" data-descriptions="playerWorkUnit" data-describedby="playerWorkUnit-description" size="18" value="">
+							  		<#else>	
+							  		<input type="text" placeholder="请输入您的工作单位" name="playerWorkUnit" id="playerWorkUnit" size="18" value="">
+						  			</#if>
+						  		
+						  		<div id="playerWorkUnit-description" class="description-wrap"></div>
+						  		</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerBirth?? && pro.playerBirth.isShow>
+						  	<tr>
+						  		<td class="name">
+						  		<#if pro.playerBirth?? && pro.playerBirth.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  		出生年月</td>
+						  		<td class="input_box">
+						  		    <#if pro.playerBirth?? && pro.playerBirth.isRequired>
+						  		    <input type="text" class="layui-input" name="playerBirth" id="dayDate" data-required="true" data-descriptions="playerBirth" data-describedby="playerBirth-description" value="" readonly="" placeholder="出生年月" style="cursor:pointer">
+							  		<#else>
+							  		<input type="text" class="layui-input" name="playerBirth" id="dayDate"  value="" readonly="" placeholder="出生年月" style="cursor:pointer">	
+						  			</#if>
+						  			
+						  			<div id="playerBirth-description" class="description-wrap"></div>
+						  		</td>						  								  								  		
+						  	</tr>
+					  	</#if>
+					  	<#if pro.email?? && pro.email.isShow>
+						  	<tr>
+						  		<td class="name name_left">
+						  		<#if pro.email?? && pro.email.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  		邮箱</td>
+						  		<td>
+						  		    <#if pro.email?? && pro.email.isRequired>
+						  		    <input type="text" placeholder="请输入您的邮箱" name="email" id="email" data-required="true" data-validate="email"  data-describedby="email-description">
+							  		<#else>
+							  		<input type="text" placeholder="请输入您的邮箱" name="email" id="email">
+						  			</#if>
+						  		
+						  		    <div id="email-description" class="description-wrap"></div>
+						  		</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerClothSize?? && pro.playerClothSize.isShow>
+						  	<tr>
+						  		<td class="name">
+						  		<#if pro.playerClothSize?? && pro.playerClothSize.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  		衣服尺码</td>
+						  		<td class="input_box">
+						  		    <#if pro.playerClothSize?? && pro.playerClothSize.isRequired>
+						  		    	<input type="text" placeholder="请输入您的衣服尺码(如M,L,XL等)" name="playerClothSize" id="playerClothSize" data-required="true" data-descriptions="playerClothSize" data-describedby="playerClothSize-description" size="18" value="">
+							  		<#else>
+							  			<input type="text" placeholder="请输入您的衣服尺码(如M,L,XL等)" name="playerClothSize" id="playerClothSize" size="18" value="">
+						  			</#if>
+						  		
+						  			<div id="playerClothSize-description" class="description-wrap"></div>
+						  		</td>				  		
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerNation?? && pro.playerNation.isShow>
+						  	<tr>
+						  	    <td class="name name_left">
+						  	    <#if pro.playerNation?? && pro.playerNation.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  	    	民族</td>
+						  		<td>
+						  		    <#if pro.playerNation?? && pro.playerNation.isRequired>
+						  		    	<input type="text" placeholder="请输入您的民族" name="playerNation" id="playerNation" data-required="true" data-descriptions="playerNation" data-describedby="playerNation-description" size="18" value="">
+							  		<#else>
+							  			<input type="text" placeholder="请输入您的民族" name="playerNation" id="playerNation"  size="18" value="">
+						  			</#if>
+						  	
+						  		<div id="playerNation-description" class="description-wrap"></div>
+						  		</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerAddress?? && pro.playerAddress.isShow>
+						  	<tr>
+						  		<td class="name">
+						  		<#if pro.playerAddress?? && pro.playerAddress.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  		联系地址</td>
+						  		<td class="input_box">
+						  			<#if pro.playerAddress?? && pro.playerAddress.isRequired>
+						  				<input type="text" placeholder="请输入您的联系地址" name="playerAddress" id="playerAddress" data-required="true" data-descriptions="playerAddress" data-describedby="playerAddress-description" size="18" value="">
+							  		<#else>
+							  			<input type="text" placeholder="请输入您的联系地址" name="playerAddress" id="playerAddress" size="18" value="">
+						  			</#if>
+						  	
+						  		    <div id="playerAddress-description" class="description-wrap"></div>
+						  		</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.assettoId?? && pro.assettoId.isShow>
+					  		<tr>
+						  	    <td class="name name_left">
+						  	    <#if pro.assettoId?? && pro.assettoId.isRequired>
+							  			<span class="star">*</span>
+						  			</#if>
+						  	    	神力科莎游戏昵称</td>
+						  		<td>
+						  		    <#if pro.assettoId?? && pro.assettoId.isRequired>
+						  		    	<input type="text" placeholder="请输入神力科莎游戏昵称" name="assettoId" id="assettoId" data-required="true" data-descriptions="assettoId" data-describedby="assettoId-description" size="18" value="">
+							  		<#else>
+							  			<input type="text" placeholder="请输入神力科莎游戏昵称" name="assettoId" id="assettoId"  size="18" value="">
+						  			</#if>
+						  		<div id="assettoId-description" class="description-wrap"></div>
+						  		</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.expands?? && (pro.expands?size > 0)>
+					  		<#list pro.expands as expand>
+					  			
+					  			<tr>
+							  	    <td class="name name_left">
+							  	    <#if expand?? && expand.isRequired>
+								  			<span class="star">*</span>
+							  			</#if>
+							  	    	${(expand.name)!''}</td>
+							  		<td>
+							  		    <#if expand?? && expand.isRequired>
+							  		    <input type="text" placeholder="请输入${(expand.name)!''}" data-key='${(expand.name)!''}' class='expandItem' name="expro" id="expro" data-isCum="true" data-required="true" data-descriptions="expro" data-describedby="expro-description" size="18" value="">
+								  		<#else>
+								  		<input type="text" placeholder="请输入${(expand.name)!''}" data-key='${(expand.name)!''}' class='expandItem' name="expro" id="expro" data-isCum="true" size="18" value="">
+							  			</#if>
+							  	
+							  		<div id="playerHeight-description" class="description-wrap"></div>
+							  		</td>
+							  	</tr>
+					  		</#list>
+					  		
+					  	</#if>
+					  	<!-- <tr>
+					  		<td class="name name_left">个人简介</td>
+					  		<td><textarea id="ccomment" name="" data-required="true" data-descriptions=""></textarea></td>
+					  	</tr> -->
+					  </table>
+
+				  <#if pro.playerCerType?? && pro.playerCerType.isShow>
+				   <div class="order">  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+					   <span style="white-space:pre;">  </span><span class="txt">其他信息</span>  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+				  </div> 
+				  <div class="upload flex flex-pack-justify clear">	
+	                    <div class='upload-wrap sf-upload clear' style='display:block'>			
+		    				<div class="layui-upload pull-left">
+		    					  <img class="layui-upload-img" id="demo3">
+		                          <div class="upload_icon" id="uploadone-sf1"><span>上传 身份证正面</span></div>
+		                          <input type="hidden" id="att_sf1" name="att_one"/>
+		                    </div>
+		                    <div class="pull-left alert_txt alert_txt_margin">
+		                    	<span class="star">*</span>格式：.jpg,.png,.jpeg<br>
+		                    	大小：限制1M
+		                    </div>		
+		    				<div class="layui-upload pull-left ">
+		    					  <img class="layui-upload-img" id="demo4">
+		                          <div class="upload_icon" id="uploadone-sf2"><span>上传 身份证反面</span></div>
+		                          <input type="hidden" id="att_sf2" name="att_two"/>
+		                    </div>
+		                    <div class="pull-left alert_txt alert_txt_margin">
+		                    	<span class="star">*</span>格式：.jpg,.png,.jpeg<br>
+		                    	大小：限制1M
+		                    </div>
+	                    </div>
+	                    <div class='upload-wrap hz-upload clear'>			
+		    				<div class="layui-upload pull-left">
+		    					  <img class="layui-upload-img" id="demo5">
+		                          <div class="upload_icon" id="uploadone-hz"><span>上传护照</span></div>
+		                          <input type="hidden" id="att_hz" name="att_one"/>
+		                    </div>
+		                    <div class="pull-left alert_txt alert_txt_margin">
+		                    	<span class="star">*</span>格式：.jpg,.png,.jpeg<br>
+		                    	大小：限制1M
+		                    </div>
+	                    </div>
+
+	                    <div class='upload-wrap jz-upload clear'>			
+		    				<div class="layui-upload pull-left">
+		    					  <img class="layui-upload-img" id="demo2">
+		                          <div class="upload_icon" id="uploadone-jz"><span>上传军官证</span></div>
+		                          <input type="hidden" id="att_jz" name="att_one"/>
+		                    </div>
+		                    <div class="pull-left alert_txt alert_txt_margin">
+		                    	<span class="star">*</span>格式：.jpg,.png,.jpeg<br>
+		                    	大小：限制1M
+		                    </div>
+	                    </div>
+    			  </div>
+    			  </#if>
+    			  <div class="order">  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+					   <span style="white-space:pre;">  </span><span class="txt">支付方式</span>  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+				  </div> 
+				  
+				  <div class="pay_choose">
+				       <a class="weixin first active" data-name="wechatpay">
+				            <img src="${stx}/img/icon_xzzf.png" style="display:block;">
+				       </a>
+				       <!-- <a class="zhifub" data-name="alipay" >
+				          <img src="${stx}/img/icon_xzzf.png">
+				       </a> -->
+				       <input type="hidden" id="type" value="wechatpay">
+				  </div>
+    			  <p class="check_read flex flex-align-center">
+    			   	<span class="awesome">
+	    			   	<input type="checkbox" id="awesome" />
+	                    <label for="awesome"></label>
+    			   	</span>
+    			    <span>我已经阅读并接受<span class="f_c" id="agreement_content">《免责声明》</span></span><br>
+    			     <span class="alert_xy" id="Agreement" style="display:none">请阅读并接受免责声明</span> 
+    			  </p>
+    			 
+    			  <p class="next_btn">
+    			  	<a class="save_btn"  style="cursor:pointer" id="saveOrder">保存信息</a>
+    			  	<a class="sumbit_btn"  id="commitOrder"><input style="cursor:pointer" type="submit"  value="提交报名信息" /></a>
+    			  </p>
+    			<!--   <p id="erroShow"><span class="alert" id="erro_alert"></span></p> -->
+ 	  	     </div>
+ 	  	    </form>
+		</div>
+		<#include "common/footer.html">
+	</body>
+	<script type="text/javascript" src="${stx}/js/jquery-2.1.1.min.js"></script>
+    <script src="${stx}/js/jquery-mvalidate.js"></script> 
+	<script src="${stx}/js/config.js"></script>
+	<script src="${stx}/layui/layui.all.js" charset="utf-8"></script>
+	<script>
+	var path = "${ctx}", btnDisable = false,playerCerType=1;
+	
+	$(function(){	
+			
+			uploadInit();
+			
+			validateInit();
+			
+			layui.use('laydate', function(){
+				  var laydate = layui.laydate;
+				  
+					 laydate.render({
+						    elem: '#dayDate',
+						    type:'date',
+						});
+			});
+
+			
+			　$('#playerCerType').change(function(){  
+				$('.upload-wrap').hide()
+			　　　　　if($(this).children('option:selected').val()==1){
+						$('.sf-upload').show();
+						playerCerType=1
+			　　　　　};  
+			　　　　　 　if($(this).children('option:selected').val()==2){
+				 		$('.hz-upload').show();
+				 		playerCerType=2
+		　　　　　	  };
+		　　　　　	  /* if($(this).children('option:selected').val()==3){
+						$('.jz-upload').show();
+						playerCerType=3;
+	　　　　　		  }; */
+	　　　　　		  if($(this).children('option:selected').val()==4){
+						$('.jz-upload').show();
+						playerCerType=4;
+	　　　　　		  };
+		　　　　})  
+			$("#male").click( function () {
+			    $(this).siblings("span").addClass("active");
+			    $(this).parents("div").siblings("div").children("span").removeClass("active");
+	        });
+			$("#female").click( function () {
+			    $(this).siblings("span").addClass("active");
+			    $(this).parents("div").siblings("div").children("span").removeClass("active");
+			});
+
+            $("#agreement_content").click(function(){
+            	$(".modal_agreement").show()
+            });
+            
+            $("#close").click(function(){
+            	$(".modal_agreement").hide()
+            });
+			
+   		 $("#Resultinquiry").click(function(){
+	      		$("#animationTipBox").show();
+     		$("#animationTipBox .dec_txt").text('成绩查询暂未开放，敬请期待 ')
+     		 setTimeout(function(){
+     			$("#animationTipBox").css("display","none");
+     			},
+     			3000)
+		 })
+		 
+            $(".pay_choose a").click(function(){
+            	$(this).children("img").show();
+            	$(this).addClass("active").siblings().removeClass("active").children("img").hide();
+            	
+            	if($(this).hasClass("active")){
+            		var Paytype = $(this).data("name")
+            		
+            		$("#type").val(Paytype)
+            	}
+            });
+            
+	           function createTimestamp () {
+	    	     	return parseInt(new Date().getTime() / 1000) + '';
+	    	    };  
+            
+			$("#saveOrder").click(function(){				
+			    	$.ajax({
+		                url:  path+"/order/enroll/save?" + createTimestamp(),
+		                data: getData(),
+		                type: 'post',
+		                dataType: 'json',
+		                success: function(data) { 
+		                	if(data.resultCode != 200){
+		                		var errMsg = data.resultMsg;
+		              		     $("#animationTipBox").show();
+					        		$("#animationTipBox .dec_txt").text(errMsg);
+					        		 setTimeout(function(){
+					        			$("#animationTipBox").css("display","none");
+					        			},
+					        			3000)
+		                	} else {
+		              		     $("#animationTipBox").show();
+					        		$("#animationTipBox .dec_txt").text('保存成功');
+					        		 setTimeout(function(){
+					        			$("#animationTipBox").css("display","none");
+					        			},
+					        			3000)
+		                		
+		                        //window.location.href="${ctx}/order/query?page=1";                    		
+		                	}
+		                }
+		            });
+			   });	
+	 });
+	      
+	//表单验证规则初始化
+	function validateInit() {
+	    /*/^0?1[3|4|5|8][0-9]\d{8}$/*/
+	    $.mvalidateExtend({
+	    	playerPhone:{
+                required : true,   
+                pattern : /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/,
+                each:function(){                  
+                },
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入手机号码</div>',
+                    pattern : '<div class="field-invalidmsg">手机号码格式不正确</div>',
+                    valid : '<div class="field-validmsg"></div>'
+                }
+            },
+            playerEmergencyPhone:{
+                required : true,   
+                pattern : /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/,
+                each:function(){                  
+                },
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入手机号码</div>',
+                    pattern : '<div class="field-invalidmsg">手机号码格式不正确</div>',
+                    valid : '<div class="field-validmsg"></div>'
+                }
+            },
+            playerWeight:{
+                required : true, 
+                pattern : /^[0-9]*$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入体重 </div>',
+                    pattern : '<div class="field-invalidmsg">只能输入数字</div>',
+                    valid : '<div class="field-validmsg"></div>'
+                }
+            },
+            playerHeight:{
+                required : true, 
+                pattern : /^[0-9]+.?[0-9]*$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入身高</div>',
+                    pattern : '<div class="field-invalidmsg">只能输入数字</div>',
+                    valid : '<div class="field-validmsg"></div>'
+                }
+            },
+            
+            email:{
+                required : true, 
+                pattern : /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入邮箱 </div>',
+                    pattern : '<div class="field-invalidmsg">邮箱格式错误 </div>',
+                    valid : '<div class="field-validmsg"></div>'
+                }
+            },
+           
+        });
+	} 
+    function getData(){
+    	var orderCode = $("#orderCode").val();
+		   var registerCode = $("#registerCode").val();
+		   var playerName = $("#playerName").val();
+		   var sex = $('[name=sex]:checked').val();
+		   console.log(sex)
+		   var playerPhone = $("#tel").val();
+		   var verifyCode = $("#verifyCode").val();
+		   var playerNationality = $("#playerNationality").val();
+		   var playerWeight = $("#playerWeight").val();
+		   var playerBloodType = $("#playerBloodType").val();
+		   var playerCerType = $('#playerCerType option:selected').val();  
+		   var playerCerNo = $("#playerCerNo").val();
+		   var playerEmergencyName = $("#playerEmergencyName").val();
+		   var playerEmergencyPhone = $("#playerEmergencyPhone").val();
+		   var playerHeight = $("#playerHeight").val();
+		   var playerWorkUnit = $("#playerWorkUnit").val();
+		   var playerBirth = $('[name=playerBirth]').val();
+		   var email = $('#email').val();
+		   var playerClothSize = $("#playerClothSize").val();
+		   var playerNation = $("#playerNation").val();
+		   var playerAddress = $("#playerAddress").val();
+		   var type = $("#type").val();
+		   var assettoId = $("#assettoId").val();
+		   var att_oneStr;
+		   if(playerCerType==1){
+			   att_oneStr=$("#att_sf1").val();
+		   }else if(playerCerType==2){
+			   att_oneStr=$("#att_hz").val();
+		   }else if(playerCerType==4){
+			   att_oneStr=$("#att_jz").val();
+		   }
+		   var att_twoStr=$("#att_sf2").val();
+		/*    att_urlStr=$("#att_url").val(); */
+		var extProArrary=[];
+		$('.expandItem').each(function(p1,p2){
+			var key=$(p2).data('key');
+			var s={};
+			s[key]=$(p2).val()
+			extProArrary.push(s)
+		})
+		console.log(extProArrary)
+		   var data={type:type,
+				   orderCode:orderCode,
+				   registerCode:registerCode,
+				   playerName:playerName,
+				   sex:sex,
+				   playerPhone:playerPhone,
+				   verifyCode:verifyCode,
+				   playerNationality:playerNationality,
+				   playerWeight:playerWeight,
+				   playerBloodType:playerBloodType,
+				   playerCerType:playerCerType,
+				   playerCerNo:playerCerNo,
+				   playerEmergencyName:playerEmergencyName,
+				   playerEmergencyPhone:playerEmergencyPhone,
+				   playerHeight:playerHeight,
+				   playerWorkUnit:playerWorkUnit,
+				   email:email,
+				   playerClothSize:playerClothSize,
+				   playerNation:playerNation,
+				   playerAddress:playerAddress,
+				   playerBirthStr:playerBirth,
+				   attOne:att_oneStr,
+				   attTwo:att_twoStr,
+				   assettoId:assettoId,
+				   extPro:JSON.stringify(extProArrary)
+				  /*  attUrl:att_urlStr */
+		   };
+   		   return data;
+    }
+	
+//	   $("#commitOrder").click(function(){
+		   $("#entyr_from").mvalidate({
+	            type: 2,
+	            onKeyup: true,
+	            sendForm: true,
+	            firstInvalidFocus: true,
+	            valid: function(event,options){
+	            	
+	            
+	                //点击提交按钮时,表单通过验证触发函数
+	                console.log("");
+	                event.preventDefault();	   			 
+	                //调用所有验证为空的方法,为true表示没有为空的数据,直接提交后台
+	                validSuccess();   //，提交数据到后台
+	                
+	    			 if($('#awesome').is(':checked')){
+		   				 console.log("gouxuan");
+		   				$("#Agreement").hide()
+					 } else {
+						 console.log("meigouxian")
+					       $("#Agreement").show()
+						 return false;
+					 } 
+	                
+	                $.ajax({
+		                 url:  "${ctx}/order/enroll/commit",
+		                 data: getData(),
+		                 type: 'post',
+		                 dataType: 'json',
+		                 success: function(data) {		                	 
+		                 
+		                 	if(data.resultCode!=200){
+		                 		var errMsg = data.resultMsg;
+		                 		if(data.resultCode==206){
+		                 			//验证码错误
+		                 			console.log('206'+errMsg);
+		                 			 $("#verifyCode-description").html(errMsg) 
+		                 			 	$('html , body').animate({scrollTop: 0});
+		  	                 			$("#verifyCode").focus(function(){
+		                 				
+		                 			     if(($("#verifyCode").val()).length!=0){
+		                 			     
+		                 			    	$("#verifyCode-description").html('') 
+		                 			     }		                 				
+		                 				
+		                 			});
+	
+		                 			 
+		                 			return ;
+		                 		}
+		                 		if(data.resultCode==207){
+		                 			//证件号码错误
+		                 			console.log('207'+errMsg)
+		                 			$("#playerCerNo-description").html(errMsg)
+		                 			$('html , body').animate({scrollTop: 0});
+		                   			$("#playerCerNo").focus(function(){
+		                 				
+		                 			     if(($("#playerCerNo").val()).length!=0){
+		                 			     
+		                 			    	$("#playerCerNo-description").html('') 
+		                 			     }		                 				
+		                 				
+		                 			});
+		                 			return ;
+		                 		}	
+		                  		if(data.resultCode==202){
+		                 			//证件号码错误
+		                 		     $("#animationTipBox").show();
+					        		$("#animationTipBox .dec_txt").text(errMsg);
+					        		 $('html , body').animate({scrollTop: 0});
+					        		 setTimeout(function(){
+					        			$("#animationTipBox").css("display","none");
+					        			},
+					        			3000)
+		                 			
+		                 			return ;
+		                 		}
+		                 		$(".alert").html(errMsg).show();
+		                 	}else{
+		                 		var url = data.result.url
+		                        window.location.href="${ctx}" + url;                   		
+		                 	}
+		                 }
+		             });
+	                
+
+	                
+	            },
+	            invalid: function(event, status, options){
+	                //点击提交按钮时,表单未通过验证触发函数
+	               
+	            },
+	            conditional: {
+	            	verifyCode: function(val) {
+	//                console.log('请求接口，验证验证码是否正确，返回true或者false'); 
+	                       
+	                       
+	                    console.log('验证码===='+val);
+	                    if(!val && !val.length) return false;
+	                    return true;
+	                }
+	            },
+	            descriptions:{
+	                playerName:{
+	                	 required : '<div class="field-invalidmsg">请输入用户名</div>',
+	                     valid : '<div class="field-validmsg"></div>'
+	                },
+	                sex:{
+	                    required : '<div class="field-invalidmsg">请输入性别</div>',
+	                    valid : '<div class="field-validmsg"></div>'
+	                },
+	                verifyCode:{
+                    	 required : '<div class="field-invalidmsg">请输入验证码</div>',
+                    	 conditional:'<div class="field-invalidmsg">您输入的验证码不正确</div>',
+                    	 valid : '<div class="field-validmsg"></div>'
+	                },
+	                email:{
+	                	 required : '<div class="field-invalidmsg">请输入邮箱地址</div>',
+	                     valid : '<div class="field-validmsg"></div>'
+	                },
+	                playerHeight:{
+                		 required : '<div class="field-invalidmsg">请输入请输入身高</div>',
+	                     valid : '<div class="field-validmsg"></div>'
+	                },
+					playerNationality:{
+				               		 required : '<div class="field-invalidmsg">请输入国籍</div>',
+				                     valid : '<div class="field-validmsg"></div>'
+					               },
+	               playerBirth:{
+	               		 required : '<div class="field-invalidmsg">请输入出生年月 </div>',
+	                     valid : '<div class="field-validmsg"></div>'
+		               },					               
+	               playerNation:{
+	               		 required : '<div class="field-invalidmsg">请输入民族</div>',
+	                     valid : '<div class="field-validmsg"></div>'
+		               },
+		               playerWeight:{
+		            	      required : '<div class="field-invalidmsg">请输入体重 </div>',
+		                     valid : '<div class="field-validmsg"></div>'
+		               },
+					playerAddress:{
+				               		 required : '<div class="field-invalidmsg">请输入联系地址</div>',
+				                     valid : '<div class="field-validmsg"></div>'
+					               },
+				    playerCerType:{
+	               		 required : '<div class="field-invalidmsg">请输入证件类型</div>',
+	                     valid : '<div class="field-validmsg"></div>'
+		               },
+		               playerCerNo:{
+	               		 required : '<div class="field-invalidmsg">请输入证件号码</div>',
+	                     valid : '<div class="field-validmsg"></div>'
+		               },
+					playerBloodType:{
+				               		 required : '<div class="field-invalidmsg">请输入联系血型</div>',
+				                     valid : '<div class="field-validmsg"></div>'
+					               },
+					playerClothSize:{
+				               		 required : '<div class="field-invalidmsg">请输入衣服尺寸</div>',
+				                     valid : '<div class="field-validmsg"></div>'
+					               },
+					playerEmergencyName:{
+				               		 required : '<div class="field-invalidmsg">请输入紧急联系人</div>',
+				                     valid : '<div class="field-validmsg"></div>'
+					               },
+					               playerWorkUnit:{
+				    	             required : '<div class="field-invalidmsg">请输入工作单位</div>',
+				                     valid : '<div class="field-validmsg"></div>'
+				                 } ,            
+					               
+					               
+		/* 			playerEmergencyPhone:{
+				               		 required : '<div class="field-invalidmsg">请输入紧急联系电话</div>',
+				                     valid : '<div class="field-validmsg"></div>'
+					               }, */
+		               assettoId:{
+		               		 required : '<div class="field-invalidmsg">请输入神力科莎游戏昵称</div>',
+		                     valid : '<div class="field-validmsg"></div>'
+			               },
+			              				               						  		
+		               expro:{
+		               		 required : '<div class="field-invalidmsg">输入不能为空</div>',
+		                     valid : '<div class="field-validmsg"></div>'
+			               },
+	            }
+	        });
+	
+	
+	
+	function checkNull(){
+		$("table tr td").each(function (){
+			var checkInput=$(this).eq(1).find("input");
+			var checkVal=null;
+			if(checkInput){
+				checkVal=$(checkInput).val();
+			}else{
+				checkInput=$(this).eq(1).find("select");
+				if(checkInput){
+					checkVal=$(checkInput).val();
+				}
+			}
+			if(checkVal==null || checkVal==""){
+				return false;
+			}
+		});
+	}
+	
+      function uploadInit() {
+	       /* layui.use('upload', function(){
+	          var $ = layui.jquery ,
+	          upload = layui.upload;
+	          var uploadInst = upload.render({
+	            elem: '#uploadone-jk',
+	            url: '${ctx}/file/pc/upload',
+	            size: 1024,
+	            before: function(obj){
+	              obj.preview(function(index, file, result){
+	                $('#demo1').attr('src', result); //图片链接（base64）
+	              });
+	            },
+	            done: function(res){
+	            	 //如果上传失败
+		              if(res.resultCode != 200){
+		                return layer.msg('上传失败');
+		              }　  
+		              //上传成功
+		              var url = res.result.url;
+		              $("#att_url").val(url);
+	            },
+	          });
+	        }); */ 
+
+	        layui.use('upload', function(){
+	          var $ = layui.jquery ,
+	          upload = layui.upload;
+	          var uploadInst = upload.render({
+	            elem: '#uploadone-sf1',
+	            url: '${ctx}/file/pc/upload',
+	            size:1024,
+	            before: function(obj){
+	        
+	              obj.preview(function(index, file, result){
+	                $('#demo3').attr('src', result); //图片链接（base64）
+	              });
+	            },
+	            done: function(res){
+	            	  console.log(res);
+	            	　　//如果上传失败
+		              if(res.resultCode != 200){
+		                return layer.msg('上传失败');
+		              }　  
+		              //上传成功
+		              var url = res.result.url;
+		              console.log(url);
+		              $("#att_sf1").val(url);
+	            },
+	          });
+	        }); 
+	        layui.use('upload', function(){
+		          var $ = layui.jquery ,
+		          upload = layui.upload;
+		          var uploadInst = upload.render({
+		            elem: '#uploadone-sf2',
+		            url: '${ctx}/file/pc/upload',
+		            size:1024,
+		            before: function(obj){
+		        
+		              obj.preview(function(index, file, result){
+		                $('#demo4').attr('src', result); //图片链接（base64）
+		              });
+		            },
+		            done: function(res){
+		            	  console.log(res);
+		            	　　//如果上传失败
+			              if(res.resultCode != 200){
+			                return layer.msg('上传失败');
+			              }　  
+			              //上传成功
+			              var url = res.result.url;
+			              console.log(url);
+			              $("#att_sf2").val(url);
+		            },
+		          });
+		        });
+	        layui.use('upload', function(){
+		          var $ = layui.jquery ,
+		          upload = layui.upload;
+		          var uploadInst = upload.render({
+		            elem: '#uploadone-jz',
+		            url: '${ctx}/file/pc/upload',
+		            size:1024,
+		            before: function(obj){
+		              obj.preview(function(index, file, result){
+		                $('#demo2').attr('src', result); //图片链接（base64）
+		              });
+		            },
+		            done: function(res){
+		            	  console.log(res);
+		            	　　//如果上传失败
+			              if(res.resultCode != 200){
+			                return layer.msg('上传失败');
+			              }　  
+			              //上传成功
+			              var url = res.result.url;
+			              console.log(url);
+			              $("#att_jz").val(url);
+		            },
+		          });
+		        });
+	        layui.use('upload', function(){
+		          var $ = layui.jquery ,
+		          upload = layui.upload;
+		          var uploadInst = upload.render({
+		            elem: '#uploadone-hz',
+		            url: '${ctx}/file/pc/upload',
+		            size:1024,
+		            before: function(obj){
+		              obj.preview(function(index, file, result){
+		                $('#demo5').attr('src', result); //图片链接（base64）
+		              });
+		            },
+		            done: function(res){
+		            	  console.log(res);
+		            	　　//如果上传失败
+			              if(res.resultCode != 200){
+			                return layer.msg('上传失败');
+			              }　  
+			              //上传成功
+			              var url = res.result.url;
+			              $("#att_hz").val(url);
+		            },
+		          });
+		        });
+};
+		
+		
+		
+	//，提交数据的方法
+	function validSuccess() {
+	    var params = {};
+	    
+	    $('form input[type="text"]').each(function(e) {
+	        console.log($(this).attr('name'));
+	        params[$(this).attr('name')] = $(this).val();
+	    });
+	    
+	    $('form input[type="radio"]:checked').each(function(e) {
+	        console.log($(this).attr('name'));
+	        params[$(this).attr('name')] = $(this).val();
+	    });
+	  /*   console.log($('input[type="radio"]:checked').val()) */
+
+	    console.log(params);
+	};
+	
+	//下一步点击
+	function nextStep() {
+		console.log($('#entyr_from input').length);
+	};
+	
+    
+    //点击获取验证码
+    function getCode(e){
+	    var tel = $("#tel").val();
+        if(checkPhone()) {
+//        	 resetCode(); //倒计时
+        	if(btnDisable) return 0;
+        	
+        	getResultMethods1("${ctx}/user/send/sms/code", {playerPhone: tel}, function(d) {
+    			if(d.resultCode ==200) {
+    				resetCode(); //倒计时
+    			}else {
+    				validErrorMessage('发送失败,请稍后重试');
+    				resetCode();
+    			}
+    		});
+        }else {
+            $('#tel').focus();
+        }
+    };
+    
+
+    //验证手机号码
+    function checkPhone(){
+        var phone = $('#tel').val().trim();//获取输入的手机号
+        if(!phone.length) {
+            validErrorMessage('请输入手机号码');
+            return false;
+        };
+        if(!/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/.test(phone)) {
+            validErrorMessage('手机号码格式不正确');
+            return false;
+        }
+        return true;
+    };
+    
+    
+    //手动触发验证
+    function validErrorMessage(text) {
+    	 var $container=$(' <div id="phone-description">'+text+'</div>');
+        $container.appendTo($("#y_num")); 
+         setTimeout(function(){
+            $container.remove();
+        },1200) 
+    };
+    
+    
+    //倒计时
+    function resetCode(){
+        timeWait(60);
+        btnDisable = true;
+    };
+    
+    function timeWait(time) {
+    	setTimeout(function() {
+    		if(time >= 0) {
+    			$('.yzm').html(time+"秒后重发").addClass('gray');
+    			time--;
+    			timeWait(time);
+    		}else {
+    			$('.yzm').html("发送验证码").removeClass('gray');
+    			btnDisable = false;
+    		}
+    	}, 1000)
+    };
+	</script>
+</html>

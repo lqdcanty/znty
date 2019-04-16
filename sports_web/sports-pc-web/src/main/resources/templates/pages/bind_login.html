@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>登 录</title>
+
+    <!-- Custom styles for this template -->
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+    
+    <link rel="stylesheet" type="text/css" href="${stx}/css/jquery.slider.css">
+  </head>
+	<body class="login_img">
+		<div class="login login2">
+			<div class="alert-danger"></div>
+			<div class="login_from controls phone_controls">
+				 <div class="login_content login_content2 clear">
+				 	 <div class="left_from pull-left">
+				 	 	  <input type="hidden" id="url" value="${(url)!''}"/>
+				 	 	  <input type="hidden" id="registerCode" value="${(registerCode)!''}"/> 
+	 			 	 	  <p class="title">绑定手机号</p>
+				 	 	  <p><input type="text" id="tel" placeholder="请输入手机号码">
+				 	 	  	  <br/><span class="alert"></span>
+				 	 	  </p>
+				 	 	  <div id="slider2" class="slider"></div>
+				 	 	  <div class="send_vercode" id="send_vercode"><input class="yzm_val" type="text" placeholder="请输入验证码"><input class="yzm" onclick="getCode(this)" type="button" value="发送验证码"></div>
+				 	 	  <p><a class="login_button" onclick="userLogin()">登 录</a></p>
+				 	 </div>
+			 	 </div>
+			 </div>
+		</div>
+	</body>
+	<script type="text/javascript" src="${stx}/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="${stx}/js/jquery.slider.min.js"></script>
+	<script>
+
+	$("#slider2").slider({
+		width: 300, // width
+		height: 34, // height
+		sliderBg: "#eaeaea", // 滑块背景颜色
+		color: "#666", // 文字颜色
+		fontSize: 14, // 文字大小
+		bgColor: "#FF8F00", // 背景颜色
+		textMsg: "请按住滑块，拖到最右边", // 提示文字
+		successMsg: "验证通过了哦", // 验证成功提示文字
+		successColor: "#fff", // 滑块验证成功提示文字颜色
+		time: 400, // 返回时间
+		callback: function(result) { // 回调函数，true(成功),false(失败)
+			$("#result2").text(result);
+			if(result == true){
+				$("#send_vercode").fadeIn("slow")
+			}
+		}
+	});
+	
+    function createTimestamp () {
+     	return parseInt(new Date().getTime() / 1000) + '';
+    };
+	
+	//点击获取验证码
+    function getCode(e){
+        if(checkPhone()) {
+            resetCode(); //倒计时
+            var tel = $("#tel").val().trim();
+            $.ajax({
+	             type: "POST",
+	             contentType: "application/json;charset=UTF-8",
+	             url: "${ctx}/user/send/sms/code?playerPhone="+tel+"&" + createTimestamp(),
+	             dataType: "json",
+	             data: {"playerPhone":tel},
+	             success: function(data){
+		            console.log(data.resultMsg);
+	             }
+            });
+        }else {
+            $('#tel').focus();
+        }
+    };
+
+    //验证手机号码
+    function checkPhone(){
+        var phone = $('#tel').val().trim();//获取输入的手机号
+        if(!phone.length) {
+            validErrorMessage('请输入手机号码');
+            return false;
+        };
+        if(!/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/.test(phone)) {
+            validErrorMessage('手机号码格式不正确');
+            return false;
+        }
+        return true;
+    }
+    
+    
+    //手动触发验证
+    function validErrorMessage(text) {
+        var $container=$('<span class="field-tooltip fieldTipBounceIn">'+text+'</span>');
+        $container.appendTo($(".alert"));
+        setTimeout(function(){
+            $container.remove();
+        },1500)
+    };
+    
+   
+    //倒计时
+    function resetCode(){
+        $('.yzm').val('60秒后重发');
+        var second = 60;
+        var timer = null;
+        timer = setInterval(function(){
+            second -= 1;
+            if(second >0 ){
+                $('.yzm').val(second+"秒后重发");
+            }else{
+                clearInterval(timer);
+                $('.yzm').val("发送验证码");
+            }
+        },1000);
+    }
+    
+    $(".login_btn").click(function(){
+    	var node=$('#slider2').next(".send_vercode");
+    	 if(node.length == 0){
+    	 	$(".alert-danger").show()
+    	 	loginErrorMessage("请滑动验证")
+    	 } else {
+    	 	 var phone = $('#tel').val().trim();//获取输入的手机号   	 
+	    	 var code = $(".yzm_val").val().trim();
+	   	 
+	    	 if(!phone.length && !code.length) {
+	    	 	$(".alert-danger").show()
+	            loginErrorMessage("手机号码/验证码不能为空")
+	            return false;
+	        };
+    	 }
+    	
+    });
+    
+     function loginErrorMessage(text) {
+        var $container=$('<span>'+text+'</span>');
+        $container.appendTo($(".alert-danger"));
+        setTimeout(function(){
+        	$(".alert-danger").hide()
+            $container.remove();
+        },1500)
+    };
+    
+    function userLogin(){
+    	 var phone = $('#tel').val().trim();//获取输入的手机号
+    	 var yzm = $(".yzm_val").val();
+    	 var url = $("#url").val();
+    	 if(yzm == ''){
+    		 $(".login_yzm").show()
+    	 } else {
+    		 $(".login_yzm ").hide()
+    	 }
+    	 var registerCode = $("#registerCode").val();
+    	 $.ajax({
+             type: "POST",
+             contentType: "application/json;charset=UTF-8",
+             url: "${ctx}/user/bind/telphone?telphone=" + phone + "&verifyCode=" + yzm + "&registerCode=" + registerCode + "&url=" + url + "&" + createTimestamp(),
+             dataType: "json",
+             data: {telphone:phone,registerCode:registerCode,verifyCode:yzm,url:url},
+             success: function(data){
+            	 if(data.resultCode == 200){
+            		 if(data.result.url){
+            			 window.location.href = "${ctx}" + data.result.url;
+            		 } else {
+	            		 window.location.href = "${ctx}/match/type?" + createTimestamp();
+            		 }
+            	 } else {
+            		 $(".alert-danger").show()
+            		 loginErrorMessage(data.resultMsg)
+            	 }
+             }
+        });
+    }
+    
+    
+	</script>
+</html>

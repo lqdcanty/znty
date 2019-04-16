@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>报 名</title>
+
+    <!-- Custom styles for this template -->
+    <link href="${ctx}/css/layout.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="${ctx}/laydate/theme/default/laydate.css">
+    <link rel="stylesheet" href="${ctx}/layui/css/layui.css"  media="all">
+</head>
+<body>
+	 <#include "common/alert.html">
+		<div class="modal_agreement">
+			 <div class="agreement_content">
+			 	  <p class="close"><img src="assets/img/icon_djishi.png"></p>
+			 	  <p class="title">全国智能体育大赛智能跳绳分赛服务协议</p>
+			 	  <div class="content">
+			 	  	
+			 	  </div>
+			 	  <p class="txt">
+			 	  	我已经阅读并同意以上协议
+			 	  </p>
+			 	  <p class="pay"><a>继续支付</a></p>
+			 </div>
+		</div>
+        <#include "common/nav.html">
+		<div class="signUp_from">
+			 <p class="title">
+ 	  	   	    <span><img src="assets/img/tit_l.png"></span>&nbsp;&nbsp;赛事介绍&nbsp;&nbsp;<span><img src="assets/img/tit_r.png"></span>
+ 	  	    </p>	  	     
+ 	  	     <div class="container from_table">
+ 	  	     	  <div class="order">  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+					   <span style="white-space:pre;">  </span><span class="txt">个人信息</span>  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+				  </div> 
+				  <form class="entyr_from" id="entyr_from" action="" method="post">
+				  <table class="user_msy" cellspacing="0" cellpadding="0" >
+				  	<tr>
+				  		<td class="name">真实姓名</td>
+				  		<td class="input_box"><input type="text" name="playerName" placeholder="请输入真实姓名" data-required="true" data-descriptions="playerName" size="18" value=""></td>
+				  		<td class="name name_left">国籍</td>
+				  		<td><input type="text" placeholder="请输入国籍" name="playerNationality" data-required="true" data-descriptions="playerNationality" size="18" value=""></td>
+				  	</tr>
+				  	<tr>
+				  		<td class="name"><span class="star">*</span>性别</td>
+				  		<td class="input_box">
+				  			<div class="sex">
+							<div class="male">
+								<span class="female-custom"></span>
+							    <input type="radio" name="sex" data-required="true"  value="m" data-descriptions="sex" id="male"> <label for="male">男</label>
+						    </div>
+						    <div class="female">
+							    <span class="female-custom"></span>
+							    <input type="radio"  name="sex" data-required="true" value="f" data-descriptions="sex" id="female"> <label for="female">女</label>						    
+						    </div>
+						</div>
+				  		</td>
+				  		<td class="name name_left">体重</td>
+				  		<td><input type="text" placeholder="请输入体重(KG)" name="playerWeight" data-required="true" data-descriptions="playerWeight" size="18" value=""></td>
+				  	</tr>
+				  	<tr>
+				  		<td class="name">证件类型</td>
+				  		<td class="input_box">
+				  			<select name="playerCerType" data-required="true" data-descriptions="playerCerType">
+				  				<option>身份证</option>
+				  				<option>护照</option>
+				  			</select>
+				  		</td>
+				  		<td class="name name_left">血型</td>
+				  		<td><input type="text" placeholder="请输入您的血型" name="playerBloodType" data-required="true" data-descriptions="playerBloodType" size="18" value=""></td>
+				  	</tr>
+				  	<tr>
+				  		<td class="name">手机号码</td>
+				  		<td class="input_box"><input type="text" id="tel" name="playerPhone" placeholder="请输入手机号码"  data-validate="playerPhone" data-describedby="phone-description"></td>
+				  		<td class="name name_left"><span class="star">*</span>紧急联系人</td>
+				  		<td><input type="text" placeholder="请输入紧急联系人" name="playerEmergencyName" data-required="true" data-descriptions="playerEmergencyName" size="18" value="">
+				  		<!--<br><span class="required">*此项为必填项，请输入后再提交</span>-->
+				  		</td>
+				  	</tr>
+				  	<tr>
+				  		<td class="name">验证码</td>
+				  		<td class="input_box">
+					  		<span class="verifyCode"><input type="text" placeholder="请输入验证码" name="verifyCode" data-required="true" data-conditional="verifyCode"  data-descriptions="captchacode">
+					  		<a class="yzm" onclick="getCode(this)">发送验证码</a></td>
+					  		</span>
+				  		<td class="name name_left">联系地址</td>
+				  		<td><input type="text" placeholder="请输入您的联系地址" name="playerAddress" data-required="true" data-descriptions="playerAddress" size="18" value=""></td>
+				  	</tr>
+				  	<tr>
+				  		<td class="name">身高</td>
+				  		<td class="input_box"><input type="text"  placeholder="请输入身高(CM)" name="playerHeight" data-required="true" data-descriptions="playerHeight" size="18" value=""></td>
+				  		<td class="name name_left">工作单位</td>
+				  		<td><input type="text" placeholder="请输入您的工作单位" name="playerWorkUnit" data-required="true" data-descriptions="playerWorkUnit" size="18" value=""></td>
+				  	</tr>
+				  	<tr>
+				  		<td class="name">出生年月</td>
+				  		<td class="input_box">
+				  			<input type="text" class="form-control custom-style-data valid" name="playerBirth" id="dayDate" value="" readonly="" placeholder="出生年月" style="cursor:pointer">
+				  		</td>
+				  		<td class="name name_left" colspan="2"></td>
+				  	</tr>
+				  </table>
+				  
+				   <div class="order">  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+					   <span style="white-space:pre;">  </span><span class="txt">其他信息</span>  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+				  </div> 
+				  
+				  <div class="upload flex flex-pack-justify clear">				
+	    				<div class="layui-upload pull-left">
+	    					  <img class="layui-upload-img" id="demo1">
+	                          <div class="upload_icon" id="uploadone"><span>上传健康证明</span></div>
+	                    </div>
+	                    <div class="pull-left alert_txt alert_txt_margin">
+	                    	<span class="star">*</span>格式：.jpg,.png,.jpeg<br>
+	                    	大小：限制1M
+	                    </div>
+	    		        <div class="layui-upload pull-left">
+	    		        	  <img class="layui-upload-img" id="demo2">
+	                          <div class="upload_icon" id="uploadTwo"><span>上传健康证明</span></div>
+	                    </div>	
+	                    <div class="pull-left alert_txt">
+	                    	<span class="star">*</span>格式：.jpg,.png,.jpeg<br>
+	                    	大小：限制1M
+	                    </div>
+    			  </div>
+    			  
+    			  <p class="check_read flex flex-align-center">
+    			   <!-- <img src="img/sel_xieyi.png">-->
+    			    <span>我已经阅读并接受<span class="f_c">《全国智能体育大赛智能跳绳分赛服务协议》</span></span>
+    			  </p>
+    			 
+    			  <p class="next_btn">
+    			  	<a class="save_btn">保存信息</a>
+    			  	<a class="sumbit_btn" id="nextStep"><input type="submit" value="提交报名信息"></a>
+    			  </p>
+ 	  	     </div>
+ 	  	    </form>
+		</div>
+	</body>
+	<script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+	<script src="${ctx}/js/jquery-mvalidate.js"></script>
+	<script src="${ctx}/laydate/laydate.js"></script>
+	<script src="${ctx}/js/config.js"></script>
+	<script src="${ctx}/layui/layui.js" charset="utf-8"></script>
+	<script>
+	   var path = "${ctx}", btnDisable = false;;
+		$(function(){	
+			
+			uploadInit();
+			
+			validateInit();
+			
+			 laydate.render({
+			    elem: '#dayDate',
+			    type:'date',
+			});
+			$("#male").click( function () {
+			    $(this).siblings("span").addClass("active");
+			    $(this).parents("div").siblings("div").children("span").removeClass("active");
+	        });
+			$("#female").click( function () {
+			    $(this).siblings("span").addClass("active");
+			    $(this).parents("div").siblings("div").children("span").removeClass("active");
+			});
+			
+			 $("#Resultinquiry").click(function(){
+		      		$("#animationTipBox").show();
+	        		$("#animationTipBox .dec_txt").text('成绩查询暂未开放，敬请期待 ')
+	        		 setTimeout(function(){
+	        			$("#animationTipBox").css("display","none");
+	        			},
+	        			3000)
+			 })
+				
+	      });
+	      
+	   
+	   
+	   
+	   
+	//表单验证规则初始化
+	function validateInit() {
+	    /*/^0?1[3|4|5|8][0-9]\d{8}$/*/
+	    $.mvalidateExtend({
+	    	playerPhone:{
+                required : true,   
+                pattern : /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/,
+                each:function(){                  
+                },
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入手机号码</div>',
+                    pattern : '<div class="field-invalidmsg">手机号码格式不正确</div>'
+                }
+            },
+            bodyheight: {
+                required : true, 
+                pattern : /^[0-9]+.?[0-9]*$/,
+                descriptions:{
+                    required : '<div class="field-invalidmsg">请输入身高</div>',
+                    pattern : '<div class="field-invalidmsg">只能输入数字</div>'
+                }
+            }
+        });
+        
+        $("#entyr_from").mvalidate({
+            type: 1,
+            onKeyup: true,
+            sendForm: true,
+            firstInvalidFocus: true,
+            valid: function(event,options){
+                //点击提交按钮时,表单通过验证触发函数
+                console.log("验证通过"); 
+                //调用所有验证为空的方法,为true表示没有为空的数据,直接提交后台
+                event.preventDefault();
+                validSuccess();   //验证通过，提交数据到后台
+                $.ajax({
+                    url:  path + "/order/add/apply",
+                    data: $("#entyr_from").serialize(),
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(data) { 
+                    	if(data.resultCode!=200){
+                    		var errMsg=data.resultMsg;
+                    		$(".alert").html(errMsg).show();
+                    	}else{
+                    	   var url=data.result.url;
+                           window.location.href=path+url;                    		
+                    	}
+                    	
+                    }
+                });               
+                
+        /*         if(checkNull()){
+                	 validSuccess();   //验证通过，提交数据到后台
+                } */
+               
+            },
+            invalid: function(event, status, options){
+                //点击提交按钮时,表单未通过验证触发函数
+            },
+            conditional: {
+            	verifyCode: function(val) {
+//                console.log('请求接口，验证验证码是否正确，返回true或者false'); 
+                    console.log('验证码===='+val);
+                    if(!val && !val.length) return false;
+                    return true;
+                }
+            },
+            descriptions:{
+                playerName:{
+                    required : '请输入用户名'
+                },
+                sex:{
+                    required : '请选择性别'
+                },
+                captchacode:{
+                    required : '请输入验证码',
+                    conditional : '您输入的验证码不正确'
+                },
+                email:{
+                	 required : '邮箱地址',
+                },
+                playerHeight:{
+                	 required : '请输入身高'
+                },
+                playerWeight:{
+               	 required : '请输入体重'
+               },
+				playerNationality:{
+				               	 required : '请输入国籍'
+				               },
+               playerNation:{
+	               	 required : '请输入民族'
+	               },
+				playerAddress:{
+				               	 required : '请输入联系地址'
+				               },
+			    playerCerType:{
+	               	 required : '请输入证件类型'
+	               },
+	               playerCerNo:{
+	               	 required : '请输入证件号码'
+	               },
+				playerBloodType:{
+				               	 required : '请输入联系血型'
+				               },
+				playerClothSize:{
+				               	 required : '请输入衣服尺寸'
+				               },
+				playerEmergencyName:{
+				               	 required : '请输入紧急联系人'
+				               },
+                 playerWorkuUnit:{
+			    	             required : '请输入工作单位',
+			                 } ,            
+				               
+				               
+				playerEmergencyPhone:{
+				               	 required : '请输入紧急联系电话'
+				               },
+            }
+        });
+	};
+	
+	
+		function checkNull(){
+		$("table tr td").each(function (){
+			var checkInput=$(this).eq(1).find("input");
+			var checkVal=null;
+			if(checkInput){
+				checkVal=$(checkInput).val();
+			}else{
+				checkInput=$(this).eq(1).find("select");
+				if(checkInput){
+					checkVal=$(checkInput).val();
+				}
+			}
+			if(checkVal==null || checkVal==""){
+				return false;
+			}
+		});
+	}
+	
+      function uploadInit() {
+	       layui.use('upload', function(){
+	          var $ = layui.jquery ,
+	          upload = layui.upload;
+	          var uploadInst = upload.render({
+	            elem: '#uploadone',
+	            url: '',
+	            size:60,
+	            before: function(obj){
+	              obj.preview(function(index, file, result){
+	                $('#demo1').attr('src', result); //图片链接（base64）
+	              });
+	            },
+	            done: function(res){
+	              //如果上传失败
+	              if(res.code > 0){
+	                return layer.msg('上传失败');
+	              }
+	              //上传成功
+	              alert()
+	            },
+	          });
+	        }); 
+
+	        layui.use('upload', function(){
+	          var $ = layui.jquery ,
+	          upload = layui.upload;
+	          var uploadInst = upload.render({
+	            elem: '#uploadTwo',
+	            url: '',
+	            size:60,
+	            before: function(obj){
+	        
+	              obj.preview(function(index, file, result){
+	                $('#demo2').attr('src', result); //图片链接（base64）
+	              });
+	            },
+	            done: function(res){
+	              //如果上传失败
+	              if(res.code > 0){
+	                return layer.msg('上传失败');
+	              }
+	              //上传成功
+	            },
+	          });
+	        }); 
+};
+		
+		
+		
+	//验证通过，提交数据的方法
+	function validSuccess() {
+	    var params = {};
+	    
+	    $('form input[type="text"]').each(function(e) {
+	        console.log($(this).attr('name'));
+	        params[$(this).attr('name')] = $(this).val();
+	    });
+	    
+	    $('form input[type="radio"]:checked').each(function(e) {
+	        console.log($(this).attr('name'));
+	        params[$(this).attr('name')] = $(this).val();
+	    });
+	  /*   console.log($('input[type="radio"]:checked').val()) */
+
+	    console.log(params);
+	};
+	
+	//下一步点击
+	function nextStep() {
+		console.log($('#entyr_from input').length);
+	};
+	
+    
+    //点击获取验证码
+    function getCode(e){
+	    var tel = $("#tel").val();
+        if(checkPhone()) {
+        	 resetCode(); //倒计时
+        	/*if(btnDisable) return 0;
+        	
+        	getResultMethods(path + "/verify/send/sms/code", {playerPhone: tel}, function(d) {
+        		console.log(d)
+    			if(d.resultCode ==200) {
+    				resetCode(); //倒计时
+    			}else {
+    				validErrorMessage('发送失败,请稍后重试');
+    				resetCode();
+    			}
+    		}); */
+        }else {
+            $('#tel').focus();
+        }
+    };
+
+    //验证手机号码
+    function checkPhone(){
+        var phone = $('#tel').val().trim();//获取输入的手机号
+        if(!phone.length) {
+            validErrorMessage('请输入手机号码');
+            return false;
+        };
+        if(!/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/.test(phone)) {
+            validErrorMessage('手机号码格式不正确');
+            return false;
+        }
+        return true;
+    };
+    
+    
+    //手动触发验证
+    function validErrorMessage(text) {
+        var $container=$('<div class="field-tooltipWrap"><div class="field-tooltipInner"><div class="field-tooltip fieldTipBounceIn">'+text+'</div></div></div>');
+        $container.appendTo($(".from_table"));
+        setTimeout(function(){
+            $container.remove();
+        },15000)
+    };
+    
+    
+    //倒计时
+    function resetCode(){
+        timeWait(60);
+        btnDisable = true;
+    };
+    
+    function timeWait(time) {
+    	setTimeout(function() {
+    		if(time >= 0) {
+    			$('.yzm').html(time+"秒后重发").addClass('gray');
+    			time--;
+    			timeWait(time);
+    		}else {
+    			$('.yzm').html("发送验证码").removeClass('gray');
+    			btnDisable = false;
+    		}
+    	}, 1000)
+    };
+	</script>
+</html>

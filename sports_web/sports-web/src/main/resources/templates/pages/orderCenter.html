@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>订单中心</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+    <style>
+        #mescroll{
+            position: absolute;
+            top: 1.28rem;
+            bottom: 0;
+            overflow-y: scroll;
+            height:auto;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper" style="height: 100%;overflow-y: scroll;">
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="callAndroid()">返回</div>
+        <div class="title">订单中心</div>
+    </div>
+    <div class="orderCenter_nav">
+        <p class="orderCenter_nav_avtive" data-type="0">全部</p>
+        <p data-type="1">待支付</p>
+        <p data-type="2">已支付</p>
+    </div>
+    <div class="mescroll" id="mescroll">
+        <ul id="mescroll_list">
+            <!--<li>-->
+                <!--<div class="medal_tips">-->
+                    <!--<div>-->
+                        <!--<img src="${staticPath}/img/img_yueye.png">-->
+                    <!--</div>-->
+                    <!--<div>-->
+                        <!--<span>订单编号：N68864988564684864</span>-->
+                        <!--<p class="medal_tips_name">智能体育大赛金牌勋章<表面电子镀金，铜芯></p>-->
+                        <!--<p class="medal_tips_price">￥140.00</p>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</li>-->
+
+        </ul>
+
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+<script>
+    var tokens = getThePrameValue('appToken')=='null'?'':getThePrameValue('appToken');
+    var agent = navigator.userAgent.toLowerCase();
+    var callAndroid = function(){
+        android.back("back")
+    };
+    var path = '${ctx}';
+    var types = 0;
+    var emptyWorn = new emptyWorn($('#mescroll_list'),'暂无数据',' ')
+    // var loadingBox = new loadingBox();
+    // loadingBox.creat();
+
+    if(!getThePrameValue('platform')){
+        $('#mescroll').css(
+            'top',1.68+'rem'
+        );
+        $('.orderCenter_nav').css(
+            'top',0.88+'rem'
+        )
+        callAndroid = function (){
+            window.location.href=path+ '/ucenter'
+        }
+    }else{
+        if(getThePrameValue('platform') == 'iOS') {
+            if (clientType('iphoneX')) {
+                //是iphoneX
+                $('#mescroll').css(
+                    'top',2.56+'rem'
+                );
+                $('.orderCenter_nav').css(
+                    'top',1.76+'rem'
+                )
+            }else{
+                $('#mescroll').css(
+                    'top',2.08+'rem'
+                )
+            }
+            callAndroid = function (){
+                window.webkit.messageHandlers.back.postMessage(null)
+            }
+        }else if(getThePrameValue('platform') == 'Android') {
+            $('#mescroll').css(
+                'top',2.08+'rem'
+            )
+            // callAndroid = function(){
+            //     android.back("back")
+            // }
+        }else{
+
+        }
+    }
+
+
+
+
+
+    //获取
+    function getData(page){
+        // var competitionCodes=getThePrameValue('competitionCode')
+        var dataType = '';
+        if(types == 1){
+            dataType = 'WAIT_PAY';
+        }else if(types == 2){
+            dataType = 'SUCCESS';
+        }
+        getResultMethods(path + '/shop/user/order/list', {
+            currentPage:page,
+            pageSize:10,
+            orderStatus:dataType
+            
+        }, function(data) {
+            if(data.resultCode == 200){
+                renderFun(data.result.list)
+                mescroll.endBySize(data.result.list.length, data.result.totalRow, '');
+            }else{
+                mescroll.endErr();
+                var tips = new loadingTips(data.resultMsg,2500)
+                tips.creat()
+            }
+        })
+
+    }
+
+    function renderFun(data){
+        if(data.length == 0){
+            emptyWorn.show()
+            return false
+        }else{
+            emptyWorn.hide()
+        }
+        data.forEach(function (item) {
+            var states = '',colors = '#9b9b9b',imgs = '${staticPath}/img/award_3.jpg',types = 0;
+            var status = item.orderStatus;
+            if(status == 'wait_pay' ||status == 'WAIT_PAY'){
+                states = '待支付';
+                colors = '#f44444'
+                types = 1;
+            }else if(status =='success' || status == 'SUCCESS'){
+                states = '已支付';
+                colors = '#28f57a'
+                types = 2;
+            }else if(status =='shipped' || status =='SHIPPED'){
+                states = '已发货';
+                colors = '#28f57a'
+                types = 2;
+            }else if(status =='completed' || status =='COMPLETED'){
+                states = '已完成';
+                colors = '#28f57a'
+                types = 2;
+            }
+            if(item.goodsPic){
+                imgs = item.goodsPic;
+            }
+            var str = '<li data-code="'+item.orderCode+'" data-payOrderCode="'+item.payOrderCode+'" data-type="'+types+'">\
+                         <div class="medal_tips">\
+                                <div>\
+                                <img src="'+imgs+'">\
+                                </div>\
+                                <div>\
+                                <span>订单编号：'+item.orderCode+'</span>\
+                            <p class="medal_tips_name">'+item.goodsTitle+'</p>\
+                            <div class="medal_tips_price"><p>'+item.orderPrice/100+'</p><span style="color: '+colors+'">'+states+'</span></div>\
+                            </div>\
+                         </div>\
+                        </li>';
+            $('#mescroll_list').append(str)
+        })
+        $('#mescroll_list li').click(function () {
+            var types = $(this).attr('data-type');
+            var code = $(this).attr('data-code');
+            var payOrderCode = $(this).attr('data-payOrderCode');
+            if(types == 1){
+                var tradeTypes = '';
+                if (agent.match(/MicroMessenger/i) == "micromessenger") {
+                    tradeTypes = 'internal'
+                }else{
+                    tradeTypes = 'outside'
+                }
+                window.location.href = path + '/order/apply/unified?waitPayCode='+code+'&tradeType='+tradeTypes+"&payOrderCode="+payOrderCode+"&jztype=1";
+            }else if(types == 2){
+                window.location.href = path +'/newDetailSuccess?orderCodeTest='+code;
+            }
+        })
+    }
+
+
+    $('.orderCenter_nav p').click(function () {
+        $('.orderCenter_nav p').removeClass('orderCenter_nav_avtive')
+        $(this).addClass('orderCenter_nav_avtive')
+        types = $(this).attr('data-type');
+        console.log(types)
+        $('#mescroll_list').html('')
+        mescroll.resetUpScroll()
+    })
+
+
+
+    //初始化下拉加载组件
+    var mescroll = new MeScroll("mescroll", {
+        up: {
+            auto: true, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+            isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+            htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+            callback: endLoad //上拉回调,此处可简写; 相当于 callback: function (page) { upCallback(page); }
+            // toTop:{ //配置回到顶部按钮
+            //     src : "../res/img/mescroll-totop.png", //默认滚动到1000px显示,可配置offset修改
+            //     //offset : 1000
+            // }
+        }
+    });
+
+
+    function endLoad(page) {
+        console.log('加载')
+        if(page.num == 1){
+            setTimeout(function () {
+                $('#mescroll_list').html('')
+                getData(page.num)
+
+            },1500)
+        }else{
+            getData(page.num)
+        }
+    }
+</script>
+<style>
+    .orderCenter_nav {
+        width: 100%;
+        height: 0.80rem;
+        font-size: 0.3rem;
+        color: #4b4b4b;
+        background: white;
+        clear: both;
+        position: fixed;
+        left: 0;
+        top: 1.28rem;
+    }
+    .orderCenter_nav p{
+        width: 33.33%;
+        height: 0.75rem;
+        line-height: 0.75rem;
+        border-bottom: 2px solid white;
+        float: left;
+        text-align: center;
+    }
+    #mescroll_list li{
+        background:#fafafa ;
+        margin-top: 0.2rem;
+    }
+    .medal_tips{
+        height: 1.3rem;
+        background: white;
+        padding: 0.2rem 0;
+        clear: both;
+    }
+    .medal_tips>div:first-of-type{
+        width: 1.3rem;
+        height: 1.3rem;
+        float: left;
+        margin-left: 0.3rem;
+        margin-right: 0.3rem;
+        display: flex;
+        align-items: center;
+        background: #fafafa;
+
+    }
+    .medal_tips>div:first-of-type img{
+        width: 100%;
+    }
+    .medal_tips>div:last-of-type{
+        width: 5.5rem;
+        height: 1.3rem;
+        float: right;
+        font-size: 0.25rem;
+    }
+
+    .medal_tips_name{
+        height: 0.6rem;
+        margin-top: 0.1rem;
+    }
+    .medal_tips_price{
+        float: none;
+        font-size: 0.26rem;
+        color: #9b9b9b;
+        height: 0.4rem !important;
+        display: flex;
+        width: 100%;
+        margin: 0;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+
+    }
+    .medal_tips_price span{
+        margin-right: 0.3rem;
+    }
+    .orderCenter_nav_avtive{
+        color: #FF8F00 !important;
+        border-color: #FF8F00 !important;
+    }
+
+</style>
+</html>

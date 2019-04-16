@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>赛事成绩查询列表</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>我的报名</title>
+
+<!-- Custom styles for this template -->
+<link href="${stx}/css/layout.css" rel="stylesheet">
+<!-- <link href="${stx}/css/page.css" rel="stylesheet"> -->
+<link href="${stx}/css/pagination.css" rel="stylesheet">
+<link rel="stylesheet" href="${stx}/laydate/theme/default/laydate.css">
+<link rel="stylesheet" href="${stx}/layui/css/layui.css"  media="all">
+<style>
+   body{background:url(${stx}/img/bg_baoming.jpg) repeat; width: 100%;height: 100%;}   
+    .table-head {    
+    padding-right: 5px;
+    background-color: #ddd;
+    }
+ .table-body{
+	 width:100%; 
+	 max-height:500px;
+	 overflow-y:scroll;
+ }
+ .table-head table,.table-body table{
+    width:100%;
+ }
+ .table-body::-webkit-scrollbar {
+    width: 4px;     
+    height: 4px;
+}
+.table-body::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+.table-body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+} 
+  [v-cloak] {
+  display: none;
+}
+  </style>
+</head>
+<body>
+    
+        <div class="content_height">
+        <#include "common/nav.html">
+
+		<div class="content_msy container clear registration_content" id="myAchievement" v-cloak>
+             <#include "common/left_menu.html">
+			 <div class="aside_content pull-right alert_a" style=" min-height: 600px;">
+			     <!-- alert -->
+			     
+			     <div id="animationTipBox" class="center_box">
+						<div class="tip">
+						    <span class="icon">i</span>
+							<span class="dec_txt">这是提示信息</span>
+						</div>
+				</div>
+
+			    <div v-for = "(scoreName,index) in scoreData">
+			 	<p class="top_title"><img src="${stx}/img/tit_right.png">[[scoreName.matchName]]</p>
+			 			        
+		        	<div style="width: 890px;border-bottom: 1px #ddd solid;"  v-if="scoreData.length">
+					    <div class="table-head">
+						    <table class="cj_table">
+							        <colgroup>
+							            <col width="160">
+							            <col width="90">
+							            <col width="90">
+							            <col width="120">
+							            <col width="120">
+							            <col width="140">
+							            <col width="130">
+							        </colgroup>
+							        <thead>
+							        <tr>
+							            <th width="160">比赛项目</th>
+							            <th width="90">排名</th>
+							  	     	<th width="90">头像</th>
+							  	     	<th width="120">昵称</th>
+							  	     	<th width="120">参赛成绩</th>
+							  	     	<th width="140">参赛时间</th>
+							  	     	<th width="130">排名详情</th>
+							        </tr>
+							        </thead>
+						    </table>
+					    </div>
+					    <div class="table-body">
+						    <table class="cj_table">
+							        <colgroup>
+							            <col width="160">
+							            <col width="90">
+							            <col width="90">
+							            <col width="120">
+							            <col width="120">
+							            <col width="140">
+							            <col width="130">
+							        </colgroup>
+	
+						  	     <tbody>
+					 		  	      <tr v-for = "(scoreList,index) in scoreName.scores">
+					 		  	        <td><p class="center_p">[[scoreList.eventName]]</p></td>
+							  	     <!-- 	<td>[[scoreList.playerCode]]</td> -->
+							  	     	<td><p class="center_p">[[scoreList.rankIng]]</p></td>
+							  	     <!-- 	<td>[[scoreList.playerCode]]</td> -->
+							  	     	<td>
+							  	     	<#if register.headimgUrl??  && register.headimgUrl!=''>
+				 	                     <img src="${(register.headimgUrl)!''}" >
+				 	                     <#else>
+				 	                    <img src="${stx}/img/icon_user.png">
+					                  </#if>
+							  	     	</td>
+							  	     	<td>[[scoreList.palyerName]]</td>
+							  	     	<td>[[scoreList.scoreDesc]]</td>
+							  	     	<td>[[scoreList.partTimeStr]]</td>
+							  	     	<td>
+							  	     	<span class="xq" @click="detail(scoreName.matchCode,scoreList.competitionCode)">查看</span>
+							  	     	<!-- <span class="pm">排名</span> -->
+							  	     	</td>
+							  	     </tr> 
+						  	  </tbody>
+						    </table>
+					    </div>
+					</div>
+		        </div>
+		        
+        		 <div v-if="!scoreData.length" class="no_data" >
+	 	  	    	 	<img src="${stx}/img/img_weikong.png">
+	 	  	    	    <p class="index_nodata" style="text-align: center;">～暂无成绩～<br>
+	                    &nbsp;&nbsp;&nbsp;～快来一起参赛吧～</p>
+	  	    	</div>
+			 </div>
+									
+		<!-- 详 情 弹 框 -->
+		<div id="table-head-modal">
+			 <div class="details_box">
+			      	<div class="xq_t">
+			      	        <div class="scoll_div">
+						    <table class="cj_table">
+							        <thead>
+							        <tr>
+							            <th width="140" v-show="header.pcIsShow" v-for="header in detailData.header">[[header.header]]</th>
+							        </tr>
+							        </thead>							        
+								    <tbody>							  	     
+					 		  	      <tr v-for="detailList in detailListData">
+							  	     	 <td v-for="item in detailList" width="140">[[item]]<span style="color: #ddd;" v-if="item == null || item == ''">——</span></td>
+							  	     </tr>  
+							  	  </tbody>
+						    </table>
+						    </div>
+					   <p class="close_p"> <a id="closeBtn">关 闭</a></p>
+					</div>
+			 </div>
+		</div>
+
+	   </div>	
+		 <div class="footer footer_bottom">
+	    	 <div class="container clear">
+	    	 	  <div class="pull-left">
+	    	 	  	   <p class="footer_nav">
+	    	 	  	   	  <a href="http://www.zntyydh.com/index.jsp">首页</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=114">新闻中心</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=107">赛事信息</a>   |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=109">智体百科</a>  |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=105">全球征集</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=106"> 联系我们</a>
+	    	 	  	   </p>
+	    	 	  	   <p class="simpleText">
+	    	 	  	   	浙ICP备18028500号-1<br>
+                                                版权所有：全国智能体育大赛 未经授权不得使用
+	    	 	  	   </p>
+	    	 	  </div>
+	    	 	  <div class="pull-right footer_code">
+	    	 	       <img src="${ctx}/img/img_footer.png">
+	    	 	  </div>
+	    	 </div>
+		   </div>
+		</div>
+
+</body>
+<script src="${stx}/js/jquery-2.1.1.min.js"></script>
+<script src="${stx}/js/vue.js"></script>
+<script src="${stx}/js/config.js"></script>
+
+<script>
+
+	var vm = null;       //全局声明vue对象
+
+	var vueData = {			
+	    scoreData:[],
+	    detailData:[],
+	    detailListData:[]
+	};
+
+
+	/**
+	 * 页面加载完毕 $.ready
+	 */
+	$(function(){
+	
+	    vueInit();
+	    GetAchievementData();   //获取我的成绩数据
+	    chooseMenu();
+	
+	});
+	
+    function chooseMenu(){
+    	$("#myScore").addClass("active");
+    	$("#myScoreEm").addClass("active");
+    	
+    	$("#closeBtn").click(function(){
+    		$("#table-head-modal").hide();
+    	});
+    };
+    
+	 /**
+	  * vue初始化，dom操作
+	  */
+	  
+	  function vueInit () {
+		 vm = new Vue({
+			 delimiters: ['[[', ']]'],
+			 el:"#myAchievement",
+			 data:vueData ,
+			 methods:{
+				  detail:detail,
+				  GetAchievementData:GetAchievementData
+			 },			 		 			 			 
+		 });
+	};
+	
+	 // 获取我的成绩数据 
+	 
+	 function GetAchievementData(){
+		 var url = "${ctx}/achievement/my/scores" 
+		 getResultMethods(url, {}, function(d){
+			 console.log(d)
+			 vueData.scoreData = d.achievements;
+	
+		 });
+
+	 };
+	 
+	 //详情页面
+	 
+	 function detail(matchCode,compCode) {
+		 console.log(matchCode)
+		 window.location.href="${ctx}/achievement/detail/init?matchCode="+matchCode +"&competitionCode="+compCode
+	 }
+</script>
+</html>

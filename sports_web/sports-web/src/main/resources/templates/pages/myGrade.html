@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>我的成绩</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <style>
+        body{
+            position: fixed;
+            top: 1.28rem;
+        }
+        .while_onclick::before{
+            content: '';
+            width: 0.1rem;
+            height: 1rem;
+            background: #FF8F00;
+            position: absolute;
+            left: 0;
+            top: 0.3rem;
+        }
+        .grade_canvas_box_bg,.grade_canvas_box_bg img{
+            width: 100%;
+            height: 100%;
+        }
+        .grade_user{
+            width: 1.2rem;
+            height: 1.2rem;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0.7rem;
+            margin: 0 auto;
+        }
+        .grade_user_avatar{
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            display: block;
+            margin-left: 0.1rem;
+        }
+        .grade_user_name{
+            width: 3rem;
+            height: 0.6rem;
+            display: block;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            line-height: 0.6rem;
+            text-align: center;
+            font-size: 0.24rem;
+            color: white;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 1.9rem;
+            margin: 0 auto;
+        }
+        .match_name_tips{
+            position: absolute;
+            top: 2.5rem;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 5.5rem;
+            height: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content:space-between;
+            font-size: 0.36rem;
+            color: white;
+        }
+        .match_name_tips p{
+            text-align: center;
+        }
+        .match_name_tips img{
+            width: 0.42rem;
+            height: 0.38rem;
+        }
+        .match_grade_rank{
+            width: 4rem;
+            height: 1rem;
+            line-height: 1rem;
+            text-align: center;
+            font-size: 0.48rem;
+            color: #FF8F00 ;
+            position: absolute;
+            top: 4.8rem;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+        }
+        .match_grade_rank p{
+            text-align: center;
+        }
+        .match_grade_rank span{
+            font-size: 0.64rem;
+        }
+        /*.match_grade_score{*/
+        /*width: 2.2rem;*/
+        /*height: 0.48rem;*/
+        /*font-size: 0.26rem;*/
+        /*color: #FF8F00;*/
+        /*text-align: center;*/
+        /*line-height: 0.48rem;*/
+        /*position: absolute;*/
+        /*top: 6.68rem;*/
+        /*left: 0;*/
+        /*right: 0;*/
+        /*margin: 0 auto;*/
+        /*}*/
+        .match_grade_massage{
+            width: 4.7rem;
+            height: 1.6rem;
+            font-size: 0.26rem;
+            color: #FF8F00;
+            text-align: center;
+            line-height: 0.48rem;
+            position: absolute;
+            top: 5.7rem;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+        }
+        .match_grade_massage div{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .match_grade_massage div img{
+            height: 0.35rem;
+            margin-right: 0.05rem;
+        }
+        .match_grade_massage div:first-of-type{
+            margin-bottom: 0.2rem;
+        }
+    </style>
+    <style>
+        .share_mask{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 999;
+            background: rgba(0,0,0,.3);
+            display: none;
+        }
+        .grade_share_dialoge{
+            width: 4.9rem;
+            height: 5.5rem;
+            background: white;
+            border-radius: 0.2rem;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            right: 0;
+            top: 3.2rem;
+            margin: 0 auto;
+            display: none;
+        }
+        .grade_canvas_box>img{
+            height: 9.5rem;
+            width: 6rem;
+            border-radius: 0.3rem;
+            user-select: none;
+            -ms-user-select: none;
+            -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
+            -moz-user-select: none;
+        }
+        .share_btn_area{
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 0.7rem;
+            width: 100%;
+            border-top: 1px solid #eeeeee;
+            display: flex;
+        }
+        .share_btn_area span{
+            display: inline-block;
+            width: 50%;
+            height: 0.7rem;
+            line-height:0.7rem;
+            color: #FF8F00;
+            font-size: 0.3rem;
+            text-align: center;
+        }
+        .share_btn_area span:first-of-type{
+            border-right: 1px solid #eeeeee;
+        }
+        .list_grade_detail li{
+            display: flex;
+            justify-content:space-between;;
+            align-items: center;
+        }
+        .list_grade_detail li span{
+            border-right: 1px solid #e2e2e2;
+        }
+        .list_grade_detail li:first-of-type span{
+            border-right: none;
+        }
+        .list_grade_detail li span:last-of-type{
+            border-right: none;
+        }
+        #nativeShare{
+            width: 100%;
+            height: 2.4rem;
+            background: white;
+            position: fixed;
+            bottom: 0rem;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            z-index: 999;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            display: none;
+        }
+        .soshm-item{
+            margin-bottom: 0.4rem;
+        }
+        #nativeShare p{
+            width: 100%;
+            height: 0.8rem;
+            font-size: 0.3rem;
+            color: #333;
+            text-align: center;
+            line-height: 0.8rem;
+            position: absolute;
+        }
+        #nativeShare p:first-of-type{
+            left: 0;
+            top: 0;
+        }
+        #nativeShare p:last-of-type{
+            left: 0;
+            bottom: 0;
+            border-top: 1px solid #E2E2E2;
+        }
+        .share_mask_box{
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 990;
+            display: none;
+        }
+        .grade_card_btns{
+            height: 1.2rem;
+            width: 6rem;
+            margin: 0 auto ;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 0.4rem;
+        }
+        .grade_card_btns p{
+            height: 0.6rem;
+            width: 2rem;
+            background-image: linear-gradient(-180deg, #F9C052 0%, #FF8F00 100%);
+            border-radius: 100px;
+            box-shadow: 0 3px 20px 0 rgba(255,143,0,0.50);
+            line-height: 0.6rem;
+            text-align: center;
+            font-size: 0.3rem;
+            color: white;
+        }
+        .grade_card_compition{
+            width: 100%;
+            height: auto;
+            background: white;
+            padding: 0.3rem 0 0.8rem 0;
+            margin-bottom: 0.2rem;
+        }
+        .grade_card_compition ul{
+            padding: 0 0.3rem;
+            border-bottom: 1px solid #FFD197;
+            border-top: 1px solid #FFD197;
+        }
+        .grade_card_compition ul li{
+            height: 0.56rem;
+            /*line-height: 0.56rem;*/
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-bottom: 1px solid #E2E2E2;
+        }
+        .grade_card_compition ul li::before{
+            content: '>';
+            color: #FF8F00;
+        }
+        .grade_card_compition ul li:last-of-type{
+            border: none;
+        }
+        .grade_card_compition ul li p{
+            width: 50%;
+            height: 0.56rem;
+            line-height: 0.56rem;
+            text-align: center;
+            color: #666666;
+            font-size: 0.22rem;
+        }
+        .grade_card_compition ul li p:first-of-type{
+            text-align: left;
+            text-indent: 4em;
+        }
+        .grade_card_compition_title{
+            width: 100%;
+            height: 0.56rem;
+            background: #FFEED9;
+            color: #FF8F00;
+            font-size: 0.26rem;
+            border-top: 1px solid #FFD197;
+            clear: both;
+        }
+        .grade_card_compition_title p{
+            width: 50%;
+            height: 0.56rem;
+            text-align: center;
+            line-height: 0.56rem;
+            float: left;
+        }
+        .canvas{
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            z-index: -1;
+            border-radius: 50%;
+        }
+        .leadShare{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(255,255,255,0.6);
+            z-index: 9999;
+            display: none;
+        }
+        .leadShare img{
+            position: fixed;
+            right: 0.2rem;
+            top: 0.6rem;
+            width: 2rem;
+        }
+        .leadShare p{
+            font-size: 0.3rem;
+            color: #1f1e1e;
+            position: fixed;
+            top: 3rem;
+            right: 0;
+            text-align: right;
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div style="height: 100%;overflow-y: scroll;">
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="callAndroid()">返回</div>
+        <div class="title">
+            我的成绩
+        </div>
+        <!--<div class="share_btn_call" style="font-size: 0.32rem;padding-right: 0.3rem;">分享</div>-->
+        <!--<img class="share_btn_call" style="width:0.4rem;height: 0.42rem;padding-bottom: 0.1rem;padding-right: 0.3rem;" src="${staticPath}/img/icon_share@3x.png"/>-->
+    </div>
+    <div style="padding-bottom: 1.3rem;background: #ededf3;">
+        <div class="geadeContent" style="padding: 0.2rem 0;background: #ededf3;display: none;">
+            <div style="background: white;padding-bottom: 0.2rem;">
+                <section class="while_onclick" style="height: 1.6rem;display:flex;justify-content: start;align-items: center;position: relative;">
+                    <div style="width: 1.5rem;height: 1rem;display: inline-block;margin-left: 0.3rem;margin-right: 0.2rem;">
+                        <img style="width: 100%;height: 100%;" src="${ctx}/img/banner_ph.jpg" />
+                    </div>
+                    <ul style="color:#666;display:flex;flex-direction: column;justify-content: space-between;height: 1rem;">
+                        <li>
+                            <img style="width: 0.3rem;height: 0.3rem;vertical-align: middle" src="${ctx}/img/icon_name.png" />
+                            <span class="gameName">--</span>
+                        </li>
+                        <li style="width: 5.0rem;text-align: right">
+                            <span class=""></span>
+                        </li>
+                        <li class="grade_time_area">
+                            <img style="width: 0.3rem;height: 0.3rem;vertical-align: middle" src="${ctx}/img/icon_time.png">
+                            <span>--至--</span>
+                        </li>
+                    </ul>
+                </section>
+                <div style="padding: 0 0.3rem;overflow-x: scroll;">
+                    <ul class="list_grade_detail" style="display: block;margin-bottom:0;">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div style="background: #ededf3;height: 0.2rem;"></div>
+        <div class="save_grade_card" style="padding-top: 0.2rem;background: white;margin-bottom: 0.2rem">
+            <div class="console_log_box" style="width: 100%;font-size: 0.24rem;text-align: center;color: #919191;" ></div>
+            <input id="imgfile" class="imgfile" accept="image/*" name="file" type="file" style="display: none;">
+            <!--<img class="save_grade_card_src" style="width: 86%;margin-top: 0.3rem;margin-left: 7%;padding-bottom: 1rem;" src="${staticPath}/img/group_grade_card.png">-->
+            <div>
+                <div class="grade_canvas_save" style="width: 6rem;height:9.5rem;margin: 0.3rem auto 0.5rem;border-radius: 0.3rem;box-shadow: 0 10px 30px 0 rgba(255,143,0,0.50);">
+                    <div class="grade_canvas_box" style="width: 6rem;height:9.5rem;position: relative;">
+                        <div class="grade_canvas_box_bg" style=""><img src="${ctx}/img/Group_4@2x.png"></div>
+                        <div class="grade_user">
+                            <img id="gradeImage_change" class="grade_user_avatar" style="width: 1rem;height: 1rem;border-radius: 50%;" src="${ctx}/img/icon_user@2x.png">
+                        </div>
+                        <span class="grade_user_name"></span>
+                        <div class="match_name_tips">
+                            <img src="${ctx}/img/kp_tit_left@2x.png" />
+                            <p></p>
+                            <img src="${ctx}/img/kp_tit_right@2x.png" />
+                        </div>
+                        <div class="match_grade_rank">
+                            <p><span>---</span></p>
+                        </div>
+                        <!--<p class="match_grade_score">-->
+                        <!--总次数：<span></span>次-->
+                        <!--</p>-->
+                        <div class="match_grade_massage">
+                            <div class="match_grade_massage_place"><p>----</p></div>
+                            <div class="match_grade_massage_time"><img src="${ctx}/img/tit_shijian@2x.png"/><span>----</span></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="save_grade_card_btn" style="margin: 0 auto;width:3.2rem;text-align:center;background: #f5f5f5;color: #919191;font-size: 0.26rem;height: 0.5rem;line-height: 0.5rem;">长按保存本图片到手机</p>
+                <div class="grade_card_btns">
+                    <p class="grade_ranking_call">排名</p>
+                    <p class="share_btn_call" onclick="callDialog()">分享</p>
+                </div>
+            </div>
+        </div>
+        <div class="grade_card_compition">
+            <div class="grade_card_compition_title"><p>成绩</p><p>时间</p></div>
+            <ul>
+                <!--<li><p>1614次</p><p>2018-08-13 12:13:30</p></li>-->
+                <!--<li><p>1614次</p><p>2018-08-13 12:13:30</p></li>-->
+                <!--<li><p>1614次</p><p>2018-08-13 12:13:30</p></li>-->
+                <!--<li><p>1614次</p><p>2018-08-13 12:13:30</p></li>-->
+                <!--<li><p>1614次</p><p>2018-08-13 12:13:30</p></li>-->
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="share_mask"></div>
+<div class="grade_share_dialoge">
+    <p style="font-size: 0.3rem;font-weight: 600;padding-top: 0.44rem;text-align: center;">分享</p>
+    <!--<p class="share_title" style="height: 0.68rem;line-height: 0.68rem;font-size: 0.26rem;text-align: center;"></p>-->
+    <img class="share_img_shortCut" style="display:block;width: 2rem;height:3.2rem;margin-top: 0.3rem;margin: 0 auto;" src="${ctx}/img/group_grade_card.png">
+    <div class="share_btn_area">
+        <span class="cancle_grade_share">取消</span>
+        <span id="share_btn" class="share" onclick="callShare()">分享</span>
+    </div>
+</div>
+<div id="nativeShare">
+    <p>分享至</p>
+    <p class="nativeShareCancel">取消</p>
+</div>
+<div class="share_mask_box"></div>
+<div class="leadShare">
+    <img src="${ctx}/img/leadShare.png">
+    <p>点击右上角选择你想要分享的地方</p>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/html2canvas.min.js"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/soshm.min.js"></script>
+<script type="text/javascript" src="${staticPath}/js/mobileShare.js?v=${cssV}"></script>
+<script>
+    var path = '${ctx}';
+    var imgFile = null;
+    var imgUrl = '',uploadUrl = '';
+    var postData = null;
+    var loadingBox = new loadingBox();
+    var reCanvas = 0;
+    var ifReLoad = 0;
+    var traUrl = '';
+    var pathPort = '${ctx}'.replace(':80','');
+    var competitionCodes=getThePrameValue('competitionCode').toString();
+    var matchCode = getThePrameValue('matchCode').toString();
+    var tokens = getThePrameValue('appToken')=='null'?'':getThePrameValue('appToken');
+    var matchNames = '';
+    var callAndroid = function(){
+        android.back("back")
+    };
+    // var competitionCodes=localStorage.getItem('competitionCode').toString();
+    // var matchCode = localStorage.getItem('matchCode').toString();
+    // var tokens=localStorage.getItem('token');
+    var callShare = function(){
+        // if(getThePrameValue('platform') == 'Android'){
+        //     android.share(imgUrl)
+        // }else
+        if(getThePrameValue('platform') == 'iOS'){
+            window.webkit.messageHandlers.share.postMessage(imgUrl)
+        }
+        // else{
+        //     $('#nativeShare').show()
+        //     $('.share_mask_box').show()
+        // }
+    };
+    loadingBox.creat();
+    if(!getThePrameValue('platform')){
+        $(document.body).css(
+            'top',0.88+'rem'
+        );
+        callShare = function () {
+            if(clientType('weixin')){
+                $('.leadShare').show()
+            }else{
+                $('#nativeShare').css('display','flex')
+                $('.share_mask_box').show()
+            }
+            hideShareCard()
+            var links = pathPort+'/game/detail/'+matchCode;
+            var imgPath = pathPort+'/img/banner_ph_share.png';
+            var shareData = {
+                title:matchNames,
+                desc:'我参加了'+matchNames+'，你也快来吧！',
+                link:links,
+                imgUrl:imgPath
+            }
+            mobileShare(pathPort,shareData)
+        }
+    }else if(getThePrameValue('platform') == 'iOS') {
+        if (clientType('iphoneX')) {
+            //是iphoneX
+            $(document.body).css(
+                'top', 1.76 + 'rem'
+            );
+        }
+        // myPhoto(tokens)
+    }
+    // var links = path+'/game/detail/'+matchCode;
+    // var imgPath = '${staticPath}/img/banner_ph.jpg';
+    // var shareData = {
+    //     title:matchNames,
+    //     desc:'我参加了'+matchNames+'，你也快来吧！',
+    //     link:links,
+    //     imgUrl:imgPath
+    // }
+    // mobileShare(path,shareData)
+    if(getThePrameValue('platform') != 'Android'){
+        callAndroid = function(){
+            var from = getThePrameValue('from');
+            if(from == 1){
+                window.location.href =path+ '/gradeRanking?competitionCode='+competitionCodes+'&matchCode='+matchCode;
+            }else{
+                window.location.href =path+ '/score/my';
+            }
+        }
+    }
+
+    // window.ontouchstart = function(e) { e.preventDefault(); };
+
+    // 获取头像的接口
+    function myPhoto(tokens){
+        var t = (new Date()).valueOf(); //获取头像传参
+        getResultMethods(path + "/user/register/check",{token:tokens,t:t},function(data){
+            console.log(data)
+            if(data.resultCode == 200){
+                if(data.result.headimgUrl){
+                    $('.grade_user_avatar').attr('src',data.result.headimgUrl)
+                    traUrl = data.result.headimgUrl;
+                }else{
+                    $('.grade_user_avatar').attr('src','${ctx}/img/icon_user_1@2x.png')
+                    traUrl = '${ctx}/img/icon_user_1@2x.png'
+                }
+            }else{
+                $('.grade_user_avatar').attr('src','${ctx}/img/icon_user@2x.png')
+                traUrl = '${ctx}/img/icon_user@2x.png'
+            }
+        })
+    }
+    // myPhoto(tokens)
+    getMyGarde()
+    //获取成绩列表数据
+    function getMyGarde(competitionCode,competitionDate){
+        getResultMethods(path + '/score/getRegisterScores', {
+            competitionCode: competitionCodes,
+            matchCode:matchCode,
+            token:tokens}, function(data) {
+            if(data.resultCode ==200){
+                loadingBox.close();
+                var result = data.result;
+                //动态成绩卡数据渲染
+                var scores=result.bestScore.scoreDesc?result.bestScore.scoreDesc:0;
+                var fileName = '';
+                var groupName = '';
+                matchNames = result.bestScore.matchName?result.bestScore.matchName:'----';
+                if(data.result.headimgUrl){
+                    $('.grade_user_avatar').attr('src',data.result.headimgUrl)
+                }else{
+                    $('.grade_user_avatar').attr('src','${ctx}/img/icon_user_1@2x.png')
+                }
+                var scoreDescs = result.bestScore.scoreDesc;
+                var userName = result.bestScore.palyerName?result.bestScore.palyerName:data.result.phone;
+                var names_1 = result.bestScore.groupName?result.bestScore.groupName:"";
+                var names_2 = result.bestScore.eventName?result.bestScore.eventName:"";
+                groupName =names_1?(names_1+'-'+names_2):names_2;
+                var dates = dateChange(result.bestScore.partTime);
+                if(getThePrameValue('platform') == 'Android'){
+                    var _postData={
+                        userName:userName,
+                        matchName:matchNames,
+                        score:scores,
+                        groupName:groupName,
+                        competitionDate:dates
+                    };
+                    postData =JSON.stringify(_postData);
+                    // android.share(postData)
+                }
+                $('.grade_user_name').html(userName)
+                $('.match_name_tips p').html(matchNames)
+                $('.match_grade_rank span').html(scores)
+                $('.match_grade_massage_place p').html(groupName)
+                $('.match_grade_massage_time span').html(dates)
+                setTimeout(function () {
+                    drawCanvas($('.grade_canvas_box')[0],false);
+                },1000)
+                var datasArr = result.scoreList;
+                datasArr.forEach(function (item) {
+                    var str='<li data-code="'+item.competitionCode+'"><p>'+item.score+'</p><p>'+item.timeStr+'</p></li>'
+                    $('.grade_card_compition ul').append(str)
+                })
+                $('.grade_card_compition ul li').click(function () {
+                    var code = $(this).attr('data-code');
+                    window.location.href=path+'/myGradeDetail?matchCode='+matchCode+'&scoreDesc='+encodeURI(scoreDescs)+'&competitionCode='+code;
+                })
+                $('.grade_ranking_call').click(function () {
+                    window.location.href = path+'/gradeRanking?matchCode='+matchCode+'&competitionCode='+competitionCodes+'&matchName='+matchNames+'&from=1';
+                })
+                // renderRankList(data)
+            }else{
+                loadingBox.close();
+                var tips = new loadingTips(data.resultMsg,2500)
+                tips.creat();
+                if(data.resultMsg == '用户未存在'){
+                    window.location.href = path+'/H5Login';
+                }
+            }
+        },function (data) {
+            loadingBox.close();
+            var tips = new loadingTips('网络错误，稍后请重试',2500)
+            tips.creat()
+        })
+    }
+    //时间转换
+    function dateChange(date,type){
+        if (!date) return ''
+        var dates = new Date(date)
+        var year = dates.getFullYear()
+        var month = dates.getMonth() + 1
+        month=checkAddZone(month)
+        var date = dates.getDate()
+        date = checkAddZone (date)
+        if(type == 1 ){
+            return year + '-' + month + '-' + date
+        }else{
+            return year + '年' + month + '月' + date + '日'
+        }
+    }
+    //加零
+    function checkAddZone (num) {
+        return num<10 ? '0' + num.toString() : num
+    }
+    function callDialog() {
+        if(getThePrameValue('platform') == 'Android'){
+            if(postData){
+                android.callShare(postData)
+            }else{
+                var tips = new loadingTips('安卓系统数据传输错误，稍后请重试',2500)
+                tips.creat()
+            }
+        }else{
+            // android.share(postData)
+            showShareDialog()
+        }
+    }
+    function showShareDialog(){
+        if($('.grade_share_dialoge').is(':hidden')){
+            // loadingBox.show()
+            //点击分享
+            if(imgUrl){
+                $(".share_mask").show()
+                $('.grade_share_dialoge').show()
+                $('.share_img_shortCut').attr('src',imgUrl)
+            }else{
+                var filetips = new loadingTips('正在创建分享链接...请稍等');
+                var checktips = new loadingTips('成绩卡base64数据为空,正在进行重绘...',3500);
+                var rechecktips = new loadingTips('页面绘制,请重新进入页面重试',3500);
+                if(reCanvas == 1 && !imgFile){
+                    // $('.console_log_box').append('<p>重绘结果为空，结束</p>')
+                    // checktips.close()
+                    rechecktips.creat()
+                    return false
+                }
+                if(!imgFile && reCanvas == 0){
+                    // $('.console_log_box').append('<p>base64数据为空进行重绘</p>')
+                    // checktips.creat()
+                    drawCanvas($('.grade_canvas_box')[0],true);
+                    return false
+                }
+                // checktips.close()
+                // $('.console_log_box').append('<p>数据检查完成，进行上传</p>')
+                // var formData = new FormData();
+                // formData.append('file', imgFile)
+                filetips.creat()
+                setTimeout(function () {
+                    if(uploadUrl){
+                        $(".share_mask").show()
+                        $('.grade_share_dialoge').show()
+                        imgUrl = uploadUrl;
+                        $('.share_img_shortCut').attr('src',uploadUrl)
+                        filetips.close()
+                    }else{
+                        var tips = new loadingTips('正在生成图片链接，请稍后尝试或重新进入',2500);
+                        tips.creat();
+                    }
+
+
+                },2000)
+            }
+        }else{
+            hideShareCard()
+        }
+    }
+
+    function upLoadBase64(callback,callbacks){
+        var formData = new FormData();
+        formData.append('file', imgFile)
+        $.ajax({
+            url:  path + '/file/upload/base64',
+            data: formData,
+            type: 'post',
+            contentType : false,
+            mimeType:"multipart/form-data",
+            dataType: 'json',
+            processData:false,
+            success: function(d) {
+                if(callbacks){
+                    callbacks()
+                }
+                if(d.resultCode == 200){
+                    if(callback){
+                        callback(d)
+                    }
+                }else{
+                    var tips = new loadingTips(d.resultMsg,2500)
+                    tips.creat()
+                }
+            },
+            error:function (d) {
+                if(callbacks){
+                    callbacks()
+                }
+                var tips = new loadingTips('网络错误，稍后请重试',2500)
+                tips.creat()
+            }
+        });
+
+    }
+
+
+    $('.share_btn').click(hideShareCard)
+    $('.cancle_grade_share').click(hideShareCard)
+    $(".share_mask").click(hideShareCard)
+    function hideShareCard() {
+        $(".share_mask").hide()
+        $('.grade_share_dialoge').hide()
+    }
+    $('.leadShare').click(function () {
+        $('.leadShare').hide()
+    })
+    var mousrDownDate = '';
+    function androidSave() {
+        android.share(mousrDownDate)
+    }
+    var timeOut = null;
+    $('.grade_canvas_save').on('touchstart',function (e) {
+        mousrDownDate = postData;
+        console.log(11111)
+        var platform = getThePrameValue('platform');
+        timeOut = setTimeout(function () {
+            if(platform == 'Android'){
+                // var tips = new loadingTips('正在进行保存...',2500);
+                // tips.creat();
+                // android.share(postData)
+            }else if(platform == 'iOS'){
+                window.webkit.messageHandlers.savaImg.postMessage(imgFile)
+            }else{
+                // var aLink = document.createElement('a');
+                // aLink.href = imgFile;
+                // aLink.download = '我的成绩.png'
+                // document.body.appendChild(aLink)
+                // aLink.click()
+                if(uploadUrl){
+                    H5DownloadImg(uploadUrl,'我的成绩')
+                }else{
+                    var tips = new loadingTips('正在生成图片链接，请稍后尝试或重新进入',2500);
+                    tips.creat();
+                }
+
+            }
+        },500)
+    })
+    $('.grade_canvas_save').on('touchend',function (e) {
+        if(timeOut){
+            clearTimeout(timeOut)
+        }
+        // e.preventDefault()
+    })
+    $('.grade_canvas_save').on('touchmove',function (e) {
+        if(timeOut){
+            clearTimeout(timeOut)
+        }
+    })
+    function DPR() {
+        if (window.devicePixelRatio && window.devicePixelRatio > 1) {
+            return window.devicePixelRatio;
+        }
+        return 1;
+    }
+    function parseValue(value) {
+        return parseInt(value, 10);
+    }
+    //动态图片生成
+    function drawCanvas(selector,ifReDraw) {
+        console.log('绘图')
+        // $('.console_log_box').append('<p>DOM文档截图程序运行</p>')
+        //获取节点高度，后面为克隆节点设置高度。
+        var height = $(selector).height()
+        //克隆节点，默认为false，不复制方法属性，为true是全部复制。
+        // $('.console_log_box').append('<p>DOM文档拷贝</p>')
+        var cloneDom = $(selector).clone(true);
+        //设置克隆节点的css属性，因为之前的层级为0，我们只需要比被克隆的节点层级低即可。
+        cloneDom.css({
+            "background-color": "white",
+            "position": "absolute",
+            "top": "0px",
+            "z-index": "-1",
+            "height": height
+        });
+        //将克隆节点动态追加到body后面。
+        $("body").append(cloneDom);
+        // $('.console_log_box').append('<p>拷贝元素属性赋值</p>')
+        // 获取想要转换的 DOM 节点
+        var dom = $(cloneDom);
+        var boxw = $(cloneDom).width();
+        var boxh = $(cloneDom).height();
+        // DOM 节点计算后宽高
+        var width = parseValue(boxw);
+        var height = parseValue(boxh);
+        // 获取像素比
+        var scaleBy = DPR();
+        // if(getThePrameValue('platform') == 'Android'){
+        //     scaleBy = 1/2;
+        // }
+        // $('.console_log_box').append('<p>创建canvas画布</p>')
+        // 创建自定义 canvas 元素
+        var canvas = document.createElement('canvas');
+        // 设定 canvas 元素属性宽高为 DOM 节点宽高 * 像素比
+        canvas.width = width * scaleBy;
+        canvas.height = height * scaleBy;
+        // 设定 canvas css宽高为 DOM 节点宽高
+        canvas.style.width = width * scaleBy+'px';
+        canvas.style.height = height * scaleBy+'px';
+        // 获取画笔
+        var context = canvas.getContext('2d');
+        // 将所有绘制内容放大像素比倍
+        context.scale(scaleBy, scaleBy);
+        // $('.console_log_box').append('<p>canvas画布准备就绪...</p>')
+        // $('.console_log_box').append('<p>'+html2canvas+'</p>')
+        // 将自定义 canvas 作为配置项传入，开始绘制
+        var element = $(cloneDom)[0];
+        html2canvas(element,{
+            width:width,
+            height:height,
+            useCORS:true}).then(function(canvas){
+            // $('.console_log_box').append('<p>开始绘制并生产base64数据</p>')
+            dataURL =canvas.toDataURL("image/png");
+            imgFile = dataURL;
+            upLoadBase64(function (d) {
+                uploadUrl = d.result.url;
+            })
+            // $('.console_log_box').append('<p>读取base64数据赋值</p>')
+            var imgData = dataURL;
+            //downloadFile(fileName, imgData);
+            var img= document.createElement('img');
+            img.setAttribute('crossOrigin', 'anonymous');
+            $(selector).html(img);
+            // $('.console_log_box').append('<p>页面中的DOM结构替换为截图</p>')
+            img.src = dataURL;
+            if(ifReDraw){
+                // $('.console_log_box').append('<p>接收参数，进行重绘</p>')
+                reCanvas = 1;
+                showShareDialog()
+            }
+        });
+    }
+    function getBase64Image(img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = $(img).width();
+        canvas.height = $(img).height();
+        var ctx = canvas.getContext("2d");
+        var widths = $(img).width();
+        var heights = $(img).height();
+        ctx.drawImage(img, 0, 0, widths , heights);
+        var dataURL = canvas.toDataURL("image/png");
+        return dataURL
+        // return dataURL.replace("data:image/png;base64,", "");
+    }
+</script>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />-->
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0,user-scalable=no, target-densityDpi=device-dpi">
+
+    <title>奖章详情</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <link rel="stylesheet" href="${staticPath}/js/swiper/swiper.min.css" />
+    <link rel="stylesheet" href="${staticPath}/css/mescroll.min.css">
+    <style>
+        .h5_header{
+            position: absolute;
+        }
+        #mescroll{
+            position: absolute;
+            top: 1.28rem;
+            bottom: 0.8rem;
+            overflow-y: scroll;
+            height:auto;
+            min-height:6.9rem;
+        }
+        .medal_more_list_img1{
+            width:7.5rem;
+            margin:0 auto;
+            height:9.8rem;
+        }
+        .medal_more_list_img2{
+            width:7.5rem;
+            margin:0 auto;
+            height:14.7rem;
+        }
+        .medal_more_list_img3{
+            width:7.5rem;
+            margin:0 auto;
+            height:15.9rem;
+        }
+        .medal_more_list_img4{
+            width:7.5rem;
+            margin:0 auto;
+            height:19.3rem;
+        }
+        .medal_more_list_img5{
+            width:7.5rem;
+            margin:0 auto;
+            height:20.6rem;
+        }
+        /*.medal_more_list_img6{*/
+            /*width:7.5rem;*/
+            /*margin:0 auto;*/
+            /*height:16.8rem;*/
+        /*}*/
+        /*.medal_more_list_img7{*/
+            /*width:7.5rem;*/
+            /*margin:0 auto;*/
+            /*height:13.9rem;*/
+        /*}*/
+        /*.medal_more_list_img8{*/
+            /*width:7.5rem;*/
+            /*margin:0 auto;*/
+            /*height:20.14rem;*/
+        /*}*/
+
+    </style>
+</head>
+<body>
+<!--<div id="wrapper" style="height: 100%;overflow-y: scroll;">-->
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="back()">返回</div>
+        <div class="title">奖章详情</div>
+    </div>
+    <div class="medal_content mescroll" id="mescroll">
+        <!--<ul id="mescroll_list">-->
+            <!---->
+        <!--</ul>-->
+
+        <div class="about_medal">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <img class="swiper-slide" src="${staticPath}/img/award_3.jpg"/>
+                    <img style="display:none" class="swiper-slide" src="${staticPath}/img/award_2.jpg"/>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+            <div class="mddal_message">
+                <p class="model_price">￥--.--</p>
+                <p class="model_title">--</p>
+            </div>
+            <div style="height: 0.2rem;background: #efeff4;width: 100%;"></div>
+            <div class="medal_more_list">
+                <p>
+                    商品详情
+                </p>
+                <div class="medal_more_list_img">
+                    <div class="nodata">
+                        <img class="medal_more_list_img1" src="${staticPath}/img/imga_1.jpg"/>
+                        <img class="medal_more_list_img2" src="${staticPath}/img/imga_2.jpg"/>
+                        <img class="medal_more_list_img3" src="${staticPath}/img/imga_3.jpg"/>
+                        <img class="medal_more_list_img4" src="${staticPath}/img/imga_4.jpg"/>
+                        <img class="medal_more_list_img5" src="${staticPath}/img/img_5b.jpg"/>
+                    </div>
+                    <!--<img class="medal_more_list_img6" src="${staticPath}/img/img_6.jpg"/>-->
+                    <!--<img class="medal_more_list_img7" src="${staticPath}/img/img_7.jpg"/>-->
+                    <!--<img class="medal_more_list_img8" src="${staticPath}/img/img_8.jpg"/>-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <p class="medalBuyNow">
+        立即购买
+    </p>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script type="text/javascript" src="${staticPath}/js/mescroll.min.js"></script>
+<script type="text/javascript" src="${staticPath}/js/swiper/swiper.min.js"></script>
+<script>
+    var tokens = getThePrameValue('appToken')=='null'?'':getThePrameValue('appToken');
+    var callAndroid = null;
+    var path = '${ctx}';
+    // var loadingBox = new loadingBox();
+    // loadingBox.creat();
+    var paddngNum= 0;
+    var u = navigator.userAgent;
+    var ua = u.toLowerCase();
+    if(!getThePrameValue('platform')){
+        $('#mescroll').css(
+            'top',0.88+'rem'
+        );
+    }else{
+        if(getThePrameValue('platform') == 'iOS') {
+            if (clientType('iphoneX')) {
+                //是iphoneX
+                $('#mescroll').css(
+                    'top',1.76+'rem'
+                );
+            }
+        }
+    }
+
+    // 是否隐藏返回按钮
+    var goNoBack = getThePrameValue('goNoBack')?getThePrameValue('goNoBack'):''
+    if(goNoBack!='' || goNoBack.length>0){
+        $('.h5_header img:first-child').css({
+            "visibility": "hidden"
+        })
+        $('.h5_header .back').css({
+            "visibility": "hidden"
+        })
+    }
+
+    //自执行
+    getData()
+
+    //刷新一次
+    $('#mescroll').one("click",function(){
+        getData()
+        // console.group('刷新奖章页面')
+        // console.log('加载刷新')
+        // console.groupEnd()
+        // // window.location.reload()
+        // window.location.href = window.location.href + '?' + new Date().getTime()
+    })
+
+    $('.medalBuyNow').click(function () {
+        var goodsCode = getThePrameValue('goodsCode')?getThePrameValue('goodsCode'):'G20180806000001';
+        window.location.href = path +'/medalOrderPage?goodsCode='+goodsCode;
+    })
+    function back() {
+        var indexLead = getThePrameValue('indexLead')?getThePrameValue('indexLead'):''
+        if(indexLead && indexLead!=''){
+            window.location.href = path+'/game/type';
+        }else{
+            window.location.href = path+'/myMedal';
+        }
+    }
+
+
+    //获取
+    function getData(){
+
+        var goodsCode = getThePrameValue('goodsCode')?getThePrameValue('goodsCode'):'G20180806000001';
+        // var goodsCode = localStorage.getItem('goodsCode')?localStorage.getItem('goodsCode'):'G20180806000001';
+        // localStorage.setItem('goodsCode','G20180806000001')
+        getResultMethods(path + '/shop/goods/'+goodsCode, {}, function(data) {
+            if(data.resultCode==200){
+                var goods = data.result.goods;
+
+                $('.model_title').html(goods.title)
+                $('.model_price').html('￥'+goods.productPrice/100)
+                if(goods.description){
+                    $('.nodata').hide();
+                    $('.medal_more_list_img').append(goods.description)
+                }
+                if(goods.goodsPic){
+                    $('.swiper-slide').attr('src',goods.goodsPic)
+                }
+
+                if(goods.thumb){
+                    var imgArr = goods.thumb.split(',');
+                    for(var i = 0;i<imgArr.length;i++){
+                        $('.swiper-wrapper').append('<img style="display:none" class="swiper-slide" src="'+imgArr[i]+'"/>')
+                    }
+                    //初始化轮播
+                    var swiper = new Swiper('.swiper-container', {
+                        spaceBetween: 30,
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                    });
+                }else{
+                    $('.swiper-wrapper').append('<img style="display:none" class="swiper-slide" src="${staticPath}/img/award_1.jpg"/>')
+                }
+
+            }
+        })
+
+    }
+
+    // //初始化下拉加载组件
+    // var mescroll = new MeScroll("mescroll", {
+    //     up: {
+    //         auto: true, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+    //         isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+    //         htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+    //         callback: endLoad //上拉回调,此处可简写; 相当于 callback: function (page) { upCallback(page); }
+    //         // toTop:{ //配置回到顶部按钮
+    //         //     src : "../res/img/mescroll-totop.png", //默认滚动到1000px显示,可配置offset修改
+    //         //     //offset : 1000
+    //         // }
+    //     }
+    // });
+
+    // function endLoad(page) {
+    //     console.log('加载')
+    //     if(page.num == 1){
+    //         setTimeout(function () {
+    //             getMYGradeList(page.num)
+    //
+    //         },1500)
+    //     }else{
+    //         getMYGradeList(page.num)
+    //     }
+    // }
+</script>
+<style>
+
+    .about_medal{
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index:9999;
+    }
+    .swiper-container,.swiper-wrapper,.swiper-slide{
+        width: 100%;
+    }
+    .swiper-slide{
+        height: 7rem;
+        text-align: center;
+        line-height: 7rem;
+        width: 7rem;
+        margin: 0 auto;
+    }
+    .swiper-pagination-bullet-active{
+        background:#FF8F00;
+    }
+    .mddal_message{
+        width: 96%;
+        padding: 0 2%;
+        background: white;
+    }
+    .mddal_message p:first-of-type{
+        font-size: 0.36rem;
+        color: #FF8F00;
+        line-height: 0.8rem;
+        padding-top: 0.1rem;
+    }
+    .mddal_message p:last-of-type{
+        font-size: 0.28rem;
+        color: #4b4b4b;
+        padding-bottom: 0.1rem;
+    }
+    .medal_more_list{
+        width: 100%;
+        height: auto;
+        background: white;
+        padding-bottom: 1rem;
+        text-align: center;
+
+    }
+    .medal_more_list p{
+        line-height: 1rem;
+        font-size: 0.35rem;
+        color: #4b4b4b;
+    }
+    .medal_more_list img{width: 100%;height: auto;}
+    .medalBuyNow{
+        width: 100%;
+        height: 0.8rem;
+        line-height: 0.8rem;
+        background:#FF8F00;
+        color: white;
+        font-size: 0.3rem;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        text-align: center;
+    }
+    .medal_content{
+        position: absolute;
+        top: 0.88rem;
+        left: 0;
+        right: 0;
+        bottom: 0.8rem;
+        overflow-y:scroll;
+        min-height: 4.9rem;
+        height: auto;
+        -webkit-overflow-scrolling : touch;
+        z-index: 15;
+    }
+
+</style>
+</html>

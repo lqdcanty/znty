@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>成绩详情</title>
+    <link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+    <style>
+        .detailHeight{
+            height: 2.76rem;
+            border-bottom: 0.2rem solid #EFEFF4;
+            margin-bottom: 0.3rem;
+        }
+        .congrationDetail{
+            font-size: 0.28rem;
+            line-height: 0.36rem;
+            text-align: center;
+            margin-top: 0.2rem;
+            color: #FF8F00;
+            font-family: MicrosoftYaHei;
+        }
+        .match_Detail{
+            background: #FFEED9;
+            text-align: center;
+            height: 0.56rem;
+            line-height: 0.56rem;
+            border-top: 1px solid #FFD197;
+            border-bottom: 1px solid #FFD197;
+        }
+        .match_Detail span{
+            font-family: PingFangSC-Regular;
+            font-size: 0.26rem;
+            color: #FF8F00;
+            text-align: left;
+            line-height: 0.26rem;
+        }
+        .myGradeLi{
+            border-bottom: 1px solid #E2E2E2;
+        }
+        .tablemyGrade .myGradeLi:last-child{
+            border-bottom: 1px solid #FFD197;
+        }
+
+        .myGradeLi .myGradeLi_Left{
+            width: 2.7rem;
+            border-right: 1px solid #E2E2E2;
+            text-align: center;
+            padding: 0.3rem;
+        }
+        .myGradeLi .myGradeLi_Right{
+            text-align: center;
+        }
+        .mygradeDiv{
+            width: 4.8rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+    </style>
+</head>
+<body>
+<div id="wrapper" style="background:#fff;overflow-x:hidden;">
+    <div class="h5_header">
+        <img src="${staticPath}/img/icon_back.png"/>
+        <div class="back" onclick="back()">返回</div>
+        <div class="title">成绩详情</div>
+    </div>
+    <div class="h5_header_space" style="height: 1.28rem"></div>
+    <div class="detailHeight">
+        <div style="padding-top: 0.6rem;text-align: center;">
+            <img style="width: 1rem;height: 1rem;" src="${staticPath}/img/icon_chenggong2x.png"/>
+        </div>
+        <div class="congrationDetail">恭喜您完成比赛 !</div>
+    </div>
+    <div class="match_Detail">
+        <span>成绩详情</span>
+    </div>
+    <table style="border-collapse: collapse;" class="tablemyGrade">
+        <tbody>
+        <tr class="myGradeLi">
+            <td class="myGradeLi_Left">比赛项名称</td>
+            <td class="myGradeLi_Right">
+                <div class="mygradeDiv">----</div>
+            </td>
+        </tr>
+        <tr class="myGradeLi">
+            <td class="myGradeLi_Left">分组名称</td>
+            <td class="myGradeLi_Right">
+                <div class="mygradeDiv">----</div>
+            </td>
+        </tr>
+        <tr class="myGradeLi">
+            <td class="myGradeLi_Left">赛场名称</td>
+            <td class="myGradeLi_Right">
+                <div class="mygradeDiv">----</div>
+            </td>
+        </tr>
+        <tr class="myGradeLi">
+            <td class="myGradeLi_Left">赛事名称</td>
+            <td class="myGradeLi_Right">
+                <div class="mygradeDiv">----</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+<script type="text/javascript" src="${staticPath}/js/jquery-2.1.1.min.js"></script>
+<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+<script>
+    var path = '${ctx}';
+    var matchCode = getThePrameValue('matchCode');
+    var competitionCode = getThePrameValue('competitionCode');
+    var scoreDesc = decodeURI(getThePrameValue('scoreDesc'));
+    var tokens = getThePrameValue('appToken')=='null'?'':getThePrameValue('appToken');
+    var back = function(){
+        if(getThePrameValue('platform') == 'iOS'){
+            window.webkit.messageHandlers.back.postMessage(null)
+        }else if(getThePrameValue('platform') == 'Android'){
+            android.back("back")
+        }else{
+            window.history.back()
+        }
+
+    };
+    if(getThePrameValue('platform') == 'iOS') {
+        if (clientType('iphoneX')) {
+            $('.h5_header_space').css(
+                'height',1.76+'rem'
+            );
+        }
+
+
+    }else if(getThePrameValue('platform') == 'Android') {
+
+
+    }
+    getResultMethods(path + '/score/getMyScoreInfo', {
+        competitionCode:competitionCode,
+        scoreDesc:scoreDesc,
+        token:tokens
+    },function (data) {
+        if(data.resultCode == 200){
+            $('.mygradeDiv').eq(0).html(data.result.eventName?data.result.eventName:'无')
+            $('.mygradeDiv').eq(1).html(data.result.groupName?data.result.groupName:'无')
+            $('.mygradeDiv').eq(2).html(data.result.siteName?data.result.siteName:'无')
+            $('.mygradeDiv').eq(3).html(data.result.matchName?data.result.matchName:'无')
+        }else{
+            var tips = new loadingTips(data.resultMsg,2500)
+            tips.creat()
+        }
+    })
+
+</script>
+</html>

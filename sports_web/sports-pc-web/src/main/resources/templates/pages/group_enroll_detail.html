@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>运动员报名表</title>
+
+    <!-- Custom styles for this template -->
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="${stx}/laydate/theme/default/laydate.css">
+    <link rel="stylesheet" href="${stx}/layui/css/layui.css"  media="all">
+  </head>
+	<body>
+		<#include "common/alert.html">
+		<div class="modal_agreement">
+			 <div class="agreement_content">
+			 	  <p class="close"><img src="assets/img/icon_djishi.png"></p>
+			 	  <p class="title">全国智能体育大赛智能跳绳分赛服务协议</p>
+			 	  <div class="content">
+			 	  	
+			 	  </div>
+			 	  <p class="txt">
+			 	  	我已经阅读并同意以上协议
+			 	  </p>
+			 	  <p class="pay"><a>继续支付</a></p>
+			 </div>
+		</div>
+		<#include "common/nav.html">
+		<div class="signUp_from">
+			<div class="container">
+				<#if status??>
+					<#if status == 'wait_end'>
+						<div class="state_title ">
+							比赛已结束,不能参加报名
+					  	   <span class="red">
+	                           	<a href="${ctx}/match/type">报名其他项目</a>
+					  	   </span>
+				    	</div>
+					</#if>
+					<#if status == 'wait_pay'>
+						<div class="state_title ">
+						订单提交成功!距订单关闭还有<span id="overplusTime">${(payOrder.overplusTime)!''}</span>,请尽快付款
+				    	</div>
+					</#if>
+					<#if status == 'wait_pay_end'>
+						<div class="state_title ">
+							比赛已结束,不能完成支付!
+							<span class="red">
+		                           	<a href="${ctx}/match/type">报名其他项目</a>
+						  	</span>
+				    	</div>
+					</#if>
+					<#if status == 'wait_pay_overtime'>
+						<div class="state_title ">
+							订单已超时,不能完成支付!
+							<span class="red">
+		                        <a href="${ctx}/match/type">重新下单</a>
+						  	</span>
+				    	</div>
+					</#if>
+				</#if>
+				
+				<!-- <div class="state_title ">
+						比赛已结束【在不能报名的四种比赛状态下】，不能完成支付！
+				  	   <span class="red">
+                           	报名其他
+				  	   </span>
+			    </div>  -->
+			
+ 	     
+ 	  	     <div class="container from_table">
+ 	  	     	  <div class="order">  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+					   <span style="white-space:pre;">  </span><span class="txt">团体信息</span>  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+				  </div>
+				  	<table class="user_msy user_msy_show group_msy" cellspacing="0" cellpadding="0">
+					  <#if leader??>
+						  	<tr>
+						  		<td class="name">团队名称</td>
+						  		<td class="input_box">${(leader.teamName)!''}</td>				  		
+						  	</tr>
+						  	<tr>
+						  		<td class="name">领队姓名</td>
+						  		<td class="input_box">
+						  				${(leader.leaderName)!''}
+						  		</td>				  		
+						  	</tr>
+						  	<tr>
+						  		<td class="name">手机号码</td>
+						  		<td class="input_box">${(leader.leaderPhone)!''}</td>				  	
+						  			
+						  	</tr>
+					  <#else>
+					  	 	<tr>
+						  		<td class="name">团队名称</td>
+						  		<td class="input_box"></td>				  		
+						  	</tr>
+						  	<tr>
+						  		<td class="name">领队姓名</td>
+						  		<td class="input_box"></td>				  		
+						  	</tr>
+						  	<tr>
+						  		<td class="name">手机号码</td>
+						  		<td class="input_box"></td>				  	
+						  	</tr>	  	
+					  </#if>
+					  </table>
+					  
+
+				  <#if players?? && (players?size > 0) >
+					<#list players as player>
+					<div class="order">  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+					   <span style="white-space:pre;">  </span><span class="txt">成员信息</span>  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+				  </div>
+					<div style="">
+				  	<table class="user_msy user_msy_show group_msy" cellspacing="0" cellpadding="0">
+					  	<tr>
+					  		<td class="name">真实姓名</td>
+					  		<td class="input_box">${(player.playerName)!''}</td>				  		
+					  	</tr>
+					  	<tr>
+					  		<td class="name">性别</td>
+					  		<td class="input_box">
+					  			<div class="sex">
+					  				${(player.sexStr)!''}
+							    </div>
+					  		</td>				  		
+					  	</tr>
+					  	<tr>
+					  		<td class="name">手机号码</td>
+					  		<td class="input_box">${(player.playerPhone)!''}</td>				  	
+					  			
+					  	</tr>
+					  	<#if pro.playerNationality?? && pro.playerNationality.isShow>
+						  	<tr>
+						  	    <td class="name name_left">国籍</td>
+						  		<td>${(player.playerNationality)!''}</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerWeight?? && pro.playerWeight.isShow>
+						  	<tr>
+						  	    <td class="name name_left">体重</td>
+						  		<td>${(player.playerWeight)!''}</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerBloodType??  && pro.playerBloodType.isShow>
+							<tr>
+								<td class="name name_left">血型</td>
+								<td>${(player.playerBloodType)!''}</td>
+							</tr>
+						</#if>
+					  	<#if pro.playerCerType?? && pro.playerCerType.isShow>
+						  	<tr>
+						  		<td class="name">证件类型</td>
+						  		<td class="input_box">
+						  			<#if player.playerCerType?? >
+						  				<#if player.playerCerType = "1">
+						  					身份证
+						  				</#if>
+						  				<#if player.playerCerType = "2">
+						  					护照
+						  				</#if>
+						  				<!-- <#if player.playerCerType = "3">
+						  					驾照
+						  				</#if> -->
+						  				<#if player.playerCerType = "4">
+						  					军官证
+						  				</#if>
+					  				</#if>
+						  		</td>			  		
+						  	</tr>
+						  	<#if pro.playerCerNo?? && pro.playerCerNo.isShow == false>
+						  		<tr>
+							  	    <td class="name name_left">证件号码</td>
+							  		<td>${(player.playerCerNo)!''}</td>
+							  	</tr>
+						  	</#if>
+					  	</#if>
+					  	<#if pro.playerCerNo??  && pro.playerCerNo.isShow>
+						  	<tr>
+						  	    <td class="name name_left">证件号码</td>
+						  		<td>${(player.playerCerNo)!''}</td>
+						  	</tr>
+						</#if>  	
+					  	<#if pro.playerEmergencyName?? && pro.playerEmergencyName.isShow>
+							<tr>
+								<td class="name name_left">紧急联系人</td>
+								<td>${(player.playerEmergencyName)!''}</td>
+							</tr>
+						</#if>
+						<#if pro.playerEmergencyPhone?? && pro.playerEmergencyPhone.isShow>
+						  	<tr>
+						  		<td class="name name_left">紧急联系电话</td>
+						  		<td>${(player.playerEmergencyPhone)!''}</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerHeight?? && pro.playerHeight.isShow>
+						  	<tr>
+						  		<td class="name">身高</td>
+						  		<td class="input_box">${(player.playerHeight)!''}</td>
+						  		
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerWorkUnit?? && pro.playerWorkUnit.isShow>
+						  	<tr>
+						  	    <td class="name name_left">工作单位</td>
+						  		<td>${(player.playerWorkUnit)!''}</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerBirth??  && pro.playerBirth.isShow>
+						  	<tr>
+						  		<td class="name">出生年月</td>
+						  		<td class="input_box">
+						  			${(player.playerBirth?string('yyyy-MM-dd'))!''}
+						  		</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.email?? && pro.email.isShow>
+						  	<tr>
+						  		<td class="name name_left">邮箱</td>
+						  		<td>${(player.email)!''}</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerClothSize?? && pro.playerClothSize.isShow>
+						  	<tr>
+						  		<td class="name">衣服尺码</td>
+						  		<td class="input_box">
+						  			${(player.playerClothSize)!''}
+						  		</td>				  		
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerNation?? && pro.playerNation.isShow>
+						  	<tr>
+						  	    <td class="name name_left">民族</td>
+						  		<td>${(player.playerNation)!''}</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.playerAddress?? && pro.playerAddress.isShow>
+						  	<tr>
+						  		<td class="name">联系地址</td>
+						  		<td class="input_box">${(player.playerAddress)!''}</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.assettoId?? && pro.assettoId.isShow>
+					  		<tr>
+						  	    <td class="name name_left">神力科莎游戏昵称</td>
+						  		<td>${(player.assettoId)!''}</td>
+						  	</tr>
+					  	</#if>
+					  	<#if pro.expands?? && (pro.expands?size > 0)>
+					  		<#list pro.expands as expand>
+					  			<#if expand?? && expand.isShow>
+					  			<tr>
+							  	    <td class="name name_left">${(expand.name)!''}</td>
+							  		<td>
+							  			<#if player.array?? && (player.array?size > 0)>
+							  				<#list player.array as array>
+							  					<#if array.key = expand.name>
+							  						${(array.value)!''}
+											  	<#else>
+							  					</#if>
+							  				</#list>
+							  			<#else>
+								  		    
+							  			</#if>
+							  		<div id="playerHeight-description" class="description-wrap"></div>
+							  		</td>
+							  	</tr>
+							  	</#if>
+					  		</#list>
+					  	</#if>					  					    					  	
+					  </table> 
+					  
+					 
+					  <#if pro.playerCerType?? && pro.playerCerType.isShow && (player.attOne!='' ||player.attOne!='')>  
+
+						   <#if  pro.playerCerType?? && pro.playerCerType.isShow>
+						   		<div class="upload_show flex-pack-justify clear" style="width:952px;">	
+					  				<#if player.playerCerType == '1'>	
+					    				<div class="layui-upload pull-left">
+					    					  <#if player.attOne?default("")?trim?length gt 1>
+					    					  	 <img class="layui-upload-img" id="demo3" src="${(player.attOne)!''}">
+					    					  <#else>
+					    					  	 <img class="layui-upload-img" id="demo3">
+					    					  </#if>
+					                    </div>
+					                    <div class="pull-left alert_txt alert_txt_margin">身份证正面</div>
+					    				<div class="layui-upload pull-left" style="margin-left: 111px;">
+					    					  <#if player.attTwo?default("")?trim?length gt 1>
+					    					  	 <img class="layui-upload-img" id="demo4" src="${(player.attTwo)!''}">
+					    					  <#else>
+					    					  	 <img class="layui-upload-img" id="demo4">
+					    					  </#if>
+					                    </div>
+					                     <div class="pull-left alert_txt alert_txt_margin">身份证反面</div>
+					                     </#if>
+					  				 	<#if player.playerCerType == '2'>
+					    				<div class="layui-upload pull-left">
+					    					  <#if player.attOne?default("")?trim?length gt 1>
+					    					  	 <img class="layui-upload-img" id="demo5" src="${(player.attOne)!''}">
+					    					  <#else>
+					    					  	 <img class="layui-upload-img" id="demo5">
+					    					  </#if>
+					                    </div>
+					                     <div class="pull-left alert_txt alert_txt_margin">护照</div>
+				  			 			</#if>
+					  				 	<!-- <#if player.playerCerType == '3'>
+					    				<div class="layui-upload pull-left">
+					    					  <#if player.attOne?default("")?trim?length gt 1>
+					    					  	 <img class="layui-upload-img" id="demo2" src="${(player.attOne)!''}">
+					    					  <#else>
+					    					  	 <img class="layui-upload-img" id="demo2">
+					    					  </#if>
+					                    </div>
+					                     <div class="pull-left alert_txt alert_txt_margin">驾照</div>
+					                    </#if> -->
+					                    <#if player.playerCerType == '4'>
+					    				<div class="layui-upload pull-left">
+					    					  <#if player.attOne?default("")?trim?length gt 1>
+					    					  	 <img class="layui-upload-img" id="demo2" src="${(player.attOne)!''}">
+					    					  <#else>
+					    					  	 <img class="layui-upload-img" id="demo2">
+					    					  </#if>
+					                    </div>
+					                     <div class="pull-left alert_txt alert_txt_margin">军官证</div>
+					                    </#if>
+					               </#if>
+					              </div>
+							</#if>
+				         </div>
+					 
+					</#list>
+				  </#if>
+    			 
+    			  
+    			  <div class="order">  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+					   <span style="white-space:pre;">  </span><span class="txt">报名信息</span>  
+					   <span style="white-space:pre;">  </span><span class="line"></span>  
+				  </div>
+				  <div class="sign_msy">
+						  	   <span>
+						  	   	    <span class="n">订单编号：</span>
+						  	   	     ${(payOrder.orderCode)!''}&nbsp;&nbsp;| &nbsp;&nbsp;  
+						  	   </span>
+						  	   <span>
+						  	   	    <span class="n">下单日期：</span>
+						  	   	    ${(payOrder.orderTime?string('yyyy-MM-dd HH:mm:ss'))!''}&nbsp;&nbsp;| &nbsp; &nbsp;  
+						  	   </span>
+						  	   <span>
+						  	   	    <span class="n">备注：</span>
+						  	   	    ${(payOrder.remark)!''}
+						  	   </span>
+						  	   <span class="pay pull-right">支付总金额：<span class="red">
+						  	   <#if payOrder.orderAmountStr??>
+							  	   ${(payOrder.orderAmountStr)!''}
+						  	   <#else>
+						  	     0
+						  	   </#if>
+						  	       元</span></span>
+				</div>
+				  <#if sites?? && (sites?size > 0) >
+				      <#list sites as site>
+				      	 	<div class="sign_msy" style="background-color: transparent;">
+						  	   <span>
+						  	   	    <span class="n">比赛场地：</span>
+						  	   	     ${(site.fieldName)!''}&nbsp;&nbsp;| &nbsp;&nbsp;  
+						  	   </span>
+						  	   <span>
+						  	   	    <span class="n">比赛地址：</span>
+						  	   	     ${(site.fieldAddress)!''}&nbsp;&nbsp;| &nbsp; &nbsp;  
+						  	   </span>
+						  	   <span>
+						  	   	    <span class="n">比赛时间(开始-结束)：</span>
+						  	   	     ${(site.startTime?string('yyyy-MM-dd HH:mm:ss'))!''}至${(site.endTime?string('yyyy-MM-dd HH:mm:ss'))!''}      
+						  	   </span>
+						  </div>
+		                <div class="court_list container entry_list" style="margin: 0 auto;">				  
+						  <div class="already_chosen clear">
+						  		<#if site.items?? && (site.items?size > 0) >
+									 <#list site.items as item>
+									 	  <div class="pull-left pull_width">
+									 	  	<#if item.groupName??>
+								  	    	 	<p class="font_16 game_name">${(item.groupName)!''}</p>
+									 	  	</#if>
+									  	    <div class="left choose_map choose_h choose_map2">
+									  	   	    <div class="msy pull-left">
+									  	   	    	 <p><img src="${stx}/img/icon_mingcheng.png">项目名称：${(item.itemName)!''}</p>
+							     	  	   	     	<p class="ellipsis_clamp2">
+							     	  	   	     		<img src="${stx}/img/icon_shijian.png" />
+							     	  	   	     		<span>比赛时间：</span>${(item.startTime?string('yyyy-MM-dd HH:mm:ss'))!''}至${(item.endTime?string('yyyy-MM-dd HH:mm:ss'))!''}
+							     	  	   	     	</p>
+							     	  	   	        <p>
+							     	  	   	        	<img src="${stx}/img/icon_minge.png" />
+							     	  	   	        	剩余名额：${(item.surplusQuota)!''}
+							     	  	   	        </p>
+									  	   	    </div>
+									  	   	    <div class="money pull-left">
+									  	   	    	<span>${(item.entryFeeStr)!''}</span>元<br>
+													报名费
+									  	   	    </div>
+									  	   </div>
+								  	   </div>
+									 </#list>	 			
+								</#if>					 			
+						  </div>
+				      </#list>
+				  </#if>  
+				  
+ 	  	    </div>
+ 	  	    	<#if status??>
+					<#if status == 'wait_end'>
+						<p class="next_btn">
+							<a class="sumbit_btn" href="${ctx}/match/type">报名其他项目</a>
+				    	</p>
+					</#if>
+					<#if status == 'wait_pay'>
+					 <div class="order">  
+						   <span style="white-space:pre;">  </span><span class="line"></span>  
+						   <span style="white-space:pre;">  </span><span class="txt">支付方式</span>  
+						   <span style="white-space:pre;">  </span><span class="line"></span>  
+					  </div>  
+			  	      <div class="pay_choose">
+					       <a class="weixin first active" data-name="wechatpay">
+					            <img src="${stx}/img/icon_xzzf.png" style="display:block;">
+					       </a>
+					       <!-- <a class="zhifub" data-name="alipay" >
+					          <img src="${stx}/img/icon_xzzf.png">
+					       </a> -->
+					       <input type="hidden" id="type" value="wechatpay">
+					  </div>
+										
+						<p class="next_btn">
+							<a class="sumbit_btn" href="${ctx}/order/apply/edit?orderCode=${(payOrder.orderCode)!''}&editStatus=1&matchCode=${(matchCode)!''}">修改信息</a> &nbsp;&nbsp;
+							<a class="sumbit_btn" id="continuePay">继续支付</a>
+							<input id="orderCode" type="hidden" value="${(payOrder.orderCode)!''}"/>
+				    	</p>
+					</#if>
+					<#if status == 'wait_pay_end'>
+						<p class="next_btn">
+							<a class="sumbit_btn" href="${ctx}/match/type">报名其他项目</a>
+				    	</p>
+					</#if>
+					<#if status == 'wait_pay_overtime'>
+						<p class="next_btn">
+							<a class="sumbit_btn" href="${ctx}/order/apply/edit?orderCode=${(payOrder.orderCode)!''}&editStatus=1&matchCode=${(matchCode)!''}">修改信息</a> &nbsp;&nbsp;
+							<a class="sumbit_btn" href="${ctx}/match/type">重新报名</a>
+				    	</p>
+					</#if>
+					<#if status == 'success'>
+						<p class="next_btn">
+							<a class="sumbit_btn" href="${ctx}/match/type">报名其他项目</a>
+				    	</p>
+					</#if>
+				</#if>
+    			  <!-- <p class="next_btn">
+    			  	<a class="sumbit_btn" href="${ctx}/match/type">报名其他项目</a>
+    			  </p> -->
+ 	  	     </div>
+ 	  	      </div>
+  	      </div>
+		</div>
+		<#include "common/footer.html">
+	</body>
+	<script type="text/javascript" src="${stx}/js/jquery-2.1.1.min.js"></script>
+	<script src="${stx}/laydate/laydate.js"></script>
+	<script src="${stx}/layui/layui.js" charset="utf-8"></script>
+	<script>
+		
+		$(function(){			
+			 laydate.render({
+			    elem: '#dayDate',
+			    type:'date',
+			});
+			$("#male").click( function () {
+			    $(this).siblings("span").addClass("active");
+			    $(this).parents("div").siblings("div").children("span").removeClass("active");
+	        });
+			$("#female").click( function () {
+			    $(this).siblings("span").addClass("active");
+			    $(this).parents("div").siblings("div").children("span").removeClass("active");
+			});
+		
+			var text = parseInt($("#overplusTime").html());
+			//text = Number(text.replace(',',''))
+			var mytimer = setInterval(function(){
+				text--;
+				if(text < 0) {
+					clearInterval(mytimer);
+					notPay();
+					$("#no_pay").show();
+				}else {
+					$("#overplusTime").text(SecondToDate(text));
+				}
+			}, 1000);
+			
+			
+			
+		    //付款方式 
+	        $(".pay_choose a").click(function(){
+	        	$(this).children("img").show();
+	        	$(this).addClass("active").siblings().removeClass("active").children("img").hide();
+	        	
+	        	if($(this).hasClass("active")){
+	        		var Paytype = $(this).data("name")
+	        		
+	        		$("#type").val(Paytype)
+	        	}
+	        });
+			
+	        function createTimestamp () {
+	         	return parseInt(new Date().getTime() / 1000) + '';
+	        }; 
+		    
+	      //付款方式 
+	        $("#continuePay").click(function(){
+	        	var orderCode = $("#orderCode").val();
+	        	var type = $("#type").val();
+				if(type == 'wechatpay'){
+					window.location.href="${ctx}/order/weichatpay/" + orderCode + "?" + createTimestamp();
+				}
+				if(type == 'alipay'){
+					window.location.href="${ctx}/order/alipay/" + orderCode + "?" + createTimestamp();
+				}
+	        });
+	        
+		});
+		
+		 $("#Resultinquiry").click(function(){
+	      		$("#animationTipBox").show();
+     		$("#animationTipBox .dec_txt").text('成绩查询暂未开放，敬请期待 ')
+     		 setTimeout(function(){
+     			$("#animationTipBox").css("display","none");
+     			},
+     			3000)
+		 })
+			
+			function notPay() {
+				$('#orderContent').hide();
+			};
+			
+			
+			//秒转分秒
+			 function SecondToDate(t) { 
+				 return Math.floor(t/60)+"分"+(t%60/100).toFixed(2).slice(-2)+"秒";			
+			       uploadInit();
+			
+	      };
+	      
+	      
+      function uploadInit() {
+	       layui.use('upload', function(){
+	          var $ = layui.jquery ,
+	          upload = layui.upload;
+	          var uploadInst = upload.render({
+	            elem: '#uploadone',
+	            url: '${ctx}/file/upload',
+	            size:60,
+	            before: function(obj){
+	              obj.preview(function(index, file, result){
+	                $('#demo1').attr('src', result); //图片链接（base64）
+	              });
+	            },
+	            done: function(res){
+	              //如果上传失败
+	              if(res.code > 0){
+	                return layer.msg('上传失败');
+	              }
+	              //上传成功
+	              alert()
+	            },
+	          });
+	        }); 
+
+	        layui.use('upload', function(){
+	          var $ = layui.jquery ,
+	          upload = layui.upload;
+	          var uploadInst = upload.render({
+	            elem: '#uploadTwo',
+	            url: '${ctx}/file/upload',
+	            size:60,
+	            before: function(obj){
+	        
+	              obj.preview(function(index, file, result){
+	                $('#demo2').attr('src', result); //图片链接（base64）
+	              });
+	            },
+	            done: function(res){
+	              //如果上传失败
+	              if(res.code > 0){
+	                return layer.msg('上传失败');
+	              }
+	              //上传成功
+	            },
+	          });
+	        }); 
+};
+			
+	</script>
+</html>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.PlayerMapper">
+
+    
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.efida.sports.entity.Player">
+        <id column="id" property="id" />
+        <result column="player_code" property="playerCode" />
+        <result column="player_phone" property="playerPhone" />
+        <result column="player_name" property="playerName" />
+        <result column="sex" property="sex" />
+        <result column="register_code" property="registerCode" />
+        <result column="email" property="email" />
+        <result column="player_height" property="playerHeight" />
+        <result column="player_weight" property="playerWeight" />
+        <result column="player_birth" property="playerBirth" />
+        <result column="player_nationality" property="playerNationality" />
+        <result column="player_address" property="playerAddress" />
+        <result column="player_cer_type" property="playerCerType" />
+        <result column="player_cer_no" property="playerCerNo" />
+        <result column="player_blood_type" property="playerBloodType" />
+        <result column="player_nation" property="playerNation" />
+        <result column="player_cloth_size" property="playerClothSize" />
+        <result column="player_emergency_name" property="playerEmergencyName" />
+        <result column="player_emergency_phone" property="playerEmergencyPhone" />
+        <result column="player_work_unit" property="playerWorkUnit" />
+        <result column="att_url" property="attUrl" />
+        <result column="att_two" property="attTwo" />
+        <result column="att_one" property="attOne" />
+        <result column="img_url" property="imgUrl" />
+        <result column="assetto_id" property="assettoId" />
+        <result column="ext_pro" property="extPro" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap2" type="com.efida.sports.entity.PlayerEx">
+        <id column="id" property="id" />
+        <result column="player_code" property="playerCode" />
+        <result column="player_phone" property="playerPhone" />
+        <result column="player_name" property="playerName" />
+        <result column="sex" property="sex" />
+        <result column="register_code" property="registerCode" />
+        <result column="email" property="email" />
+        <result column="player_height" property="playerHeight" />
+        <result column="player_weight" property="playerWeight" />
+        <result column="player_birth" property="playerBirth" />
+        <result column="player_nationality" property="playerNationality" />
+        <result column="player_address" property="playerAddress" />
+        <result column="player_cer_type" property="playerCerType" />
+        <result column="player_cer_no" property="playerCerNo" />
+        <result column="player_blood_type" property="playerBloodType" />
+        <result column="player_nation" property="playerNation" />
+        <result column="player_cloth_size" property="playerClothSize" />
+        <result column="player_emergency_name" property="playerEmergencyName" />
+        <result column="player_emergency_phone" property="playerEmergencyPhone" />
+        <result column="player_work_unit" property="playerWorkUnit" />
+        <result column="att_url" property="attUrl" />
+        <result column="att_two" property="attTwo" />
+        <result column="att_one" property="attOne" />
+        <result column="img_url" property="imgUrl" />
+        <result column="assetto_id" property="assettoId" />
+        <result column="ext_pro" property="extPro" />
+        <result column="apply_code" property="applyCode" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, player_code, player_phone, player_name, sex, register_code, email, player_height, player_weight, player_birth, player_nationality, player_address, player_cer_type, player_cer_no, player_blood_type, player_nation, player_cloth_size, player_emergency_name, player_emergency_phone,player_work_unit, att_url, att_two,att_one,img_url,assetto_id,ext_pro, gmt_create, gmt_modified
+    </sql>
+    
+    
+    
+   <update id="batchUpdatePlayerCreater" parameterType="java.util.Map">
+   update  player set register_code=#{newRegisterCode},gmt_modified=now()
+    where register_code=#{oldRegisterCode}
+  </update>
+    
+  <select id="selectPlayersByApplyInfoCodes"  parameterType="java.util.List" resultMap="BaseResultMap2">
+		select
+		   t1.id, t1.player_code, player_phone, player_name, sex, register_code, email, 
+		   player_height, player_weight, player_birth, player_nationality, player_address, player_cer_type, 
+		   player_cer_no, player_blood_type, player_nation, player_cloth_size, player_emergency_name, 
+		   player_emergency_phone,player_work_unit, att_url, att_two,att_one,img_url,assetto_id, 
+		   ext_pro, t1.gmt_create, t1.gmt_modified, t2.apply_code
+		from player t1,  apply_player t2 
+		where  t1.player_code = t2.player_code 
+ 		and	apply_code in 
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+  </select> 
+  
+  <delete id="deletPlayerByApplyInfoCode" parameterType="java.lang.String">
+        delete from player where player_code in (SELECT  player_code FROM apply_player WHERE  apply_code=#{applyCode}) 
+   </delete>
+  
+  
+  
+</mapper>

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>成绩详情</title>
+
+<!-- Custom styles for this template -->
+<link href="${stx}/css/layout.css" rel="stylesheet">
+<link href="${stx}/css/pagination.css" rel="stylesheet">
+<link rel="stylesheet" href="${stx}/layui/css/layui.css"  media="all">
+<style>
+
+ .table-head {    
+   /*  padding-right: 5px;
+    background-color: #fff; */
+    }
+ .table-body{
+	 width:100%; 
+	 max-height:500px;
+	/*  overflow-y:scroll; */
+ }
+ .table-head table,.table-body table{
+    width:100%;
+ }
+ .table-body::-webkit-scrollbar {
+    width: 4px;     
+    height: 4px;
+}
+.table-body::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+.table-body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+} 
+  [v-cloak] {
+  display: none;
+}
+
+   		.echart-box {
+   			width: 860px;
+   			height: 300px;
+   			margin: 0 auto;
+   		}
+   		.match_score a.link {
+           display: block;
+   		}
+
+</style>
+</head>
+<body>
+			     
+     <div id="animationTipBox" style="margin-left: -305px;">
+			<div class="tip">
+			    <span class="icon">i</span>
+				<span class="dec_txt">这是提示信息</span>
+			</div>
+	</div>
+    <div class="main_content content_height">
+     <div class="header nav_top">
+	    <div class="container clear">
+			   	  	<a  href="${ctx}/match/type"  class="pull-left back_index"></a>
+			  	   <div class="code_aside pull-right">
+		 	  	   	<p class="pull-left hidden-xs clear">
+		 	  	   	    <a class="qr_code" href="${ctx}/match/type">
+		 	  	   	    	参赛报名
+		 	  	   	    </a> 
+		 	  	   	    <a class="qr_code hover_q" id="Resultinquiry" href="javascript:window.location.href='${ctx}/achievement/match/init'">
+		 	  	   	    	成绩查询
+		 	  	   	    </a>
+		 	  	   	    
+		 	  	   	    <a class="qr_code" href="javascript:window.location.href='${ctx}/order/query'">
+		 	  	   	    	报名查询
+		 	  	   	    </a>
+
+		 	  	   	     <a class="app_link" href="javascript:window.location.href='${ctx}/user/upload/page'">
+		 	  	   	    	
+		 	  	   	    </a>
+		 	  	   	</p>
+		 	  	   	
+		 	  	 	<p class="login_btn pull-left hidden-xs clear">
+		 	  	   		<#if register??>
+		 	  	   			<span class="user_head">
+		 	  	   			<#if register.headimgUrl?default("")?trim?length gt 1>
+		 	  	   				<img style="cursor:pointer" onClick="javascript:window.location.href='${ctx}/order/query'" src="${register.headimgUrl}">
+		 	  	   			<#else>
+			 	  	   			<img  onClick="javascript:window.location.href='${ctx}/order/query'" src="${stx}/img/icon_user.png">				 	  	   			
+			 	  	   		</#if>
+		 	  	   		        <span class="hover">
+		 	  	   		              <a class="first" href="javascript:window.location.href='${ctx}/order/query'">个人中心</a>
+		 	  	   		              <a href="${ctx}/user/quit/login">退出登录</a>
+		 	  	   		        </span> 	  	   		   
+		 	  	   		   </span>
+		 	  	   		<#else>
+			 	  	   		 <a class="enroll_btn" href="${ctx}/user/login/index">登 录</a>
+		 	  	   		</#if>
+		 	  	   	</p>
+			  	   </div>
+			  </div>
+	 </div>
+    <div id="Scoredetails" v-cloak>
+  	<div id="score_banner"   style="padding-top:92px;">
+        <img v-if="RelevantData.pcPanner"  :src="RelevantData.pcPanner" >        		
+         <img v-else src="${stx}/img/banner_moren.jpg"> 
+    </div>
+	<div class="container clear registration_content" >
+	     
+	     <div id="left_column_content" class="pull-left">
+ 	           <div class="match_flow">
+	 			   <p id="custom_title" style="margin-top: 0px;">
+				  	 <span class="pull_left">
+				  	 	<img src="${stx}/img/tit_saishi.png"><span class="name">赛事流程</span>
+				  	 </span>
+				   </p>
+
+	            <!--   	<div id="container">
+			    		<div class="echart-box"></div>
+			    	</div> -->
+	          </div> 
+	          
+	          <div class="match_tab_m">
+	               <a @click="goLink('#name_'+index,name.competitionName)" :href="'#name_'+index" v-for="(name,index) in competionsData">[[name.competitionName]]</a>
+	          </div>
+	          
+	          <div :id="competionsList.competitionCode == compCode ? 'myid' : null"   class="match_score" v-for="(competionsList, index) in competionsData">
+	              <a  class="link" :name="'name_'+index" :id="'name_'+index" style=""></a>
+	              <div id="custom_title" class="clear" v-if="competionsList.achievements">
+				  	 <span class="pull-left pull_left">
+				  	 	<img src="${stx}/img/tit_saishi.png"><span class="name">[[competionsList.competitionName]]</span>
+				  	 </span>	  	            
+				   </div>
+				   
+				   <div style="width: 890px;border-bottom: 1px #ddd solid;" v-if="competionsList.achievements.length>0">
+					    <div class="table-head">
+						    <table class="cj_table">
+							        <colgroup>
+							            <col width="140">
+							            <col width="100">
+							            <col width="90">
+							            <col width="100">
+							            <col width="100">
+							            <col width="120">
+							        </colgroup>     
+							        <thead>         
+							        <tr>
+							        	<th width="140">赛事</th>
+							  	     	<th width="100">排名</th>
+							  	     	<th width="90">头像</th>
+							  	     	<th width="100">昵称</th>
+							  	     	<th width="100">参赛成绩</th>
+							  	     	<th width="120">参赛时间</th>
+							        </tr>
+							        <tr class="my" v-for="myList in competionsList.myAchievements">
+							          
+							            <th width="140"><p class="center_p"><i class="s"></i>[[myList.matchName]]</p></th>
+							  	     	<th width="100">[[myList.rank]]</th>
+							  	     	<th width="90">
+							  	     	<img v-if="!myList.playerHeaderImg == null " :src="myList.playerHeaderImg" border="0">
+							  	      	<img v-else-if="myList.playerHeaderImg == null " src="${stx}/img/icon_user.png" > 
+							  	     	</th>
+							  	     	<th width="100" style="color: #FF8F00;">[[myList.playerName]]</th>
+							  	     	<th width="100">[[myList.score]]</th>
+							  	     	<th width="120">[[myList.competitionDateStr]]</th>
+							        </tr>
+							        </thead>
+						    </table>
+					    </div>
+					    <div class="table-body">
+						    <table class="cj_table">
+							        <colgroup>
+							            <col width="140">
+							            <col width="100">
+							            <col width="90">
+							            <col width="100">
+							            <col width="100">
+							            <col width="120">
+							        </colgroup>
+	
+						  	     <tbody>
+						  	     <tr  v-for="List in competionsList.achievements">
+						  	        <td><p class="center_p">[[List.matchName]]<p></td>
+						  	     	<td>[[List.rank]]</td>
+						  	     	<td>
+						  	     	   	<img v-if="!List.playerHeaderImg == null " :src="List.playerHeaderImg" border="0">
+							  	      	<img v-else-if="List.playerHeaderImg == null " src="${stx}/img/icon_user.png" > 
+						  	     	</td>
+						  	     	<td>[[List.playerName]]</td>
+						  	     	<td>[[List.score]]</td>
+						  	     	<td>[[List.competitionDateStr]]</td>
+						  	     </tr>
+						  	  </tbody>
+						    </table>
+					    </div>
+					</div>
+					
+					<!-- 分页  -->
+	 	  	        <div  :data-id="competionsList.competitionCode">
+	 	  	    	     <div :id="'pagination_' + competionsList.competitionCode" class="m-style"></div>
+	 	  	    	</div> 
+	 	  	   
+	 	  	   
+		
+					<!-- 无数据  -->
+				<div v-if="!competionsList.achievements.length" class="no_data">
+	 	  	    	 	<img src="${stx}/img/img_weikong.png">
+	 	  	    	    <p class="index_nodata" style="text-align: center;">～暂无相关成绩数据～</p>
+	  	    	</div>
+	  	    	      
+	          </div>
+	      
+	     </div>
+		     
+		<div class="card_box pull-right" id="card_box">
+ 			  <div class="match_card" >
+			  	  <div class="head_img"></div>
+			  	  <p class="match_time common_ellipsis"><img src="${stx}/img/icon_jiezhi.png"><span>报名截止：[[RelevantData.endTime]]</span></p>
+			  	  <p class="match_time common_ellipsis"><img src="${stx}/img/icon_time.png"><span>比赛时间：[[RelevantData.startTime]] 至  [[RelevantData.endTime]]</span></p>
+			  	  <!-- <p class="match_time"><img src="${stx}/img/icon_add.png"> <span>比赛场地：[[RelevantData.address]]</span></p> -->
+			  	  <p class="bottom_btn">
+			  	  
+			  	  <a class="bm_btn" v-if="RelevantData.regStatus == 'normal' "  @click="gosignUP(RelevantData.matchCode)" >开始报名</a>
+			  	  <a class="bm_btn" v-if="RelevantData.regStatus == 'pause' "  style="display:none;">暂停报名</a>
+			  	  <a class="bm_btn" v-if="RelevantData.regStatus == 'end' "  style="display:none;">比赛结束</a>
+			  	   <a class="bm_btn" v-if="RelevantData.regStatus == 'enroll_end' "  style="display:none;">报名截止</a>
+			  	  </p>
+			  </div> 
+			  
+ 			  <div class="match_card_lie" v-if="correlationsData.length">
+			  	  <div class="top_title">
+			  	  	  <img src="${stx}/img/tit_right.png" />
+			  	  	  <span>[[gameName]]</span>
+			  	  </div>
+			  	   <div class="content_list" v-for="Correlations in correlationsData">
+			  	  	  <p class="w1 p1"><img src="${stx}/img/sq.png"><span class="common_ellipsis">[[Correlations.matchName]]</span>
+			  	  	  <a v-if="Correlations.canApply" @click="bm(Correlations.matchCode)">报名</a>
+			  	  	  </p>
+			  	  	  <p class="w2 p2"><img src="${stx}/img/icon_time.png">比赛时间：[[Correlations.startTime]] 至  [[Correlations.endTime]]</p>
+			  	  </div> 
+			  </div> 
+		</div>
+	
+		<!-- 详 情 弹 框 -->
+		<div id="table-head-modal">
+			 <div class="details_box">
+			      	<div class="xq_t">
+			      	        <div class="scoll_div">
+						    <table class="cj_table">
+							        <thead>
+							        <tr>
+							            <th width="140" v-show="header.pcIsShow" v-for="header in detailData.header">[[header.header]]</th>
+							        </tr>
+							        </thead>							        
+								    <tbody>							  	     
+					 		  	      <tr v-for="detailList in detailListData">
+							  	     	 <td v-for="item in detailList" width="140">[[item]]<span style="color: #ddd;" v-if="item == null || item == ''">——</span></td>
+							  	     </tr>  
+							  	  </tbody>
+						    </table>
+						    </div>
+					   <p class="close_p"> <a id="closeBtn">关 闭</a></p>
+					</div>
+			 </div>
+		</div>
+	</div>
+</div>
+</div>
+ 	<#include "common/footer.html">
+</body>
+
+<script src="${stx}/js/jquery-2.1.1.min.js"></script>
+<script src="${stx}/js/vue.js"></script>
+<script src="${stx}/js/config.js"></script>
+<script src="${stx}/layui/layui.all.js" charset="utf-8"></script>
+<script src="${stx}/js/jquery.pagination.js"></script>
+<!-- <script type="text/javascript" src="${stx}/js/echarts.min.js"></script> -->
+ 
+<script type="text/javascript">
+
+    var vm = null;       //全局声明vue对象
+    var matchCode = "${(matchCode)!''}"
+    var compCode="${(competitionCode)!''}" 
+    
+    console.log(compCode)
+    
+	var vueData = {			
+		RelevantData :{},       //相关赛事数据
+		correlationsData :[],   //赛事相关信息 
+		competionsData:[],    //成绩信息
+		myEchart: null,    //定义echart对象
+ 		echartLists: [],    //定义 echart数据
+	    detailData:[],
+	    detailListData:[],
+	    gameName:'',
+	    competitionCode:'',
+	    compCode:'',
+	};
+
+
+	/**
+	 * 页面加载完毕 $.ready
+	 */
+	$(function(){
+	
+	    vueInit();
+	    GetAchievementData();   //获取我的成绩数据
+	    chooseMenu();    
+	});
+	
+    function createTimestamp() {
+     	  return parseInt(new Date().getTime() / 1000) + '';
+    }; 
+	
+    function chooseMenu(){
+    	$("#myScore").addClass("active");
+    	$("#myScoreEm").addClass("active");
+    	
+    	$("#closeBtn").click(function(){
+    		$("#table-head-modal").hide();
+    	});
+    	
+    }
+    
+    function goLink(name,nametext){
+    	  $(".match_score").each(function(){
+             var linkName = $(this).find(".name").text();
+                   if(nametext == linkName) {
+                      $(this).find(".link").css({"padding-top":"160px"})
+                   } else {
+                	   $(this).find(".link").css({"padding-top":"0px"})
+                   }
+    	  
+    	  });
+    }
+    
+	 /**
+	  * vue初始化，dom操作
+	  */
+	  
+	  function vueInit () {
+		 vm = new Vue({
+			 delimiters: ['[[', ']]'],
+			 el:"#Scoredetails",
+			 data:vueData ,
+			 methods:{
+				 gosignUP:gosignUP,
+				 GetAchievementData:GetAchievementData,
+				 detail:detail,
+				 detail2:detail2,
+				 bm:bm,
+				 goLink:goLink,
+			 },	
+		 });
+		 
+		//初始化echart对象
+	 		var dom = document.querySelector('.echart-box');
+	 		/* vueData.myEchart = echarts.init(dom); */
+	 		vueData.compCode = compCode;
+	 		/*  GetAchievementData()  */
+	};
+	
+
+	// 获取成绩数据
+	
+	function GetAchievementData(page){
+	     console.log(page)
+		 var url = "${ctx}/achievement/match/detail";		 
+		 var parms = {
+               matchCode:matchCode,
+               currentPage: 1, 
+               pageSize:5,
+               competitionCode:vueData.competitionCode,
+             };	
+		 
+		 	if(page) parms.currentPage = page;
+		 	getResultMethods(url, parms, function(d){							
+				  vueData.RelevantData = d.relevant ; 
+				  vueData.competionsData = d.competions; 
+				  vueData.echartLists = d.achievement;
+				  vueData.correlationsData = d.correlations;
+				  vueData.gameName = d.gameName;
+				  console.log(vueData.correlationsData)
+				 /*  this.echartSetOptions(); */
+				  
+				  vm.$nextTick(function() {
+				  		d.competions.forEach(function(v, n) {
+				  			console.log(v);
+				  			$('#pagination_' + v.competitionCode).pagination({
+				  	    	    jump: true,
+				  	    	    totalData: v.total,
+				  	    	    current: v.current,
+				  	    	    pageCount: v.pages,
+				  	    	    coping: true,
+				  	    	    homePage: '首页',
+				  	    	    endPage: '末页',
+				  	    	    prevContent: '上页',
+				  	    	    nextContent: '下页',
+				  	    	    callback: function (api) {
+//				  	    	    	vueData.competitionCode = $("#pagination").parent().attr("data-id")
+//				  	    	    	console.log(vueData.competitionCode)
+				  	    	    	getAchievementMore(api.getCurrent(), v.competitionCode);
+				  	    	    }
+				  		     });
+				  		});
+						  document.getElementById("myid").scrollIntoView(false);
+				  })
+			 });
+	};
+	
+	//分页列表
+	function getAchievementMore(page, code) {
+		console.log(page)
+		console.log(code)
+		var url = "${ctx}/achievement/competition/ranks";		 
+		var parms = {
+           currentPage: page, 
+           pageSize:5,
+           competitionCode: code,
+        };	
+        
+		getResultMethods(url, parms, function(d){
+			console.log(d);
+			
+			vueData.competionsData.forEach(function(m ,n) {
+				console.log(m)
+				console.log(m.competitionCode)
+			    if(m.competitionCode == code) {
+			        m.achievements = d.achievements;
+			        
+			        console.log(m.achievements)
+			    }
+			});
+			
+			vm.$nextTick(function() {
+				$('#pagination_' + code).pagination({
+	  	    	    jump: true,
+	  	    	    totalData: d.total,
+	  	    	    current: d.current,
+	  	    	    pageCount: d.pages,
+	  	    	    coping: true,
+	  	    	    homePage: '首页',
+	  	    	    endPage: '末页',
+	  	    	    prevContent: '上页',
+	  	    	    nextContent: '下页',
+	  	    	    callback: function (api) {
+	  	    	    	getAchievementMore(api.getCurrent(), code);
+	  	    	    }
+	  		    });
+			});
+		});
+	};
+	
+
+
+	// 报名
+	function gosignUP(code){
+		 window.open("${ctx}/match/item/"+code + "" ) 
+	}
+	
+	function bm(code){
+		 window.open("${ctx}/match/item/"+code +" ") 
+	}
+	
+
+	 //详情页面
+	 
+	 function detail(competitionCode,rankCode) {
+		 console.log(competitionCode)
+		  console.log(rankCode)
+		  
+		 var url = "${ctx}/achievement/extPros";
+		 var parms = {
+				  competitionCode:competitionCode,
+				 rankCode:rankCode, 
+/* 				 competitionCode: '20180726152404kffv01',
+				 rankCode:'201806281050320039', */
+		 }
+			 getResultMethods(url, parms, function(d){
+				 vueData.detailData = d.scoreDetail
+				 vueData.detailListData = [];
+				 if(d.scoreDetail.detail!=null &&d.scoreDetail.detail.data!=null && d.scoreDetail.detail.data.length>0){
+					 vueData.detailListData =d.scoreDetail.detail.data
+					 $("#table-head-modal").fadeIn(); 
+				 }else {
+					 $("#table-head-modal").hide();
+			      		$("#animationTipBox").show();
+			     		$("#animationTipBox .dec_txt").text('无详情展示 ')
+			     		 setTimeout(function(){
+			     			$("#animationTipBox").css("display","none");
+			     			},
+			     			3000)
+				 }
+				 
+			 });
+		   
+	 }
+	 
+	 //详情页面
+	 
+	 function detail2(competitionCode,rankCode) {
+		 console.log(competitionCode)
+		  console.log(rankCode)
+		  
+		 var url = "${ctx}/achievement/extPros";
+		 var parms = {
+				  competitionCode:competitionCode,
+				 rankCode:rankCode, 
+/* 				 competitionCode: '20180726152404kffv01',
+				 rankCode:'201806281050320039', */
+		 }
+			 getResultMethods(url, parms, function(d){
+				 vueData.detailData = d.scoreDetail
+				 vueData.detailListData = [];
+				 if(d.scoreDetail.detail!=null &&d.scoreDetail.detail.data!=null && d.scoreDetail.detail.data.length>0){
+					 vueData.detailListData =d.scoreDetail.detail.data
+					 $("#table-head-modal").fadeIn(); 
+				 }else {
+					 $("#table-head-modal").hide();
+			      		$("#animationTipBox").show();
+			     		$("#animationTipBox .dec_txt").text('无详情展示 ')
+			     		 setTimeout(function(){
+			     			$("#animationTipBox").css("display","none");
+			     			},
+			     			3000)
+				 }
+				 
+			 });
+		   
+	 }
+	 
+ /* 	//渲染echart
+ 	function echartSetOptions() {
+ 		//定义options
+ 		var options = {
+// 			title: {text: 'Graph 简单示例'},
+   			animationDurationUpdate: 1500,
+   			nimationEasingUpdate: 'quinticInOut'
+ 		};
+ 		
+ 		var seriesOptions = {
+ 			type: 'graph',
+	        layout: 'none',
+	        symbolSize: 50,
+			roam: false,
+			label: {
+                normal: {show: true}
+            },
+            edgeSymbol: ['circle', 'arrow'],
+	        edgeSymbolSize: [10, 10],
+			edgeLabel: {
+                normal: {
+                    textStyle: {
+                        fontSize: 12,
+                    }
+                }
+           	},
+           	lineStyle: {
+                normal: {
+                	color:"#F8BB1A",
+                    opacity: 0.9,
+                    width: 2,
+                    curveness: 0
+                }
+            }
+ 		};
+ 		
+ 		var data = [], links = [];
+ 		var echartLists = vueData.echartLists;
+ 		var domWidth = document.querySelector('.echart-box').clientWidth;   //dom盒子的宽
+ 		var domHeight = document.querySelector('.echart-box').clientHeight;  //dom盒子的高
+
+ 		var symbolWidth = 140,   //每一个展示选项的宽
+ 			symbolHeight = 35,  //每一个展示选项的高
+ 			symbolItemY = 80,   //每一个子选项的Y坐标
+ 			value = 50;   //value值，没用到
+ 		
+ 		console.log(domWidth);
+ 		
+ 	 	var xLen = ''
+ 	 		 if(echartLists.matchList.length=== 1){
+ 	 		 	xLen=0
+ 	 		 } else if (echartLists.matchList.length > 3){
+ 	 		 	xLen=domWidth /2 - (symbolWidth/2)
+ 	 		 } else {
+ 	 		 	xLen=domWidth /2 - symbolWidth
+ 	 		 } 
+ 	 	
+ 	 	console.log(echartLists.matchName.length)
+ 		
+ 	 	var oldText = echartLists.matchName
+ 	 	if(oldText.length>11) {
+ 	 		 var newText = oldText.substring(0,10)+"...";
+ 	 	}else {
+ 	 		 var newText = echartLists.matchName;
+ 	 	}
+ 		//data数据第一个默认值写死
+   		data[0] = {
+            name: newText,
+            x: xLen,
+            y: -domHeight / 2,
+            value: value,
+            symbol: 'rect', //让节点为矩形显示
+            symbolSize: [symbolWidth, symbolHeight],//节点的长和宽
+            itemStyle: {normal: {color: '#FF8F00',borderColor:'#FF8F00' }},
+
+       	};
+       	
+       	//links第一个默认值写死
+       	links[0] = {source: 0, target: 1};
+       	
+    	
+       	//循环数据
+       	for(var i = 0, len = echartLists.matchList.length; i < len; i++) {
+       		var symbolX = (domWidth / len) * i;  //每一个子选项的X坐标
+       		console.log(echartLists.matchList[i].competitionName)
+       		var item = {
+       			name: echartLists.matchList[i].competitionName,
+       			x: symbolX,
+       			y: symbolItemY,
+       			value: value,
+       			symbol: 'rect', //让节点为矩形显示
+	            symbolSize: [symbolWidth, symbolHeight],//节点的长和宽
+	            itemStyle: {normal: {color: '#F8BB1A'}}
+       		};
+       		
+       		var linkItem = {source: 0, target: i + 2};
+       		
+       		data.push(item);   //data填充数据
+       		links.push(linkItem);   //links填充数据
+       	};
+       	
+       	console.log(data);
+       	
+       	seriesOptions.data = data;
+       	seriesOptions.links = links;
+       	options.series = [seriesOptions];
+       	
+       	vueData.myEchart.setOption(options, true);    //渲染echart
+ 	};
+ 	 */
+
+ </script>
+</html>

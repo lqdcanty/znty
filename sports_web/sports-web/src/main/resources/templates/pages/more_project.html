@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>选择项目</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+		<style>
+			body{
+				position: fixed;
+				top: 1.28rem;
+			}
+		</style>
+	</head>
+	<body style="background-color: #fff;">
+		<div id="wrapper" style="height: 100%;overflow-y: scroll;">
+			<div class="h5_header">
+				<img src="${staticPath}/img/icon_back.png"/>
+				<div class="back">返回</div>
+				<div class="title">选择项目</div>
+			</div>
+			<div class="h5_header_space" style="display: none;"></div>
+			<div style="display: none;"></div>
+		    <div class="match_Entrance match_introduce custom_title" id="clearFour" style="padding-top: 0.4rem;position: absolute;left: 0;top:0;;bottom: 0;right: 0;margin: 0 auto;overflow-y: scroll;">
+		   		<ul class="entrance_img  flex-align-center flex-pack-justify" style="padding-bottom: 2rem">
+		   		    <#list games as game>
+		   			<li class="fl ml10">
+						<a href="javascript:void(0)" data-code="${(game.gameCode)!''}">
+							<p class="big_box"><img style="height:100%" src="${(game.gameImg)!''}" /></p>
+							<span class="gameName">${(game.gameName)!''}</span>
+		   				</a>
+		   			</li>
+		   			</#list>
+		   			<div style="clear:both"></div>
+		   		</ul>
+		   </div>
+		</div>
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+	<script type="text/javascript" src="${staticPath}/js/vue.js?v=${cssV}"></script>
+	<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+	<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+	<script>
+        var path = "${ctx}";
+        $(window).load(function () {
+            var paddngNum= 0;
+            var u = navigator.userAgent;
+            var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if (isIOS) {
+                if (screen.height == 812 && screen.width == 375){
+                    //是iphoneX
+                    $(document.body).css(
+                        'top',1.76+'rem'
+                    );
+                }
+            }
+            if(!getThePrameValue('platform')){
+                $('#clearFour').css({
+                    "padding-top":0
+                })
+            }
+        })
+
+		$('.match_Entrance a').click(function () {
+
+			var code = $(this).attr('data-code');
+            console.log(code)
+			// localStorage.setItem('gameCode',code)
+            window.location.href= path + '/competitionResults?gameCode='+code;
+
+        })
+		$('.back').click(function () {
+		    // localStorage.removeItem('gameCode')
+			window.location.href= path + '/competitionResults';
+        })
+	</script>
+</html>

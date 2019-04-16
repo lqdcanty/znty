@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.ApplySendLogMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.efida.sports.entity.ApplySendLog">
+        <id column="id" property="id" />
+        <result column="apply_code" property="applyCode" />
+        <result column="player_code" property="playerCode" />
+        <result column="pay_order_code" property="payOrderCode" />
+        <result column="game_code" property="gameCode" />
+        <result column="game_name" property="gameName" />
+        <result column="match_code" property="matchCode" />
+        <result column="match_name" property="matchName" />
+        <result column="site_code" property="siteCode" />
+        <result column="site_name" property="siteName" />
+        <result column="send_status" property="sendStatus" />
+        <result column="send_time" property="sendTime" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+	
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, apply_code, player_code, pay_order_code, game_code, game_name, match_code, match_name,site_code,site_name,send_status, send_time, gmt_create, gmt_modified
+    </sql>
+
+</mapper>

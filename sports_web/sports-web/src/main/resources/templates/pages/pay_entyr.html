@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>付费报名订单</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="pay_entyr common_layout custom_title" style="margin: 0;">
+				<p class="title"><i></i>订单信息</p>
+                <ul class="pay_lie">
+                  <#if order?? &&  (order.applys?size > 0)>
+                     <#list order.applys as apply>
+                     <li class="flex flex-align-center flex-pack-justify">
+                		<span>${(apply.matchGroupName)!''}  |  <span>${(apply.eventName)!''} </span></span>
+                		<span class="money">¥${apply.applyAmountStr}</span>
+                	</li>
+		   			</#list>
+		   		  </#if>	
+                </ul>
+		    </div>
+		    
+		    <div class="pay_entyr common_layout custom_title" id="orderCheck">
+				<p class="title"><i></i>订单信息</p>
+                <ul class="pay_lie">
+                	<li class="flex flex-align-center flex-pack-justify">
+                		<span class="flex flex-align-center"><img src="${staticPath}/img/icon_weixin.png"> 微信支付</span>
+                		<span class="choose choose_btn choose-after"></span>
+                	</li>
+                	<!-- <li class="flex flex-align-center flex-pack-justify">
+                		<span class="flex flex-align-center"><img src="${staticPath}/img/icon_zhifubao.png"> 支付宝支付</span>
+                		<span class="choose choose_btn"></span>
+                	</li> -->
+                </ul>
+		    </div>
+		    <div class="kong_margin"></div>
+		    <p class="pay_btn pay_margin"><a  class="total_money">总金额：¥${order.orderAmountStr}</a><a class="next" onclick="gotoPay()">下一步</a></p>
+		</div>
+		
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+	<script type="text/javascript" src="${staticPath}/js/vue.js?v=${cssV}"></script>
+	<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+	<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+	<script>
+        var path = "${ctx}";
+        var orderCode = "${order.orderCode}";
+        function gotoPay(){
+            var agent = navigator.userAgent.toLowerCase();
+            if (agent.match(/MicroMessenger/i) == "micromessenger") {
+                window.location.href=path+'/order/apply/unified?orderCode='+orderCode+'&tradeType=internal';
+            }else{
+                window.location.href=path+'/order/apply/unified?orderCode='+orderCode+'&tradeType=outside';
+            }
+
+        }
+		//checkGroupInit("orderCheck",true,null)
+	</script>
+</html>

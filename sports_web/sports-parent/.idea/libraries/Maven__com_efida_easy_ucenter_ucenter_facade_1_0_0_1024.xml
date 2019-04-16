@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.efida.easy.ucenter:ucenter-facade:1.0.0.1024">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/efida/easy/ucenter/ucenter-facade/1.0.0.1024/ucenter-facade-1.0.0.1024.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/efida/easy/ucenter/ucenter-facade/1.0.0.1024/ucenter-facade-1.0.0.1024-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/efida/easy/ucenter/ucenter-facade/1.0.0.1024/ucenter-facade-1.0.0.1024-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

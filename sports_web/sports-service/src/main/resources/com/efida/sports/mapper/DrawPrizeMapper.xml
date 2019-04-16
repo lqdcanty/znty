@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.DrawPrizeMapper">
+
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.efida.sports.entity.DrawPrize">
+		<id column="id" property="id" />
+		<result column="activity_code" property="activityCode" />
+		<result column="prize_code" property="prizeCode" />
+		<result column="prize_name" property="prizeName" />
+		<result column="prize_type" property="prizeType" />
+		<result column="prize_number" property="prizeNumber" />
+		<result column="remain_number" property="remainNumber" />
+		<result column="ratio" property="ratio" />
+		<result column="cycle_number" property="cycleNumber" />
+		<result column="status" property="status" />
+		<result column="is_del" property="isDel" />
+		<result column="gmt_create" property="gmtCreate" />
+		<result column="gmt_modified" property="gmtModified" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, activity_code, prize_code, prize_name, prize_type,
+		prize_number,
+		remain_number, ratio, cycle_number, status, is_del,
+		gmt_create,
+		gmt_modified
+	</sql>
+
+	<select id="lockPrize" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from draw_prize
+		where id = #{id} for update
+	</select>
+
+	<update id="upPrizeRemainSize">
+		update draw_prize set remain_number=remain_number-1
+		,gmt_modified=now()
+		where
+		id = #{id}
+	</update>
+
+
+
+</mapper>

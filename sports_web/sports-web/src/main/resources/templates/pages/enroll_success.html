@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>报名成功</title>
+		<link rel="stylesheet" href="${staticPath}/css/layout.css?v=${cssV}" />
+		<style>
+			.newPerson{
+				width:6.5rem;
+				height: 4.1rem;
+			}
+		</style>
+	</head>
+	<body style="background-color: #fff;position: relative;">
+		<div id="wrapper">
+			 <div class="enroll_top flex flex-align-center" style="width: 100%;background: white;">
+			 	  <ul>
+			 	  	 <li><img src="${ctx}/img/icon_chenggong.png"></li>
+			 	  	 <li class="font_c1">报名成功</li>
+			 	  	 <li class="font_c2">希望您取得好成绩！</li>
+			 	  </ul>
+			 </div>
+			 <#if order??  && order.eventType?? && order.eventType=='group'>
+			  <div class="kong"></div>
+				 <div class="entyr_from" style="padding:0;margin-top: 0">
+				 <div class="custom_title">
+				   <p class="title"><i></i>团队信息</p>
+			     <table>
+					<tr>
+						<td>团体名称</td>
+						<td><input type="text" name=teamName value="${(order.leader.teamName)}"></td>
+					</tr>
+					<tr>
+						<td>领队名称</td>
+						<td><input type="text" value="${(order.leader.leaderName)}"></td>
+					</tr>
+					<tr>
+						<td>手机号码</td>
+						<td><input id="tel"  value="${(order.leader.leaderPhone)}"></td>
+					</tr>
+				</table>
+				</div>
+			</div>
+			</#if>
+			
+			<#if order??  && order.teams?? && (order.teams?size > 0)>
+			   <#list order.teams as team>
+             <div class="kong"></div>
+			 <div class="entyr_from" style="padding:0;margin-top: 0">
+			 	<div class="custom_title">
+			    	<p class="title"><i></i>个人信息</p>
+					<table class="entyr_from_table">
+					   <#assign hasOtherInfo="0">
+					   <#if team?? && team.players?? && (team.players?size > 0)>
+						   <#list team.players as player>
+						    <#if ( player.attributeName =='attOne' || player.attributeName =='attTwo'  || player.attributeName =='attUrl' )>
+						        <#assign hasOtherInfo="1">
+						   </#if>
+						    
+						   <#if player.isShow && player.formatVal?? && player.formatVal!=''  && player.attributeName!='attOne' && player.attributeName!='attTwo' && player.attributeName!='attUrl' && player.attributeName!='imgUrl'  >
+							    <tr>
+									<td>${(player.cnname)!''}</td>
+									<td>${(player.formatVal)!''}</td>
+								</tr>
+							</#if>
+							<#if !player.isShow  && player.attributeName='sex'>
+							   <tr>
+								   <td>${(player.cnname)!''}</td>
+								   <td>${(player.formatVal)!''}</td>
+							   </tr>
+							</#if>
+						    </#list>
+					   </#if>
+					</table>
+				</div>
+				 <#if team?? && team.players??  && hasOtherInfo=='1'>
+					    <div class="kong"></div>
+					     <div class="upload_msy custom_title">
+							<p class="title"><i></i>其他信息</p>
+							<div class="upload flex flex-pack-justify">	
+							   <#list team.players as player>
+							     <#if player.attributeName =='attOne'>
+									<div class="layui-upload cardPoto1">
+										<img class="layui-upload-img" src="${(player.formatVal)!''}">
+					                </div>
+								 </#if>	
+								  <#if player.attributeName =='attTwo'>
+									<div class="layui-upload cardPoto1">
+										<img class="layui-upload-img" src="${(player.formatVal)!''}">
+					                </div>
+								 </#if>	
+								  <#if player.attributeName =='attUrl'>
+									<div class="layui-upload cardPoto1">
+										<img class="layui-upload-img" src="${(player.formatVal)!''}">
+					                </div>
+								 </#if>	
+								 </#list>
+							</div>
+						</div>
+		            </#if>
+			    </#list>
+			 </div>
+			 </#if>
+			 
+			  
+				<div class="kong"></div>
+				 <div class="entyr_from" style="padding:0;margin-top: 0">
+				<div class="custom_title">
+					<p class="title"><i></i>报名信息</p>
+					<table class="entyr_from_table signTable">
+						<#if order.applys?? && (order.applys?size > 0)>
+						 	 <#list order.applys as apply>
+						 	 <tr>
+								<td style="vertical-align: top;line-height: 0.5rem;">报名项：</td>
+								<td style="vertical-align: top;">
+									<p>
+									 <span style="color: #FF8F00">${(apply.eventTypeName)}</span>
+									<#if apply.matchGroupName?? >${(apply.matchGroupName)!''}-</#if>${(apply.eventName)!''}
+									</p>
+									<p>比赛时间：${(apply.eventStartTime?string("yyyy年MM月dd日  HH:mm:ss"))!''}</p>
+									<p>报名费：¥${(apply.applyAmountStr)!''}</p>
+								</td>
+						      </tr>
+						 	 </#list>
+						</#if>
+						<tr>
+							<td>订单编号：</td>
+							<td>TS ${(order.orderCode)!''}</td>
+						</tr>
+						<tr>
+							<td>下单日期：</td>
+							<td>${(order.orderTime?string("yyyy年MM月dd日  HH:mm:ss"))!''}</td>
+						</tr>	
+						<tr>
+							<td>订单总额：</td>
+							<td>¥${(order.orderAmountStr)!''}</td>
+						</tr>
+						<tr >
+							<td>备注信息：</td>
+							<td>${(order.remark)!''}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="kong"></div>
+			<div class="save_img" >长按保存报名卡到手机</div>
+			<p class="match_name mt30" style="background-image: url(${ctx}/img/img_kpbg.png)">2018首届全国智能体育大赛</p>
+			<p class="card">报名卡</p>
+			<div class="enroll_card_box">
+				<#list order.applys as orderApplays>
+				<div class="enroll_middle flex flex-align-center flex-pack-center" style="width: 6.5rem;margin: 0.3rem auto 0.1rem;height: 4.1rem;">
+
+					<div class="save_dom" style="height: 4.1rem;width: 6.5rem;">
+						<ul>
+							<li class="place save_to_img" data-name="${(orderApplays.eventName)!''}" id="save_to_img" style="height: 4.1rem;position: relative;">
+								<img class="backShow" src="" />
+								<div class="match_list" >
+									<div style="clear: both;">
+										<img class="left fl" src="${ctx}/img/img_kaplogo.png" alt="" />
+										<div class="bgRight fl" style="width: 4.9rem;">
+											<p class="bgRightTitle">${(orderApplays.matchName)!'--'}</p>
+											<p class="bgRightP"><img class="bgRight_imgLeft" src="${ctx}/img/icon_kpchd.png" alt="" /><span class="apply_siteName">${(orderApplays.siteName)!'--'}</span></p>
+											<p class="bgRightP"><img class="bgRight_imgLeft" src="${ctx}/img/icon_kpdzh.png" alt="" /><span class="apply_address">${(orderApplays.address)!'--'}</span></p>
+										</div>
+									</div>
+									<div class="bgBottom">
+										<p class="bgBottomP"><span  class="apply_eventTypeName" style="color:#FF8F00;vertical-align: top;margin-right: 0.1rem;">${(orderApplays.eventTypeName)!''}</span>${(orderApplays.matchGroupName)!''}-${(orderApplays.eventName)!''}</p>
+										<p class="bgBottomP"><img class="img" src="${ctx}/img/icon_kpshj.png" alt="" /><span class="apply_time">比赛时间：${(orderApplays.eventStartTime?string("yyyy-MM-dd HH:mm:ss"))!'--'}</span></p>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+			</#list>
+			</div>
+
+			<div class="erweima">
+				<img src="${ctx}/img/img_kpewm.png" alt="" />
+				<p class="erweima_p">长按关注官方公众号</p>
+			</div>
+			<div class="kong_content" style="height:1rem;"></div>
+			<a class="button"  href="${ctx}/game/type">继续报名赛事</a>
+		</div>
+	</body>
+	<script type="text/javascript" src="${staticPath}/js/jquery-1.8.3.min.js?v=${cssV}"></script>
+	<!--<script type="text/javascript" src="${staticPath}/js/html2canvas.min.js"></script>-->
+	<script src="https://cdn.bootcss.com/html2canvas/0.5.0-alpha2/html2canvas.js"></script>
+	<!--<script type="text/javascript" src="${staticPath}/js/vue.js?v=${cssV}"></script>-->
+	<script>
+var path = "${ctx}";
+var socialDomain="${socialDomain}"
+</script>
+	<script type="text/javascript" src="${staticPath}/js/config.js?v=${cssV}"></script>
+	<script type="text/javascript">
+		// window.onload=function(){
+		var applyIndex = "${(order.applys[0].index)!''}";
+		// var matchName = "${(order.applys[0].matchName)!''}";
+		// var siteName = "${(order.applys[0].siteName)!''}";
+		// var address = "${(order.applys[0].address)!''}";
+		// var eventTypeName = "${(order.applys[0].eventTypeName)!''}";
+		// var eventName = "${(order.applys[0].eventName)!''}";
+		// var matchGroupName = "${(order.applys[0].matchGroupName)!''}";
+		// var eventStartTime = '${(order.applys[0].eventStartTime?string("yyyy-MM-dd hh:mm:ss"))!""}';
+		var backImg ='';
+
+		var timeOut = null;
+		var dataURL = '';
+        var path = '${ctx}';
+
+        render()
+
+		function render() {
+            // console.log(applyIndex)
+            // console.log(matchName)
+            if(applyIndex == 1){
+                backImg = '${ctx}/img/img_kpa.png';
+            }else if(applyIndex == 2){
+                backImg = '${ctx}/img/img_kpb.png';
+            }else if(applyIndex == 0){
+                backImg = '${ctx}/img/img_kpc.png)';
+            }else{
+                backImg = '${ctx}/img/img_kpa.png';
+            }
+            // $('.match_list').css('background-image','url('+backImg+')')
+			$('.backShow').attr('src',backImg)
+            // $('.bgRightTitle').html(matchName)
+            // $('.apply_siteName').html(siteName)
+            // $('.apply_address').html(address)
+            // $('.bgBottomP').eq(0).html('<span  class="apply_eventTypeName" style="color:#FF8F00;vertical-align: top;margin-right: 0.1rem;">'+eventTypeName+'</span>'+matchGroupName+'-'+eventName)
+            // $('.apply_time').html('比赛时间：'+eventStartTime)
+			// $('#save_to_img').attr('data-name',eventName)
+
+            setTimeout(function () {
+                var domList = $('.enroll_card_box .enroll_middle');
+				for(var i=0;i<domList.length;i++) {
+                    drawCanvas(domList[i]);
+                }
+            },300)
+        }
+
+		function DPR() {
+			if (window.devicePixelRatio && window.devicePixelRatio > 1) {
+				return window.devicePixelRatio;
+			}
+			return 1;
+		}
+		function parseValue(value) {
+			return parseInt(value, 10);
+		}
+		$('.enroll_card_box .enroll_middle').on('touchstart',function (event) {
+		    var thisImg = $(this).children()[0];
+		    var imgDatas = $(thisImg).attr('src');
+			timeOut = setTimeout(function () {
+				// var aLink = document.createElement('a');
+				// aLink.href = imgDatas;
+				// aLink.download = '我的报名卡.png';
+				// document.body.appendChild(aLink)
+				// aLink.click()
+				var formData = new FormData();
+				formData.append('file', imgDatas)
+				$.ajax({
+					url:  path + '/file/upload/base64',
+					data: formData,
+					type: 'post',
+					contentType : false,
+					mimeType:"multipart/form-data",
+					dataType: 'json',
+					processData:false,
+					success: function(d) {
+						if(d.resultCode == 200){
+                            H5DownloadImg(d.result.url,'我的成绩')
+						}else{
+							var tips = new loadingTips(d.resultMsg,2500)
+							tips.creat()
+						}
+					},
+					error:function (d) {
+						var tips = new loadingTips('网络错误，稍后请重试',2500)
+						tips.creat()
+					}
+				});
+			},500);
+		})
+		$('.enroll_card_box .enroll_middle').on('touchend',function (event) {
+			if(timeOut){
+				clearTimeout(timeOut)
+			}
+			event.preventDefault()
+		})
+		$('.enroll_card_box .enroll_middle').on('touchmove',function (e) {
+			if(timeOut){
+				clearTimeout(timeOut)
+			}
+		})
+        function drawCanvas(selector,ifReDraw) {
+            console.log('绘图')
+            //获取节点高度，后面为克隆节点设置高度。
+            var height = $(selector).innerHeight();
+            var width = $(selector).innerWidth();
+            //克隆节点，默认为false，不复制方法属性，为true是全部复制。
+            var cloneDom = $(selector).clone(true);
+            //设置克隆节点的css属性，因为之前的层级为0，我们只需要比被克隆的节点层级低即可。
+            cloneDom.css({
+                "background-color": "white",
+                "position": "absolute",
+                "top": "0px",
+                "z-index": "-1",
+                "height": height,
+                'width': width
+            });
+            //将克隆节点动态追加到body后面。
+            $("body").append(cloneDom);
+            // 获取想要转换的 DOM 节点
+            var dom = $(cloneDom);
+            var boxw = $(cloneDom).innerWidth();
+            var boxh = $(cloneDom).innerHeight();
+            // DOM 节点计算后宽高
+            var width = parseValue(boxw);
+            var height = parseValue(boxh);
+            // 获取像素比
+            var scaleBy = DPR();
+            // 创建自定义 canvas 元素
+            var canvas = document.createElement('canvas');
+            // 设定 canvas 元素属性宽高为 DOM 节点宽高 * 像素比
+            canvas.width = width * scaleBy;
+            canvas.height = height * scaleBy;
+            // 设定 canvas css宽高为 DOM 节点宽高
+            canvas.style.width = width * scaleBy+'px';
+            canvas.style.height = height * scaleBy+'px';
+            // 获取画笔
+            var context = canvas.getContext('2d');
+            // 将所有绘制内容放大像素比倍
+            context.scale(scaleBy, scaleBy);
+            // 将自定义 canvas 作为配置项传入，开始绘制
+            var element = $(cloneDom)[0];
+            console.log(element)
+            html2canvas(element,{
+                width:width,
+                height:height,
+                allowTaint:true}).then(function(canvas){
+					dataURL =canvas.toDataURL("image/png");
+					imgFile = dataURL;
+					var imgData = dataURL;
+					var img= document.createElement('img');
+					img.setAttribute('crossOrigin', 'anonymous');
+					$(selector).html(img)
+					img.src = dataURL;
+            });
+        }
+
+	
+	</script>
+<style>
+    body{
+        position: relative !important;
+    }
+	.backShow{
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 6.5rem;
+		height: 4.1rem;
+	}
+    .save_to_img>img{
+		/*width: 6.5rem;*/
+		/*height: 3.7rem;*/
+    }
+	.enroll_middle>img{
+		width:100%;
+		height: 4.1rem;
+	}
+</style>
+	
+</html>

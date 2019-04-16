@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.efida.sports.mapper.DrawActivityMapper">
+
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.efida.sports.entity.DrawActivity">
+		<id column="id" property="id" />
+		<result column="activity_code" property="activityCode" />
+		<result column="activity_name" property="activityName" />
+		<result column="activity_desc" property="activityDesc" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="ratio" property="ratio" />
+		<result column="status" property="status" />
+		<result column="is_del" property="isDel" />
+		<result column="is_refresh" property="IsRefresh" />
+		<result column="gmt_create" property="gmtCreate" />
+		<result column="gmt_modified" property="gmtModified" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, activity_code, activity_name, activity_desc,
+		start_time, end_time,
+		ratio, status, is_del,is_refresh, gmt_create,
+		gmt_modified
+	</sql>
+
+	<select id="lockActivityByCode" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from draw_activity
+		where activity_code = #{activeCode} for update
+	</select>
+
+</mapper>

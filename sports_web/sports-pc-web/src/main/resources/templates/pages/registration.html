@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="inital-scale=1.0,user-scalable=yes;">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>我的报名</title>
+
+    <!-- Custom styles for this template -->
+    <link href="${stx}/css/layout.css" rel="stylesheet">
+    <!-- <link href="${stx}/css/page.css" rel="stylesheet"> -->
+    <link href="${stx}/css/pagination.css" rel="stylesheet">
+    <link rel="stylesheet" href="${stx}/laydate/theme/default/laydate.css">
+    <link rel="stylesheet" href="${stx}/layui/css/layui.css"  media="all">
+    <style>
+	
+		body{background:url(${stx}/img/bg_baoming.jpg) repeat; width: 100%;height: 100%;}
+		  [v-cloak] {
+		  display: none;
+		}
+    </style>
+  </head>
+	<body>
+	 <#include "common/alert.html">
+	<div id="order_content" class="content_height" v-cloak>
+		<div class="modal_agreement">
+			 <div class="agreement_content">
+			 	  <p class="close"><img src="${stx}/img/icon_djishi.png"></p>
+			 	  <p class="title">全国智能体育大赛智能跳绳分赛服务协议</p>
+			 	  <div class="content">
+			 	  	
+			 	  </div>
+			 	  <p class="txt">
+			 	  	我已经阅读并同意以上协议
+			 	  </p>
+			 	  <p class="pay"><a>继续支付</a></p>
+			 </div>
+		</div>
+			
+            <#include "common/nav.html">
+		<div class="container registration_content clear" id='mainWrap'>
+             <#include "common/left_menu.html">
+		     <div class="registration_content_aside pull-right" style="min-height:660px;">
+	         <ul class="clear pay_ul">
+	         	<li v-for = "(tab,index) in tab" :class="{active: indexs == index}" @click="tabClick(index,tab.id)"><a><i></i>[[tab.text]]</a></li>
+	         </ul>
+ 	  	    <div class="registration_lie clear">
+ 	  	    	<div class="registration_nav">
+ 	  	    		<span class="custom_width">订单项目</span>
+ 	  	    		<span>数量</span>
+ 	  	    		<span>金额</span>
+ 	  	    		<!-- <span>报名人</span> -->
+ 	  	    		<span>订单状态</span>
+ 	  	    		<span class="custom_width2">操作</span>
+ 	  	    	</div>
+ 	  	    	
+ 	  	    	<div style="margin-bottom: 20px;" v-show="orderData.records && orderData.records.length">
+	 	  	    	<div class="lists">
+	 	  	    		<div class="order_list clear"  v-for = "(orderData,index) in orderData.records" >
+		 	  	    		 <p class="title">
+		 	  	    		 	<span>[[ orderData.orderTimeStr ]]</span>
+		 	  	    		 	<b @click="orderDetailCommon(orderData.orderCode,orderData.applyInfos[0].matchCode)">订单号：[[ orderData.orderCode ]]</b>
+		 	  	    		 </p>
+		 	  	    		 <div class="lie_left clear pull-left">
+		 	  	    		 	<span class="pull-left" v-if="orderData.applyInfos.length"><img @click="matchDetailCommon(orderData.applyInfos[0].matchCode)" :src="orderData.applyInfos[0].poster"/></span>
+		 	  	    		 	<div class="pull-left sign_msy" v-if="orderData.applyInfos.length">
+		 	  	    		 		<p class="f_c" @click="matchDetailCommon(orderData.applyInfos[0].matchCode)">【[[orderData.applyInfos[0].status]]】[[orderData.applyInfos[0].matchName]]</p>
+		 	  	    		 		<p v-for="(info, num) in orderData.applyInfos" :key="num">
+		 	  	    		 		<!-- 	[[info.matchGroupName]] | [[info.siteName]] -->
+		 	  	    		 			[[info.eventName]]
+		 	  	    		 		</p>
+		 	  	    		 	</div>
+		 	  	    		 </div>
+		 	  	    		 <span class="pull-left c_width">[[orderData.applyInfoSize]]</span>
+		 	  	    		 <span class="pull-left c_width">[[orderData.orderAmountStr]]<br>[[orderData.payWayName]] </span>
+		 	  	    		<!--  <span class="pull-left c_width">[[(orderData.player && orderData.player.playerName) ? orderData.player.playerName : '']]</span> -->
+		 	  	    		 <span class="pull-left c_width"> [[getOtherStatus(orderData.orderStatus)]] <br><a class="details" @click="orderDetail(orderData.orderCode,orderData.applyInfos[0].matchCode)">查看详情</a></span>
+		 	  	    		 <span class="pull-left c_width_last" v-if="orderData.overplusTime > -1 && orderData.overplusTime!= 0 ">
+		 	  	    		 	<a class="pay" v-if="orderData.orderStatus != 'success' && orderData.applyInfos[0].statusCode == 'going' " @click="goPayHandle(orderData.orderStatus, orderData.orderCode, orderData.applyInfos[0].matchCode)">
+		 	  	    		 		
+		 	  	    		 		[[orderData.orderStatus == 'wait_pay' ? '去支付' : '去完善']]
+		 	  	    		 	</a><br>		 	  	 
+		 	  	    	        <span v-if="orderData.orderStatus == 'wait_pay' && orderData.overplusTime > -1"><img src="${stx}/img/icon_djishi.png" />[[orderData.timer]]</span> 		 	  	    		      	    		
+		 	  	    		 </span>
+		 	  	    	</div>
+	 	  	    	</div>
+	 	  	    	
+	 	  	    	<!-- 分页  -->
+	 	  	        <div v-if="orderData.total > 5">
+	 	  	    	     <div id="pagination" class="m-style"></div>
+	 	  	    	</div>
+ 	  	    	</div>
+ 	  	    	
+ 	  	    	<div v-if="orderData.records && !orderData.records.length" class="no_data indexNo_data">
+ 	  	    	 	<img src="${stx}/img/img_weikong.png">
+ 	  	    	    <p>暂无数据</p>
+ 	  	    	</div>
+ 	  	    </div>
+		
+		    </div>
+		</div>
+		 <div class="footer footer_bottom">
+	    	 <div class="container clear">
+	    	 	  <div class="pull-left">
+	    	 	  	   <p class="footer_nav">
+	    	 	  	   	  <a href="http://www.zntyydh.com/index.jsp">首页</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=114">新闻中心</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=107">赛事信息</a>   |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=109">智体百科</a>  |   
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=105">全球征集</a>  |  
+	    	 	  	   	  <a href="http://www.zntyydh.com/col.jsp?id=106"> 联系我们</a>
+	    	 	  	   </p>
+	    	 	  	   <p class="simpleText">
+	    	 	  	   	浙ICP备18028500号-1<br>
+                                                版权所有：全国智能体育大赛 未经授权不得使用
+	    	 	  	   </p>
+	    	 	  </div>
+	    	 	  <div class="pull-right footer_code">
+	    	 	       <img src="${ctx}/img/img_footer.png">
+	    	 	  </div>
+	    	 </div>
+		   </div>
+	</div>
+	</body>
+	<script type="text/javascript" src="${stx}/js/jquery-2.1.1.min.js"></script>
+	<script src="${stx}/js/vue.js"></script>
+	<script src="${stx}/js/page.js"></script>
+	<script src="${stx}/js/jquery.pagination.js"></script>
+	<script src="${stx}/js/config.js"></script>
+	<script src="${stx}/laydate/laydate.js"></script>
+	<script src="${stx}/layui/layui.js" charset="utf-8"></script>
+	<script>
+	var vm = null;       //全局声明vue对象
+	$(".indexNo_data").attr("style","display:block");
+	var vueData = {			
+		orderData: {},
+		indexs:0,
+		activeTab: '',
+		tab:[
+	        {id: '', text: '全部',lists: []},
+            {id: 'wait_pay', text: '待支付',lists: []},
+            {id: 'wait_complete', text: '待完善',lists: []},
+            {id: 'success', text: '已成功',lists: []}
+		],
+	};
+	
+
+	/**
+	 * 页面加载完毕 $.ready
+	 */
+	$(function(){	
+	    vueInit(); 
+	    pageInt();
+	});
+	
+	/**
+	 * 页面初始化，dom操作
+	 */
+	 function pageInt(){
+		getDatalists();
+	    style();		
+	};
+	
+    function style(){
+    	$("#order").addClass("active");
+    	$("#orderEm").addClass("active");
+    };
+	 
+	 /**
+	  * vue初始化，dom操作
+	  */
+	  
+	//Vue.config.delimiters = ['${', '}$'];
+	  function vueInit () {
+		 vm = new Vue({
+			 delimiters: ['[[', ']]'],
+			 el:"#order_content",
+			 data:vueData ,
+
+			 methods:{
+				 tabClick: tabClick,
+				 getDatalists: getDatalists,
+				 getOtherStatus: getOtherStatus,
+				 orderDetail: orderDetail,
+				 orderDetailCommon:orderDetailCommon,
+				 goPayHandle: goPayHandle,
+				 payment: payment,
+				 perfect: perfect,
+				 matchDetailCommon: matchDetailCommon
+			 },
+		 });
+	 };
+	 
+	 //跟据后台返回status，获取对应的中文
+	 function getOtherStatus(status) {
+		 var text = '';
+		 vueData.tab.forEach(function(d) {
+			 if(d.id == status) text = d.text;
+		 });
+		 
+		 return text;
+	 };
+	 
+	 //获取倒计时
+	 function getPayTimer() {
+		 console.log(vueData.orderData.records)
+		 vueData.orderData.records.forEach(function(d) {
+
+			 if(d.orderStatus == 'wait_pay') {	
+				var mytimer = setInterval(function(){
+					d.overplusTime --;
+					d.timer = d.overplusTime < 0 ? clearInterval(mytimer) : SecondToDate(d.overplusTime);
+				}, 1000); 
+			 }
+		 });
+	 };
+	 
+	 //秒转分秒
+	 function SecondToDate(t) { 
+		 return Math.floor(t/60)+"分"+(t%60/100).toFixed(2).slice(-2)+"秒";
+	};
+	 
+	 
+	 
+     function tabClick(str,id){
+    	 vueData.indexs=str
+    	 vueData.activeTab = id;
+    	 getDatalists();
+     };
+     
+     function createTimestamp () {
+   	  return parseInt(new Date().getTime() / 1000) + '';
+     };
+     
+     //支付/完善按钮点击方法
+     function goPayHandle(status, code, matchCode) {
+    	console.log("..完善");
+        console.log(matchCode);
+    	console.log(status);
+    	if(status == 'wait_pay') return this.payment(code, matchCode);
+    	if(status == 'wait_complete') return this.perfect(code, matchCode);
+     };
+     
+   	 //查看详情
+     function orderDetail(code, matchCode) {
+    	 window.location.href="${ctx}/order/enroll/detail/"+code+"/"+matchCode + "?" + createTimestamp();
+     };
+     function orderDetailCommon(code, matchCode) {
+    	 window.location.href="${ctx}/order/enroll/detail/"+code+"/"+matchCode + "?" + createTimestamp();
+     };
+     
+     //支付方法
+     function payment(code, matchCode) {
+    	 window.location.href="${ctx}/order/enroll/detail/"+code+"/"+matchCode + "?" + createTimestamp();
+     };
+     
+     //查看赛事详情
+     function matchDetailCommon(matchCode) {
+    	 window.location.href="${ctx}/match/detail/"+matchCode + "?" + createTimestamp();
+     };
+     
+     //完善方法
+     function perfect(code,matchCode) {
+    	 console.log(code)
+    	 window.location.href="${ctx}/order/apply/edit?orderCode="+code + "&matchCode="+matchCode+"&editStatus=1&" + createTimestamp();
+     };
+     
+     function getDatalists(page) {
+    	 var params = {orderStatus: vueData.activeTab, currentPage: 1, pageSize:5};
+    	 
+    	 if(page) params.currentPage = page;
+    	 var url =  "${ctx}/order/query/page?"  + createTimestamp ();
+    	 getResultMethods(url, params, function(d){
+    		console.log(d)
+    		d.page.records.forEach(function(d){if(d.orderStatus == 'wait_pay') d.timer = ''});
+  			vueData.orderData = d.page;
+  			console.log(vueData.orderData)
+  			var listdata = d.page;
+  			//var totalPage = Math.ceil(listdata.total/listdata.size)
+  			 setTimeout(function(){
+	  		     $('#pagination').pagination({
+	  	    	    jump: true,
+	  	    	    totalData: listdata.total,
+	  	    	    showData: listdata.size,
+	  	    	    current: listdata.current,
+	  	    	    pageCount: listdata.pages,
+	  	    	    coping: true,
+	  	    	    homePage: '首页',
+	  	    	    endPage: '末页',
+	  	    	    prevContent: '上页',
+	  	    	    nextContent: '下页',
+	  	    	    callback: function (api) {
+	  	    	        getDatalists(api.getCurrent());
+	  	    	    }
+	  		     });
+  			}, 100)
+  		     
+  		   	 getPayTimer()
+  		 });
+     };
+     
+
+     
+	</script>
+</html>
